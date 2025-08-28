@@ -1,0 +1,214 @@
+import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcryptjs';
+import { UsersService } from '../users/users.service';
+import { CompaniesService } from '../companies/companies.service';
+import { User, UserRole, UserStatus } from '../users/entities/user.entity';
+import { Company, SubscriptionPlan } from '../companies/entities/company.entity';
+
+export interface AuthResponse {
+  access_token: string;
+  refresh_token?: string;
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: UserRole;
+    companyId: string;
+    companyName: string;
+  };
+  company: {
+    id: string;
+    name: string;
+    subscriptionPlan: SubscriptionPlan;
+  };
+}
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private usersService: UsersService,
+    private companiesService: CompaniesService,
+    private jwtService: JwtService,
+  ) {}
+
+  async validateUser(email: string, password: string): Promise<User | null> {
+    const user = await this.usersService.findByEmail(email);
+    if (user && await bcrypt.compare(password, user.password_hash)) {
+      return user;
+    }
+    return null;
+  }
+
+  async login(user: User): Promise<AuthResponse> {
+    // Get company details
+    const company = await this.companiesService.findOne(user.company_id);
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      companyId: user.company_id,
+      role: user.role,
+    };
+
+    const accessToken = this.jwtService.sign(payload);
+
+    // Update last login
+    await this.usersService.updateLastLogin(user.id);
+
+    return {
+      access_token: accessToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        role: user.role,
+        companyId: user.company_id,
+        companyName: company.name,
+      },
+      company: {
+        id: company.id,
+        name: company.name,
+        subscriptionPlan: company.subscription_plan,
+      },
+    };
+  }
+
+  async register(registerData: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    companyName: string;
+    phone?: string;
+  }): Promise<AuthResponse> {
+    // Check if user already exists
+    const existingUser = await this.usersService.findByEmail(registerData.email);
+    if (existingUser) {
+      throw new ConflictException('User with this email already exists');
+    }
+
+    // Check if company name is taken
+    const existingCompany = await this.companiesService.findByName(registerData.companyName);
+    if (existingCompany) {
+      throw new ConflictException('Company with this name already exists');
+    }
+
+    // Create company
+    const company = await this.companiesService.create({
+      name: registerData.companyName,
+      email: registerData.email,
+      phone: registerData.phone,
+      subscription_plan: SubscriptionPlan.FREE,
+      is_trial: true,
+      subscription_expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days trial
+    });
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(registerData.password, 12);
+
+    // Create user
+    const user = await this.usersService.create({
+      first_name: registerData.firstName,
+      last_name: registerData.lastName,
+      email: registerData.email,
+      password_hash: hashedPassword,
+      phone: registerData.phone,
+      role: UserRole.COMPANY_ADMIN,
+      company_id: company.id,
+      status: UserStatus.ACTIVE,
+      is_email_verified: false, // In production, send verification email
+    });
+
+    // Auto-login after registration
+    return this.login(user);
+  }
+
+  async refreshToken(user: User): Promise<{ access_token: string }> {
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      companyId: user.company_id,
+      role: user.role,
+    };
+
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
+  async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<void> {
+    const user = await this.usersService.findOne(userId);
+
+    // Verify old password
+    const isValidPassword = await bcrypt.compare(oldPassword, user.password_hash);
+    if (!isValidPassword) {
+      throw new UnauthorizedException('Invalid current password');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    // Update password
+    await this.usersService.update(userId, { password_hash: hashedPassword });
+  }
+
+  async forgotPassword(email: string): Promise<{ message: string }> {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      // Don't reveal if user exists or not for security
+      return { message: 'If an account with this email exists, a reset link has been sent.' };
+    }
+
+    // Generate reset token
+    const resetToken = this.jwtService.sign(
+      { sub: user.id, type: 'password_reset' },
+      { expiresIn: '1h' }
+    );
+
+    // Save reset token (in production, save hashed token in database)
+    await this.usersService.update(user.id, {
+      password_reset_token: resetToken,
+      password_reset_expires_at: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
+    });
+
+    // In production, send email with reset link
+    console.log(`Password reset token for ${email}: ${resetToken}`);
+
+    return { message: 'If an account with this email exists, a reset link has been sent.' };
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    try {
+      const payload = this.jwtService.verify(token);
+
+      if (payload.type !== 'password_reset') {
+        throw new UnauthorizedException('Invalid token type');
+      }
+
+      const user = await this.usersService.findOne(payload.sub);
+
+      if (!user || user.password_reset_token !== token) {
+        throw new UnauthorizedException('Invalid or expired token');
+      }
+
+      if (user.password_reset_expires_at && user.password_reset_expires_at < new Date()) {
+        throw new UnauthorizedException('Token has expired');
+      }
+
+      // Hash new password
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+      // Update password and clear reset token
+      await this.usersService.update(user.id, {
+        password_hash: hashedPassword,
+        password_reset_token: undefined,
+        password_reset_expires_at: undefined,
+      });
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
+  }
+}

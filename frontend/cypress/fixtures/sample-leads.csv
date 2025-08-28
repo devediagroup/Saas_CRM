@@ -1,0 +1,5 @@
+first_name,last_name,phone,email,status,budget_min,budget_max,preferred_location,property_type,notes
+أحمد,محمد,+966501234567,ahmed@example.com,New,500000,1000000,الرياض,Apartment,عميل مهتم بالشقق
+فاطمة,علي,+966507654321,fatima@example.com,Contacted,400000,800000,جدة,Villa,عميلة مهتمة بالفلل
+محمد,خالد,+966509876543,mohamed@example.com,Interested,300000,600000,الدمام,Office,عميل مهتم بالمكاتب
+سارة,أحمد,+966504567890,sara@example.com,New,600000,1200000,مكة,Villa,عميلة تبحث عن فيلا كبيرة

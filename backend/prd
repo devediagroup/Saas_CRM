@@ -1,0 +1,767 @@
+# 🏢 EchoOps Real Estate CRM - Backend PRD
+## Product Requirements Document (PRD)
+
+---
+
+## 📋 **معلومات المشروع**
+
+| **المعلومة** | **التفاصيل** |
+|---------------|---------------|
+| **اسم المشروع** | EchoOps Real Estate CRM Backend |
+| **نوع المنتج** | SaaS Platform API Backend |
+| **التقنية الأساسية** | NestJS + TypeScript + MySQL |
+| **الهدف** | منصة سحابية متكاملة لإدارة العقارات مع multi-tenancy |
+| **نموذج العمل** | SaaS Subscription (€15-35/شهر) |
+| **المرحلة** | MVP → Advanced Features |
+
+---
+
+## 🎯 **رؤية المنتج (Product Vision)**
+
+### **الهدف الأساسي**
+تطوير backend API قوي ومرن لمنصة إدارة العقارات تدعم الآلاف من الشركات بشكل آمن ومنفصل (multi-tenant) مع ميزات متقدمة للذكاء الاصطناعي والتحليلات.
+
+### **القيمة المضافة**
+- **للشركات العقارية**: نظام شامل لإدارة العملاء والعقارات والصفقات
+- **للمطورين**: APIs موثقة وقابلة للتطوير
+- **للنظام**: أرشيتكتشر قابلة للتوسع تدعم ملايين المعاملات
+
+---
+
+## 🏗️ **المواصفات التقنية (Technical Specifications)**
+
+### **Technology Stack**
+```typescript
+Core Technologies:
+├── Framework: NestJS v10.x
+├── Language: TypeScript 5.x
+├── Database: MySQL 8.0
+├── ORM: TypeORM + MySQL2
+├── Authentication: JWT + Passport
+├── Documentation: Swagger/OpenAPI
+├── Testing: Jest + Supertest
+├── Validation: class-validator
+└── Configuration: @nestjs/config
+```
+
+### **Database Architecture**
+```sql
+-- Multi-Tenant SaaS Architecture
+Database: echoops_crm_db
+Tables: 15+ core tables with company_id isolation
+Relationships: Optimized foreign keys with cascading
+Indexing: Performance-focused indexes
+Encryption: Sensitive data encryption at rest
+```
+
+### **API Architecture**
+```
+REST API Design:
+├── Base URL: https://api.echoops.com/v1
+├── Authentication: Bearer JWT tokens
+├── Response Format: JSON with consistent structure
+├── Error Handling: Standardized error codes
+├── Rate Limiting: Per-company limits
+└── Documentation: Auto-generated Swagger docs
+```
+
+---
+
+## 👥 **المستخدمون المستهدفون (Target Users)**
+
+### **1. شركات العقارات الصغيرة والمتوسطة**
+- **الحجم**: 5-50 موظف
+- **الحاجة**: نظام بسيط وفعال لإدارة العقارات
+- **التحدي**: أنظمة معقدة ومكلفة
+
+### **2. وسطاء العقارات المستقلين**
+- **الحجم**: 1-10 موظف
+- **الحاجة**: أدوات تنظيم العملاء والصفقات
+- **التحدي**: إدارة يدوية للبيانات
+
+### **3. شركات التسويق العقاري**
+- **الحجم**: 10-100 موظف
+- **الحاجة**: تتبع الحملات وتحليل الأداء
+- **التحدي**: ربط التسويق بالمبيعات
+
+---
+
+## 🎯 **الأهداف والمخرجات (Goals & Deliverables)**
+
+### **الهدف الأساسي (Primary Goal)**
+تطوير backend API مكتمل يدعم جميع وظائف CRM العقاري مع multi-tenancy كامل.
+
+### **الأهداف الفرعية (Secondary Goals)**
+1. **الأمان**: حماية بيانات الشركات بشكل منفصل
+2. **الأداء**: استجابة سريعة للـ APIs (< 200ms)
+3. **التوسع**: دعم آلاف الشركات والمستخدمين
+4. **التكامل**: APIs سهلة التكامل مع Frontend
+
+### **المخرجات المطلوبة (Deliverables)**
+- [x] **NestJS Application** - تطبيق كامل مع TypeScript
+- [x] **MySQL Database** - قاعدة بيانات محسنة
+- [x] **15+ API Modules** - وحدات APIs متكاملة
+- [x] **Authentication System** - نظام أمان متقدم
+- [x] **Documentation** - توثيق شامل للـ APIs
+- [x] **Testing Suite** - اختبارات شاملة
+- [x] **Deployment Config** - إعدادات النشر
+
+---
+
+## 📊 **متطلبات الوظائف (Functional Requirements)**
+
+### **المرحلة 1: الأساسيات (Core Features)**
+
+#### **1. إدارة الشركات (Companies Management)**
+```typescript
+Features:
+├── Company Registration & Profile Management
+├── Subscription Plans (Basic, Pro, Enterprise)  
+├── Multi-tenant Data Isolation
+├── Company Settings & Branding
+└── Usage Tracking & Limits
+
+APIs:
+├── POST /api/companies - إنشاء شركة جديدة
+├── GET /api/companies/:id - عرض بيانات الشركة
+├── PUT /api/companies/:id - تحديث بيانات الشركة
+├── DELETE /api/companies/:id - حذف الشركة
+└── GET /api/companies/:id/stats - إحصائيات الشركة
+```
+
+#### **2. إدارة المستخدمين (Users Management)**
+```typescript
+Features:
+├── User Registration & Authentication
+├── Role-Based Access Control (RBAC)
+├── Team Management
+├── Activity Tracking
+└── Security Monitoring
+
+Roles:
+├── Super Admin - إدارة النظام
+├── Company Admin - إدارة الشركة
+├── Sales Manager - إدارة الفريق
+├── Sales Agent - إدارة العملاء
+├── Marketing - إدارة الحملات
+└── Support - خدمة العملاء
+
+APIs:
+├── POST /api/auth/register - تسجيل مستخدم جديد
+├── POST /api/auth/login - تسجيل دخول
+├── POST /api/auth/logout - تسجيل خروج
+├── GET /api/users - قائمة المستخدمين
+├── PUT /api/users/:id - تحديث مستخدم
+└── DELETE /api/users/:id - حذف مستخدم
+```
+
+#### **3. إدارة العملاء المحتملين (Leads Management)**
+```typescript
+Features:
+├── Lead Creation & Management
+├── Lead Sources Tracking
+├── Lead Assignment & Distribution
+├── Lead Scoring & Qualification
+├── Communication History
+└── Follow-up Automation
+
+Lead Status Flow:
+New → Contacted → Qualified → Proposal → Negotiation → Closed (Won/Lost)
+
+APIs:
+├── POST /api/leads - إضافة عميل محتمل
+├── GET /api/leads - قائمة العملاء المحتملين
+├── GET /api/leads/:id - تفاصيل العميل
+├── PUT /api/leads/:id - تحديث العميل
+├── DELETE /api/leads/:id - حذف العميل
+├── POST /api/leads/:id/assign - تعيين عميل لمندوب
+└── GET /api/leads/sources - مصادر العملاء
+```
+
+#### **4. إدارة العقارات (Properties Management)**
+```typescript
+Features:
+├── Property Listing & Management
+├── Property Categories & Types
+├── Image & Video Upload
+├── Location & Map Integration
+├── Property Status Tracking
+└── Advanced Search & Filtering
+
+Property Types:
+├── Apartment - شقة
+├── Villa - فيلا  
+├── Office - مكتب
+├── Shop - محل تجاري
+├── Land - أرض
+└── Warehouse - مستودع
+
+APIs:
+├── POST /api/properties - إضافة عقار جديد
+├── GET /api/properties - قائمة العقارات
+├── GET /api/properties/:id - تفاصيل العقار
+├── PUT /api/properties/:id - تحديث العقار
+├── DELETE /api/properties/:id - حذف العقار
+├── POST /api/properties/:id/images - رفع صور
+└── GET /api/properties/search - البحث المتقدم
+```
+
+#### **5. إدارة الصفقات (Deals Management)**
+```typescript
+Features:
+├── Deal Pipeline Management
+├── Deal Stages & Probability
+├── Revenue Tracking
+├── Commission Calculation
+├── Deal Analytics
+└── Sales Forecasting
+
+Deal Stages:
+Prospect → Qualified → Proposal → Negotiation → Contract → Closed
+
+APIs:
+├── POST /api/deals - إنشاء صفقة جديدة
+├── GET /api/deals - قائمة الصفقات
+├── GET /api/deals/:id - تفاصيل الصفقة
+├── PUT /api/deals/:id - تحديث الصفقة
+├── PUT /api/deals/:id/stage - تحديث مرحلة الصفقة
+├── DELETE /api/deals/:id - حذف الصفقة
+└── GET /api/deals/pipeline - عرض Pipeline
+```
+
+#### **6. إدارة الأنشطة (Activities Management)**
+```typescript
+Features:
+├── Activity Creation & Tracking
+├── Calendar Integration
+├── Reminders & Notifications
+├── Activity Types & Categories
+├── Team Activity Monitoring
+└── Follow-up Management
+
+Activity Types:
+├── Call - مكالمة هاتفية
+├── Email - بريد إلكتروني
+├── Meeting - اجتماع
+├── WhatsApp - رسالة واتساب
+├── Site Visit - زيارة موقع
+└── Note - ملاحظة
+
+APIs:
+├── POST /api/activities - إنشاء نشاط
+├── GET /api/activities - قائمة الأنشطة
+├── GET /api/activities/:id - تفاصيل النشاط
+├── PUT /api/activities/:id - تحديث النشاط
+├── DELETE /api/activities/:id - حذف النشاط
+└── GET /api/activities/calendar - عرض التقويم
+```
+
+### **المرحلة 2: المميزات المتقدمة (Advanced Features)**
+
+#### **7. تكامل الواتساب (WhatsApp Integration)**
+```typescript
+Features:
+├── WhatsApp Business API Integration
+├── Multi-Account Support
+├── Real-time Chat Management
+├── Message Templates
+├── Bulk Messaging
+└── Chat Analytics
+
+APIs:
+├── POST /api/whatsapp/accounts - إضافة حساب واتساب
+├── GET /api/whatsapp/chats - قائمة المحادثات
+├── POST /api/whatsapp/send - إرسال رسالة
+├── GET /api/whatsapp/messages - قائمة الرسائل
+└── POST /api/whatsapp/webhook - استقبال الرسائل
+```
+
+#### **8. نظام الإشعارات (Notifications System)**
+```typescript
+Features:
+├── Real-time Notifications
+├── Email Notifications  
+├── Push Notifications
+├── Notification Templates
+├── User Preferences
+└── Notification Analytics
+
+APIs:
+├── GET /api/notifications - قائمة الإشعارات
+├── POST /api/notifications - إرسال إشعار
+├── PUT /api/notifications/:id/read - تحديد كمقروء
+├── DELETE /api/notifications/:id - حذف إشعار
+└── GET /api/notifications/preferences - إعدادات الإشعارات
+```
+
+#### **9. التقارير والتحليلات (Analytics & Reports)**
+```typescript
+Features:
+├── Dashboard KPIs
+├── Sales Performance Reports
+├── Lead Conversion Analytics
+├── Property Performance
+├── Team Performance
+└── Custom Reports
+
+APIs:
+├── GET /api/analytics/dashboard - إحصائيات الداشبورد
+├── GET /api/analytics/sales - تقارير المبيعات
+├── GET /api/analytics/leads - تحليل العملاء المحتملين
+├── GET /api/analytics/properties - تحليل العقارات
+└── POST /api/reports/custom - تقرير مخصص
+```
+
+### **المرحلة 3: ميزات المؤسسات (Enterprise Features)**
+
+#### **10. إدارة الاشتراكات (Subscription Management)**
+```typescript
+Features:
+├── Subscription Plans Management
+├── Usage Tracking & Billing
+├── Payment Integration
+├── Invoice Generation
+├── Usage Limits Enforcement
+└── Subscription Analytics
+
+APIs:
+├── GET /api/subscriptions/plans - خطط الاشتراك
+├── POST /api/subscriptions - اشتراك جديد
+├── GET /api/subscriptions/:id - تفاصيل الاشتراك
+├── PUT /api/subscriptions/:id - تحديث الاشتراك
+├── GET /api/billing/invoices - الفواتير
+└── GET /api/usage/tracking - تتبع الاستخدام
+```
+
+#### **11. الأمان والمراجعة (Security & Audit)**
+```typescript
+Features:
+├── Audit Logs
+├── Security Event Monitoring
+├── Data Encryption
+├── Access Control
+├── Threat Detection
+└── Compliance Reporting
+
+APIs:
+├── GET /api/audit/logs - سجل العمليات
+├── GET /api/security/events - الأحداث الأمنية
+├── POST /api/security/report - تقرير أمني
+└── GET /api/compliance/status - حالة الامتثال
+```
+
+#### **12. الذكاء الاصطناعي (AI & ML)**
+```typescript
+Features:
+├── Lead Scoring
+├── Deal Prediction
+├── Price Estimation
+├── Market Analysis
+├── Smart Recommendations
+└── Chatbot Integration
+
+APIs:
+├── POST /api/ai/lead-score - تسجيل العميل المحتمل
+├── POST /api/ai/deal-predict - توقع الصفقة
+├── POST /api/ai/price-estimate - تقدير السعر
+├── GET /api/ai/recommendations - التوصيات الذكية
+└── POST /api/ai/analyze - تحليل ذكي
+```
+
+---
+
+## 🔒 **متطلبات الأمان (Security Requirements)**
+
+### **1. المصادقة والتخويل (Authentication & Authorization)**
+```typescript
+Security Measures:
+├── JWT Token-based Authentication
+├── Role-Based Access Control (RBAC)
+├── Multi-Factor Authentication (2FA)
+├── Session Management
+├── Password Policies
+└── Account Lockout Protection
+```
+
+### **2. حماية البيانات (Data Protection)**
+```typescript
+Protection Methods:
+├── Data Encryption at Rest (AES-256)
+├── Data Encryption in Transit (TLS 1.3)
+├── Database Connection Encryption
+├── Sensitive Data Masking
+├── PII Data Protection
+└── GDPR Compliance
+```
+
+### **3. الأمان على مستوى التطبيق (Application Security)**
+```typescript
+Security Features:
+├── Input Validation & Sanitization
+├── SQL Injection Prevention
+├── XSS Protection
+├── CSRF Protection
+├── Rate Limiting & DDoS Protection
+└── Security Headers
+```
+
+### **4. Multi-Tenancy Security**
+```typescript
+Isolation Methods:
+├── Row-Level Security (RLS)
+├── Company-based Data Filtering
+├── API Endpoint Authorization
+├── Resource Access Control
+├── Tenant Data Encryption
+└── Audit Trail per Company
+```
+
+---
+
+## 🚀 **متطلبات الأداء (Performance Requirements)**
+
+### **استجابة الـ API (API Response Times)**
+| **نوع العملية** | **الهدف** | **الحد الأقصى** |
+|------------------|------------|------------------|
+| GET Requests | < 100ms | < 200ms |
+| POST/PUT Requests | < 200ms | < 500ms |
+| Complex Queries | < 500ms | < 1000ms |
+| Report Generation | < 2s | < 5s |
+| File Upload | < 3s | < 10s |
+
+### **السعة والتوسع (Scalability)**
+```typescript
+Capacity Targets:
+├── Concurrent Users: 1,000+ per company
+├── Companies: 10,000+ companies
+├── Database Records: 100M+ records
+├── API Requests: 100,000+ requests/hour
+├── Storage: 1TB+ per company
+└── Uptime: 99.9% availability
+```
+
+### **التحسينات (Optimizations)**
+```typescript
+Performance Optimizations:
+├── Database Query Optimization
+├── Connection Pooling
+├── Caching Strategy (Redis)
+├── CDN for Static Assets
+├── Lazy Loading
+└── Background Job Processing
+```
+
+---
+
+## 🗄️ **تصميم قاعدة البيانات (Database Design)**
+
+### **الجداول الأساسية (Core Tables)**
+```sql
+Primary Tables (15):
+├── companies - الشركات (Multi-tenant root)
+├── users - المستخدمين
+├── subscription_plans - خطط الاشتراك
+├── company_subscriptions - اشتراكات الشركات
+├── lead_sources - مصادر العملاء
+├── leads - العملاء المحتملين
+├── properties - العقارات
+├── deals - الصفقات
+├── activities - الأنشطة
+├── whatsapp_accounts - حسابات الواتساب
+├── whatsapp_chats - محادثات الواتساب
+├── whatsapp_messages - رسائل الواتساب
+├── notifications - الإشعارات
+├── audit_logs - سجل العمليات
+└── analytics - التحليلات
+```
+
+### **العلاقات (Relationships)**
+```sql
+Key Relationships:
+├── companies → users (1:many)
+├── companies → leads (1:many)  
+├── companies → properties (1:many)
+├── companies → deals (1:many)
+├── leads → deals (1:many)
+├── properties → deals (many:many)
+├── users → activities (1:many)
+├── leads → activities (1:many)
+└── deals → activities (1:many)
+```
+
+### **الفهرسة (Indexing Strategy)**
+```sql
+Performance Indexes:
+├── company_id (on all tenant tables)
+├── created_at, updated_at (time-based queries)
+├── status fields (filtering)
+├── foreign keys (joins)
+├── email, phone (search)
+└── composite indexes (complex queries)
+```
+
+---
+
+## 📡 **تصميم الـ API (API Design)**
+
+### **معايير الـ API (API Standards)**
+```typescript
+API Standards:
+├── RESTful Design Principles
+├── Consistent Naming Conventions
+├── Standard HTTP Status Codes
+├── JSON Response Format
+├── Error Handling Standards
+└── Version Management (v1, v2, etc.)
+```
+
+### **هيكل الاستجابة (Response Structure)**
+```typescript
+// Success Response
+{
+  "success": true,
+  "data": {
+    // Response data
+  },
+  "meta": {
+    "page": 1,
+    "limit": 20,
+    "total": 150,
+    "hasNext": true
+  },
+  "timestamp": "2024-12-26T10:30:00Z"
+}
+
+// Error Response  
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid input data",
+    "details": [
+      {
+        "field": "email",
+        "message": "Email is required"
+      }
+    ]
+  },
+  "timestamp": "2024-12-26T10:30:00Z"
+}
+```
+
+### **Authentication Headers**
+```http
+Authorization: Bearer <JWT_TOKEN>
+Content-Type: application/json
+Accept: application/json
+X-Company-ID: 123 (for multi-tenant context)
+```
+
+---
+
+## 🧪 **استراتيجية الاختبار (Testing Strategy)**
+
+### **أنواع الاختبارات (Testing Types)**
+```typescript
+Testing Levels:
+├── Unit Tests (80% coverage target)
+├── Integration Tests 
+├── End-to-End Tests
+├── Performance Tests
+├── Security Tests
+└── Load Tests
+```
+
+### **أدوات الاختبار (Testing Tools)**
+```typescript
+Testing Stack:
+├── Jest - Unit Testing Framework
+├── Supertest - HTTP Testing
+├── Factory Pattern - Test Data Generation
+├── Docker - Test Environment
+├── Artillery - Load Testing
+└── SonarQube - Code Quality
+```
+
+### **بيئات الاختبار (Testing Environments)**
+```typescript
+Environments:
+├── Local Development
+├── CI/CD Pipeline
+├── Staging Environment  
+├── Pre-Production
+└── Production Monitoring
+```
+
+---
+
+## 🚀 **خطة التطوير (Development Roadmap)**
+
+### **المرحلة 1: الأساس (Foundation) - 3 أسابيع**
+#### **الأسبوع 1: البنية الأساسية**
+- [x] إعداد مشروع NestJS
+- [x] تكوين MySQL وTypeORM
+- [x] إعداد المتغيرات البيئية
+- [x] تكوين Swagger للتوثيق
+
+#### **الأسبوع 2: المصادقة والشركات**
+- [x] نظام المصادقة بـ JWT
+- [x] تسجيل وإدارة الشركات
+- [x] أدوار المستخدمين والصلاحيات
+- [x] Multi-tenant security guards
+
+#### **الأسبوع 3: الوحدات الأساسية**
+- [x] إدارة العملاء المحتملين
+- [x] إدارة العقارات
+- [x] البحث والفلترة المتقدمة
+
+### **المرحلة 2: الوظائف الأساسية (Core Features) - 3 أسابيع**
+#### **الأسبوع 4: الصفقات والأنشطة**
+- [x] إدارة pipeline الصفقات
+- [x] تتبع الأنشطة والمتابعة
+- [x] نظام التذكيرات
+
+#### **الأسبوع 5: التكاملات**
+- [x] تكامل واتساب API
+- [x] إدارة المحادثات
+- [x] الرسائل الجماعية
+
+#### **الأسبوع 6: الإشعارات والتقارير**
+- [x] نظام الإشعارات الفوري
+- [x] التقارير والإحصائيات
+- [x] dashboard KPIs
+
+### **المرحلة 3: المميزات المتقدمة (Advanced Features) - 4 أسابيع**
+#### **الأسبوع 7-8: إدارة الاشتراكات**
+- [ ] خطط الاشتراك
+- [ ] تتبع الاستخدام والفواتير
+- [ ] تكامل الدفع
+
+#### **الأسبوع 9-10: الأمان والذكاء الاصطناعي**
+- [ ] تعزيز الأمان وسجل العمليات
+- [ ] ميزات الذكاء الاصطناعي
+- [ ] التوصيات الذكية
+
+### **المرحلة 4: التحسين والإطلاق (Optimization & Launch) - 2 أسابيع**
+#### **الأسبوع 11-12: الجاهزية للإنتاج**
+- [ ] اختبارات شاملة
+- [ ] تحسين الأداء
+- [ ] توثيق كامل
+- [ ] إعداد النشر
+
+---
+
+## 📊 **مؤشرات الأداء (KPIs & Metrics)**
+
+### **مؤشرات التطوير (Development KPIs)**
+| **المؤشر** | **الهدف** | **الحالي** |
+|-------------|------------|-------------|
+| API Endpoints | 50+ | 0 |
+| Test Coverage | 80%+ | 0% |
+| Documentation | 100% | 0% |
+| Performance | <200ms | N/A |
+| Security Score | A+ | N/A |
+
+### **مؤشرات الأعمال (Business KPIs)**
+| **المؤشر** | **الهدف السنوي** |
+|-------------|-------------------|
+| Active Companies | 1,000+ |
+| API Requests/Day | 1M+ |
+| Uptime | 99.9%+ |
+| Customer Satisfaction | 4.5+/5 |
+| Revenue | €500K+ |
+
+---
+
+## 🎯 **معايير النجاح (Success Criteria)**
+
+### **المعايير التقنية (Technical Success)**
+- ✅ جميع APIs تعمل بشكل صحيح
+- ✅ زمن الاستجابة أقل من 200ms
+- ✅ تغطية اختبارات 80%+
+- ✅ توثيق شامل 100%
+- ✅ أمان متقدم A+
+
+### **معايير الأعمال (Business Success)**
+- ✅ دعم 100+ شركة في أول 6 أشهر
+- ✅ معدل رضا العملاء 4.0+/5
+- ✅ وقت تشغيل 99.5%+
+- ✅ نمو شهري 20%+
+- ✅ إيرادات شهرية €10K+
+
+### **معايير المستخدم (User Success)**
+- ✅ سهولة التكامل مع Frontend
+- ✅ استجابة سريعة للواجهات
+- ✅ استقرار في الأداء
+- ✅ مميزات شاملة
+- ✅ دعم فني ممتاز
+
+---
+
+## 🛠️ **المتطلبات التقنية النهائية (Technical Requirements Summary)**
+
+### **البنية التحتية (Infrastructure)**
+```yaml
+Production Environment:
+  Server: Ubuntu 20.04 LTS
+  Node.js: v18.x LTS
+  NestJS: v10.x
+  MySQL: v8.0
+  Redis: v7.x (Caching)
+  Nginx: v1.20 (Reverse Proxy)
+  SSL: Let's Encrypt
+  Monitoring: PM2 + Winston
+  Backup: Daily automated backups
+```
+
+### **المتطلبات الأمنية (Security Requirements)**
+```yaml
+Security Stack:
+  Authentication: JWT + Refresh Tokens
+  Authorization: RBAC + Multi-tenancy
+  Encryption: AES-256 (Data at rest)
+  Transport: TLS 1.3 (Data in transit)
+  Validation: class-validator + sanitization
+  Rate Limiting: Express rate limit
+  Headers: Helmet.js security headers
+  Monitoring: Security event logging
+```
+
+### **مراقبة الأداء (Performance Monitoring)**
+```yaml
+Monitoring Tools:
+  Logging: Winston + Morgan
+  Metrics: Prometheus + Grafana  
+  APM: New Relic / DataDog
+  Health Checks: Custom health endpoints
+  Alerts: Email + Slack notifications
+  Uptime: External monitoring service
+```
+
+---
+
+## 📞 **الدعم والصيانة (Support & Maintenance)**
+
+### **خطة الدعم (Support Plan)**
+- **المستوى 1**: دعم أساسي (9-5, وقت العمل)
+- **المستوى 2**: دعم متقدم (24/7)
+- **المستوى 3**: دعم مؤسسي (24/7 + SLA)
+
+### **الصيانة الدورية (Regular Maintenance)**
+- **يومي**: مراقبة الأداء والأمان
+- **أسبوعي**: تحليل السجلات والمقاييس
+- **شهري**: تحديثات الأمان والتحسينات
+- **فصلي**: مراجعة شاملة وتطوير ميزات
+
+### **النسخ الاحتياطية (Backup Strategy)**
+- **يومي**: نسخ احتياطي كامل لقاعدة البيانات
+- **كل 6 ساعات**: نسخ تزايدي
+- **شهري**: أرشفة طويلة المدى
+- **اختبار الاستعادة**: شهري
+
+---
+
+## 🎉 **الخلاصة النهائية (Executive Summary)**
+
+### **نظرة عامة على المشروع**
+EchoOps Real Estate CRM Backend هو نظام API متطور مبني بـ NestJS وMySQL، مصمم لتلبية احتياجات شركات العقارات من جميع الأحجام.

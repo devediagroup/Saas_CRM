@@ -1,0 +1,2744 @@
+{
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "search": "بحث",
+    "filter": "فلترة",
+    "loading": "جاري التحميل...",
+    "noData": "لا توجد بيانات",
+    "confirm": "تأكيد",
+    "yes": "نعم",
+    "no": "لا",
+    "close": "إغلاق",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "submit": "إرسال",
+    "reset": "إعادة تعيين",
+    "export": "تصدير",
+    "import": "استيراد",
+    "view": "عرض",
+    "details": "تفاصيل",
+    "actions": "الإجراءات",
+    "status": "الحالة",
+    "created": "تم الإنشاء",
+    "updated": "تم التحديث",
+    "total": "المجموع",
+    "count": "العدد",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "address": "العنوان",
+    "description": "الوصف",
+    "notes": "ملاحظات",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "amount": "المبلغ",
+    "currency": "العملة",
+    "percentage": "النسبة المئوية",
+    "priority": "الأولوية",
+    "type": "النوع",
+    "category": "الفئة",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "features": "المميزات",
+    "notSpecified": "غير محدد",
+    "hours": "ساعة",
+    "copyright": "© 2024 EchoOps CRM. جميع الحقوق محفوظة."
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "leads": "العملاء المحتملين",
+    "properties": "العقارات",
+    "deals": "الصفقات",
+    "activities": "الأنشطة",
+    "companies": "الشركات",
+    "analytics": "التحليلات",
+    "settings": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "logout": "تسجيل الخروج",
+    "notifications": "الإشعارات",
+    "whatsapp": "واتساب",
+    "ai": "الذكاء الاصطناعي",
+    "payments": "المدفوعات",
+    "users": "المستخدمين",
+    "roles": "الأدوار",
+    "permissions": "الصلاحيات",
+    "leadSources": "مصادر العملاء",
+    "marketing": "التسويق",
+    "tasks": "المهام",
+    "calendar": "التقويم",
+    "reports": "التقارير"
+  },
+  "auth": {
+    "login": {
+      "title": "تسجيل الدخول",
+      "welcome": "مرحباً بك في EchoOps CRM",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "rememberMe": "تذكرني",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "loginButton": "دخول",
+      "noAccount": "ليس لديك حساب؟",
+      "createAccount": "إنشاء حساب",
+      "error": {
+        "invalid": "بيانات الدخول غير صحيحة",
+        "required": "يرجى إدخال البريد الإلكتروني وكلمة المرور",
+        "network": "خطأ في الاتصال بالخادم"
+      }
+    },
+    "register": {
+      "title": "إنشاء حساب جديد",
+      "subtitle": "ابدأ رحلتك مع EchoOps CRM",
+      "firstName": "الاسم الأول",
+      "lastName": "الاسم الأخير",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "companyName": "اسم الشركة",
+      "phone": "رقم الهاتف",
+      "terms": "أوافق على الشروط والأحكام",
+      "registerButton": "إنشاء الحساب",
+      "haveAccount": "لديك حساب بالفعل؟",
+      "loginLink": "تسجيل الدخول",
+      "error": {
+        "passwordMismatch": "كلمات المرور غير متطابقة",
+        "termsRequired": "يجب الموافقة على الشروط والأحكام",
+        "emailExists": "البريد الإلكتروني مستخدم بالفعل"
+      }
+    },
+    "profile": {
+      "title": "الملف الشخصي",
+      "personalInfo": "المعلومات الشخصية",
+      "changePassword": "تغيير كلمة المرور",
+      "currentPassword": "كلمة المرور الحالية",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+      "preferences": "التفضيلات",
+      "language": "اللغة",
+      "theme": "المظهر",
+      "notifications": "الإشعارات"
+    }
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "profile": {
+      "title": "الملف الشخصي",
+      "subtitle": "إدارة معلوماتك الشخصية وصورة الملف",
+      "personalInfo": "المعلومات الشخصية",
+      "username": "اسم المستخدم",
+      "firstName": "الاسم الأول",
+      "lastName": "الاسم الأخير",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "avatar": "الصورة الشخصية",
+      "uploadAvatar": "رفع صورة",
+      "removeAvatar": "إزالة الصورة",
+      "saveProfile": "حفظ التغييرات",
+      "saving": "جاري الحفظ...",
+      "success": "تم تحديث الملف الشخصي بنجاح",
+      "error": "حدث خطأ في تحديث الملف الشخصي"
+    },
+    "security": {
+      "title": "الأمان",
+      "subtitle": "إدارة كلمة المرور وإعدادات الأمان",
+      "changePassword": "تغيير كلمة المرور",
+      "currentPassword": "كلمة المرور الحالية",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور الجديدة",
+      "passwordMismatch": "كلمة المرور الجديدة وتأكيد كلمة المرور غير متطابقتان",
+      "passwordSuccess": "تم تغيير كلمة المرور بنجاح",
+      "passwordError": "حدث خطأ في تغيير كلمة المرور",
+      "passwordMatch": "كلمات المرور متطابقة",
+      "updatingPassword": "جاري التحديث...",
+      "updatePassword": "تحديث كلمة المرور",
+      "passwordStrength": "قوة كلمة المرور:",
+      "strong": "قوية",
+      "medium": "متوسطة",
+      "weak": "ضعيفة",
+      "twoFactor": "المصادقة الثنائية",
+      "enableTwoFactor": "تفعيل المصادقة الثنائية",
+      "twoFactorDesc": "حماية إضافية لحسابك باستخدام تطبيق المصادقة",
+      "sessionTimeout": "مهلة الجلسة",
+      "minutes": "دقائق",
+      "loginNotifications": "إشعارات تسجيل الدخول",
+      "loginNotificationsDesc": "إشعار عند تسجيل الدخول من جهاز جديد",
+      "sessionSettings": "إعدادات الجلسة",
+      "sessionTimeoutLabel": "انتهاء الجلسة (دقيقة)",
+      "passwordExpiry": "انتهاء صلاحية كلمة المرور",
+      "passwordExpiryLabel": "انتهاء كلمة المرور (أيام)",
+      "saveSecurity": "حفظ إعدادات الأمان",
+      "days": "أيام"
+    },
+
+    "notifications": {
+      "title": "الإشعارات",
+      "subtitle": "إدارة وعرض جميع إشعارات النظام",
+      "refresh": "تحديث",
+      "markAllRead": "تحديد الكل كمقروء",
+      "stats": {
+        "totalNotifications": "إجمالي الإشعارات",
+        "unread": "غير مقروءة",
+        "read": "مقروءة",
+        "readRate": "معدل القراءة"
+      },
+      "filters": {
+        "search": "البحث في الإشعارات...",
+        "type": "النوع",
+        "allTypes": "جميع الأنواع",
+        "priority": "الأولوية",
+        "allPriorities": "جميع الأولويات",
+        "status": "الحالة",
+        "allStatuses": "جميع الحالات",
+        "unread": "غير مقروءة",
+        "read": "مقروءة",
+        "archived": "مؤرشفة",
+        "actions": "إجراءات",
+        "selectedCount": "إجراءات ({count})"
+      },
+      "table": {
+        "notification": "الإشعار",
+        "type": "النوع",
+        "priority": "الأولوية",
+        "status": "الحالة",
+        "date": "التاريخ",
+        "actions": "إجراءات"
+      },
+      "types": {
+        "info": "معلومات",
+        "success": "نجاح",
+        "warning": "تحذير",
+        "error": "خطأ",
+        "reminder": "تذكير"
+      },
+      "priorities": {
+        "urgent": "عاجلة",
+        "high": "عالية",
+        "normal": "عادية",
+        "low": "منخفضة"
+      },
+      "statuses": {
+        "archived": "مؤرشف",
+        "read": "مقروء",
+        "unread": "غير مقروء"
+      },
+      "actions": {
+        "markRead": "تحديد كمقروء",
+        "archive": "أرشفة",
+        "delete": "حذف",
+        "viewDetails": "عرض التفاصيل",
+        "markAllRead": "تحديد جميع الإشعارات كمقروءة",
+        "archiveNotification": "تم أرشفة الإشعار",
+        "deleteNotification": "تم حذف الإشعار",
+        "markReadSuccess": "تم تحديد الإشعار كمقروء",
+        "deleteAllSuccess": "تم حذف جميع الإشعارات",
+        "error": "حدث خطأ"
+      },
+      "pagination": {
+        "showing": "عرض {from} إلى {to} من {total} إشعار",
+        "previous": "السابق",
+        "next": "التالي",
+        "of": "من"
+      },
+      "empty": {
+        "title": "لا توجد إشعارات",
+        "description": "لم يتم العثور على إشعارات تطابق المعايير المحددة",
+        "notifications": "إشعار"
+      },
+      "dangerZone": {
+        "title": "منطقة الخطر",
+        "deleteAll": "حذف جميع الإشعارات",
+        "deleteAllDesc": "سيتم حذف جميع الإشعارات نهائياً ولا يمكن التراجع عن هذا الإجراء",
+        "deleteAllButton": "حذف الكل"
+      },
+      "bulk": {
+        "noSelection": "يرجى اختيار إشعارات للعمل عليها",
+        "selectAll": "تحديد الكل"
+      }
+    },
+    "company": {
+      "activities": {
+        "leadCreated": "تم إنشاء عميل محتمل جديد",
+        "dealCompleted": "تم إكمال صفقة",
+        "propertyAdded": "تم إضافة عقار جديد",
+        "profileUpdated": "تم تحديث الملف الشخصي",
+        "hoursAgo": "منذ ساعتين",
+        "yesterday": "أمس",
+        "daysAgo": "منذ 3 أيام",
+        "weekAgo": "منذ أسبوع"
+      },
+      "roles": {
+        "admin": "مدير",
+        "manager": "مدير فريق",
+        "agent": "وكيل",
+        "user": "مستخدم"
+      },
+      "memberSince": "عضو منذ",
+      "lastLogin": "آخر دخول"
+    },
+    "companies": {
+      "title": "إدارة الشركات",
+      "subtitle": "إدارة وتتبع جميع الشركات في النظام",
+      "addCompany": "إضافة شركة جديدة",
+      "editCompany": "تعديل الشركة",
+      "deleteCompany": "حذف الشركة",
+      "editCompanyDesc": "تعديل بيانات الشركة",
+      "addCompanyDesc": "أدخل بيانات الشركة الجديدة",
+      "companyName": "اسم الشركة",
+      "companyNamePlaceholder": "أدخل اسم الشركة",
+      "emailPlaceholder": "أدخل البريد الإلكتروني",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "addressPlaceholder": "أدخل العنوان",
+      "cityPlaceholder": "أدخل المدينة",
+      "status": "الحالة",
+      "subscriptionType": "نوع الاشتراك",
+      "employeesCount": "عدد الموظفين",
+      "employeesPlaceholder": "أدخل عدد الموظفين",
+      "cancel": "إلغاء",
+      "saving": "جاري الحفظ...",
+      "update": "تحديث",
+      "add": "إضافة",
+      "searchCompanies": "البحث في الشركات...",
+      "allStatuses": "جميع الحالات",
+      "allSubscriptions": "جميع الاشتراكات",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "basic": "أساسي",
+      "premium": "مميز",
+      "enterprise": "مؤسسي",
+      "noCompanies": "لا توجد شركات",
+      "noCompaniesDesc": "لم يتم العثور على أي شركات. ابدأ بإضافة شركة جديدة.",
+      "employees": "موظف",
+      "createdDate": "تاريخ الإنشاء",
+      "successCreate": "تم إنشاء الشركة بنجاح",
+      "errorCreate": "حدث خطأ في إنشاء الشركة",
+      "successUpdate": "تم تحديث الشركة بنجاح",
+      "errorUpdate": "حدث خطأ في تحديث الشركة",
+      "successDelete": "تم حذف الشركة بنجاح",
+      "errorDelete": "حدث خطأ في حذف الشركة",
+      "confirmDelete": "هل أنت متأكد من حذف هذه الشركة؟",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "city": "المدينة"
+    },
+    "analytics": {
+      "title": "التحليلات والتقارير",
+      "subtitle": "تحليل شامل لأداء المبيعات والعملاء والأنشطة",
+      "exportReport": "تصدير التقرير",
+      "refresh": "تحديث",
+      "periods": {
+        "day": "يومي",
+        "week": "أسبوعي",
+        "month": "شهري",
+        "quarter": "ربع سنوي",
+        "year": "سنوي"
+      },
+      "kpis": {
+        "totalRevenue": "إجمالي الإيرادات",
+        "totalDeals": "إجمالي الصفقات",
+        "totalLeads": "العملاء المحتملين",
+        "conversionRate": "معدل التحويل",
+        "lastMonth": "عن الشهر الماضي"
+      },
+      "charts": {
+        "monthlyRevenue": "الإيرادات الشهرية",
+        "leadSources": "مصادر العملاء المحتملين",
+        "dealsByStatus": "الصفقات حسب الحالة",
+        "activitySummary": "ملخص الأنشطة",
+        "dealsTrend": "اتجاه الصفقات الشهرية"
+      },
+      "data": {
+        "months": {
+          "january": "يناير",
+          "february": "فبراير",
+          "march": "مارس",
+          "april": "أبريل",
+          "may": "مايو",
+          "june": "يونيو"
+        },
+        "leadSources": {
+          "facebook": "فيسبوك",
+          "google": "جوجل",
+          "whatsapp": "واتساب",
+          "referral": "إحالة",
+          "other": "أخرى"
+        },
+        "dealStatuses": {
+          "new": "جديد",
+          "inProgress": "قيد المتابعة",
+          "completed": "مكتمل",
+          "cancelled": "ملغي"
+        },
+        "activityTypes": {
+          "calls": "مكالمات",
+          "emails": "إيميلات",
+          "whatsapp": "واتساب",
+          "meetings": "اجتماعات"
+        }
+      },
+      "summary": {
+        "topSalesRep": "أفضل مندوب مبيعات",
+        "topRegions": "أكثر المناطق مبيعاً",
+        "popularPropertyTypes": "أنواع العقارات الأكثر طلباً",
+        "deals": "صفقة",
+        "revenue": "الإيرادات",
+        "percentage": "من إجمالي الأنشطة"
+      },
+      "regions": {
+        "riyadh": "الرياض",
+        "jeddah": "جدة",
+        "dammam": "الدمام"
+      },
+      "propertyTypes": {
+        "villa": "فيلا",
+        "apartment": "شقة",
+        "land": "أرض",
+        "office": "مكتب"
+      },
+      "salesReps": {
+        "ahmedMohamed": "أحمد محمد",
+        "saraAli": "سارة علي",
+        "mohamedAhmed": "محمد الأحمد"
+      },
+      "units": {
+        "million": "م",
+        "sar": "ريال"
+      },
+      "labels": {
+        "month": "شهر",
+        "revenue": "الإيرادات",
+        "dealsCount": "عدد الصفقات",
+        "percentage": "النسبة"
+      }
+    },
+
+    "notifications": {
+      "title": "الإشعارات",
+      "subtitle": "إدارة تفضيلات الإشعارات",
+      "notificationMethods": "طرق الإشعار",
+      "emailNotifications": "إشعارات البريد الإلكتروني",
+      "emailNotificationsDesc": "استقبال الإشعارات عبر البريد الإلكتروني",
+      "smsNotifications": "الرسائل النصية",
+      "smsNotificationsDesc": "استقبال الإشعارات عبر الرسائل النصية",
+      "pushNotifications": "الإشعارات المنبثقة",
+      "pushNotificationsDesc": "إشعارات فورية في المتصفح",
+      "notificationTypes": "أنواع الإشعارات",
+      "newLeads": "عملاء محتملين جدد",
+      "dealUpdates": "تحديثات الصفقات",
+      "systemAlerts": "تنبيهات النظام",
+      "marketingEmails": "رسائل التسويق",
+      "activityReminders": "تذكيرات الأنشطة",
+      "whatsappMessages": "رسائل واتساب",
+      "reportSchedule": "جدولة التقارير",
+      "reports": "التقارير",
+      "never": "بدون تقارير",
+      "saveNotifications": "حفظ إعدادات الإشعارات",
+      "daily": "يومياً",
+      "weekly": "أسبوعياً",
+      "monthly": "شهرياً"
+    },
+    "appearance": {
+      "title": "المظهر",
+      "subtitle": "تخصيص مظهر التطبيق",
+      "theme": "المظهر",
+      "language": "اللغة",
+      "dateFormat": "تنسيق التاريخ",
+      "currency": "العملة",
+      "timezone": "المنطقة الزمنية",
+      "compactMode": "الوضع المضغوط"
+    },
+    "integrations": {
+      "title": "التكاملات",
+      "subtitle": "إدارة التكاملات الخارجية",
+      "whatsapp": "واتساب Business API",
+      "email": "خدمة البريد الإلكتروني",
+      "sms": "خدمة الرسائل النصية",
+      "calendar": "تقويم Google",
+      "crm": "نظام CRM",
+      "webhooks": "Webhooks",
+      "connected": "متصل",
+      "notConnected": "غير متصل",
+      "connect": "اتصال",
+      "disconnect": "فصل الاتصال",
+      "configure": "تكوين"
+    },
+    "messages": {
+      "saved": "تم حفظ الإعدادات بنجاح",
+      "error": "حدث خطأ في حفظ الإعدادات",
+      "sectionSaved": "تم حفظ إعدادات {{section}} بنجاح"
+    }
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً بك، {{name}}",
+    "overview": "نظرة عامة",
+    "statistics": {
+      "totalLeads": "إجمالي العملاء المحتملين",
+      "totalProperties": "إجمالي العقارات",
+      "totalDeals": "إجمالي الصفقات",
+      "totalRevenue": "إجمالي الإيرادات",
+      "conversionRate": "معدل التحويل",
+      "activeDeals": "الصفقات النشطة",
+      "pendingActivities": "الأنشطة المعلقة",
+      "monthlyGrowth": "النمو الشهري",
+      "completedDeals": "الصفقات المكتملة"
+    },
+    "recent": {
+      "activities": "الأنشطة الأخيرة",
+      "leads": "العملاء المحتملين الجدد",
+      "properties": "العقارات المضافة حديثاً",
+      "deals": "الصفقات الجديدة"
+    },
+    "quickActions": {
+      "title": "الإجراءات السريعة",
+      "addLead": "إضافة عميل محتمل",
+      "addProperty": "إضافة عقار",
+      "createDeal": "إنشاء صفقة",
+      "scheduleActivity": "جدولة نشاط"
+    }
+  },
+  "leads": {
+    "title": "العملاء المحتملين",
+    "add": "إضافة عميل محتمل",
+    "edit": "تعديل العميل المحتمل",
+    "delete": "حذف العميل المحتمل",
+    "search": "البحث في العملاء المحتملين",
+    "filter": "فلترة العملاء المحتملين",
+    "export": "تصدير العملاء المحتملين",
+    "import": "استيراد العملاء المحتملين",
+    "pipeline": {
+      "title": "Pipeline العملاء",
+      "new": "جديد",
+      "contacted": "تم التواصل",
+      "qualified": "مؤهل",
+      "proposal": "عرض مقدم",
+      "negotiation": "تفاوض",
+      "closed": "مكتملة",
+      "lost": "مفقودة"
+    },
+    "fields": {
+      "firstName": "الاسم الأول",
+      "lastName": "الاسم الأخير",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "company": "الشركة",
+      "budgetMin": "الميزانية الدنيا",
+      "budgetMax": "الميزانية العليا",
+      "preferredLocation": "الموقع المفضل",
+      "propertyType": "نوع العقار",
+      "timeline": "الجدول الزمني",
+      "source": "المصدر",
+      "status": "الحالة",
+      "priority": "الأولوية",
+      "assignedTo": "مسؤول عن",
+      "notes": "ملاحظات",
+      "lastContact": "آخر تواصل",
+      "nextFollowUp": "المتابعة التالية",
+      "interest": "الاهتمام",
+      "budget": "الميزانية",
+      "agent": "الوكيل"
+    },
+    "priorities": {
+      "low": "منخفضة",
+      "medium": "متوسطة",
+      "high": "عالية",
+      "urgent": "عاجلة"
+    },
+    "timelines": {
+      "immediately": "فوراً",
+      "1_month": "شهر واحد",
+      "3_months": "3 أشهر",
+      "6_months": "6 أشهر",
+      "1_year": "سنة واحدة",
+      "flexible": "مرن"
+    },
+    "sources": {
+      "website": "الموقع الإلكتروني",
+      "facebook": "فيسبوك",
+      "instagram": "إنستغرام",
+      "google": "جوجل",
+      "referral": "إحالة",
+      "direct": "مباشر",
+      "other": "أخرى"
+    },
+    "actions": {
+      "call": "اتصال",
+      "email": "إرسال بريد إلكتروني",
+      "whatsapp": "واتساب",
+      "meeting": "موعد",
+      "viewProfile": "عرض الملف",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "convert": "تحويل إلى صفقة",
+      "addActivity": "إضافة نشاط"
+    },
+    "messages": {
+      "created": "تم إضافة العميل المحتمل بنجاح",
+      "updated": "تم تحديث العميل المحتمل بنجاح",
+      "deleted": "تم حذف العميل المحتمل بنجاح",
+      "deleteConfirm": "هل أنت متأكد من حذف هذا العميل المحتمل؟",
+      "noLeads": "لا توجد عملاء محتملين",
+      "loading": "جاري تحميل العملاء المحتملين...",
+      "error": "حدث خطأ في العملية"
+    },
+    "stats": {
+      "totalLeads": "إجمالي العملاء",
+      "newLeads": "عملاء جدد",
+      "potentialDeals": "صفقات محتملة",
+      "conversionRate": "معدل التحويل"
+    },
+    "filters": {
+      "title": "فلترة وبحث العملاء",
+      "searchPlaceholder": "البحث بالاسم، الهاتف، أو البريد الإلكتروني...",
+      "statusPlaceholder": "فلترة بالحالة",
+      "sourcePlaceholder": "فلترة بالمصدر",
+      "allStatuses": "جميع الحالات",
+      "allSources": "جميع المصادر"
+    },
+    "status": {
+      "all": "جميع الحالات",
+      "جديد": "جديد",
+      "متابع": "متابع",
+      "مهتم": "مهتم",
+      "صفقة": "صفقة",
+      "عدم اهتمام": "عدم اهتمام",
+      "new": "جديد",
+      "contacted": "متابع",
+      "interested": "مهتم"
+    },
+    "sources": {
+      "all": "جميع المصادر",
+      "فيسبوك": "فيسبوك",
+      "جوجل": "جوجل",
+      "إحالة": "إحالة",
+      "واتساب": "واتساب",
+      "بوابة عقارية": "بوابة عقارية"
+    },
+    "table": {
+      "title": "قائمة العملاء",
+      "clientName": "اسم العميل",
+      "contact": "التواصل",
+      "source": "المصدر",
+      "status": "الحالة",
+      "interest": "الاهتمام",
+      "budget": "الميزانية",
+      "agent": "الوكيل",
+      "lastContact": "آخر تواصل",
+      "actions": "الإجراءات"
+    }
+  },
+  "properties": {
+    "title": "العقارات",
+    "add": "إضافة عقار",
+    "edit": "تعديل العقار",
+    "delete": "حذف العقار",
+    "search": "البحث في العقارات",
+    "filter": "فلترة العقارات",
+    "view": "عرض العقار",
+    "types": {
+      "apartment": "شقة",
+      "villa": "فيلا",
+      "office": "مكتب",
+      "shop": "محل",
+      "land": "أرض",
+      "warehouse": "مستودع"
+    },
+    "statuses": {
+      "available": "متاح",
+      "sold": "مباع",
+      "rented": "مؤجر",
+      "under_contract": "تحت عقد",
+      "pending": "معلق",
+      "off_market": "خارج السوق",
+      "booked": "محجوز"
+    },
+    "fields": {
+      "title": "العنوان",
+      "description": "الوصف",
+      "type": "النوع",
+      "price": "السعر",
+      "currency": "العملة",
+      "city": "المدينة",
+      "district": "الحي",
+      "address": "العنوان الكامل",
+      "coordinates": "الإحداثيات",
+      "bedrooms": "غرف النوم",
+      "bathrooms": "دورات المياه",
+      "area": "المساحة (متر مربع)",
+      "parking": "مواقف السيارات",
+      "floor": "الطابق",
+      "totalFloors": "إجمالي الطوابق",
+      "yearBuilt": "سنة البناء",
+      "furnished": "مفروش",
+      "features": "المميزات",
+      "images": "الصور",
+      "status": "الحالة",
+      "owner": "المالك",
+      "agent": "الوسيط",
+      "commission": "العمولة"
+    },
+    "features": {
+      "pool": "مسبح",
+      "garden": "حديقة",
+      "gym": "صالة رياضية",
+      "parking": "مواقف سيارات",
+      "elevator": "مصعد",
+      "security": "أمان",
+      "balcony": "شرفة",
+      "terrace": "تراس",
+      "basement": "قبو",
+      "attic": "علية",
+      "fireplace": "مدفأة",
+      "airConditioning": "تكييف",
+      "heating": "تدفئة",
+      "internet": "إنترنت",
+      "cableTV": "كابل تلفزيون"
+    },
+    "actions": {
+      "view": "عرض التفاصيل",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "duplicate": "نسخ",
+      "share": "مشاركة",
+      "print": "طباعة",
+      "addToFavorites": "إضافة للمفضلة",
+      "scheduleViewing": "جدولة معاينة",
+      "createDeal": "إنشاء صفقة",
+      "uploadImages": "رفع صور",
+      "manageImages": "إدارة الصور"
+    },
+    "messages": {
+      "created": "تم إضافة العقار بنجاح",
+      "updated": "تم تحديث العقار بنجاح",
+      "deleted": "تم حذف العقار بنجاح",
+      "deleteConfirm": "هل أنت متأكد من حذف هذا العقار؟",
+      "noProperties": "لا توجد عقارات",
+      "loading": "جاري تحميل العقارات...",
+      "imagesUploaded": "تم رفع الصور بنجاح",
+      "imagesDeleted": "تم حذف الصور بنجاح",
+      "error": "حدث خطأ في العملية"
+    },
+    "stats": {
+      "totalProperties": "إجمالي العقارات",
+      "availableProperties": "عقارات متاحة",
+      "bookedProperties": "عقارات محجوزة",
+      "soldProperties": "عقارات مباعة",
+      "averagePrice": "متوسط السعر"
+    },
+    "filters": {
+      "title": "فلترة وبحث العقارات",
+      "searchPlaceholder": "البحث بالعنوان، الموقع، أو الحي...",
+      "typePlaceholder": "نوع العقار",
+      "statusPlaceholder": "الحالة",
+      "pricePlaceholder": "نطاق السعر",
+      "allTypes": "جميع الأنواع",
+      "allStatuses": "جميع الحالات",
+      "allPrices": "جميع الأسعار"
+    },
+    "types": {
+      "all": "جميع الأنواع",
+      "فيلا": "فيلا",
+      "شقة": "شقة",
+      "أرض": "أرض",
+      "مكتب": "مكتب"
+    },
+    "statuses": {
+      "all": "جميع الحالات",
+      "متاح": "متاح",
+      "محجوز": "محجوز",
+      "مباع": "مباع",
+      "مؤجر": "مؤجر"
+    },
+    "priceRanges": {
+      "all": "جميع الأسعار",
+      "under-300k": "أقل من 300 ألف",
+      "300k-600k": "300-600 ألف",
+      "600k-1m": "600 ألف - 1 مليون",
+      "over-1m": "أكثر من مليون"
+    }
+  },
+  "deals": {
+    "title": "الصفقات",
+    "add": "إضافة صفقة",
+    "edit": "تعديل الصفقة",
+    "delete": "حذف الصفقة",
+    "view": "عرض الصفقة",
+    "kanban": "عرض Kanban",
+    "pipeline": {
+      "title": "Pipeline الصفقات",
+      "initial_inquiry": "استفسار أولي",
+      "property_showing": "عرض العقار",
+      "proposal_submitted": "تقديم العرض",
+      "negotiation": "تفاوض",
+      "initial_agreement": "عقد مبدئي",
+      "deal_closed": "إغلاق الصفقة",
+      "post_sale_followup": "متابعة بعد البيع"
+    },
+    "fields": {
+      "title": "عنوان الصفقة",
+      "description": "وصف الصفقة",
+      "amount": "قيمة الصفقة",
+      "currency": "العملة",
+      "probability": "نسبة النجاح (%)",
+      "expectedCloseDate": "تاريخ الإغلاق المتوقع",
+      "actualCloseDate": "تاريخ الإغلاق الفعلي",
+      "commission": "العمولة",
+      "commissionPercentage": "نسبة العمولة (%)",
+      "status": "الحالة",
+      "stage": "المرحلة",
+      "lead": "العميل",
+      "property": "العقار",
+      "assignedTo": "المسؤول",
+      "notes": "ملاحظات",
+      "nextSteps": "الخطوات التالية",
+      "competitors": "المنافسون",
+      "objections": "الاعتراضات"
+    },
+    "actions": {
+      "view": "عرض التفاصيل",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "moveStage": "نقل لمرحلة",
+      "addActivity": "إضافة نشاط",
+      "addNote": "إضافة ملاحظة",
+      "scheduleFollowUp": "جدولة متابعة",
+      "generateContract": "إنشاء عقد",
+      "closeDeal": "إغلاق الصفقة",
+      "reopenDeal": "إعادة فتح الصفقة"
+    },
+    "messages": {
+      "created": "تم إنشاء الصفقة بنجاح",
+      "updated": "تم تحديث الصفقة بنجاح",
+      "deleted": "تم حذف الصفقة بنجاح",
+      "stageChanged": "تم تغيير مرحلة الصفقة بنجاح",
+      "deleteConfirm": "هل أنت متأكد من حذف هذه الصفقة؟",
+      "noDeals": "لا توجد صفقات",
+      "loading": "جاري تحميل الصفقات...",
+      "dealClosed": "تم إغلاق الصفقة بنجاح",
+      "dealReopened": "تم إعادة فتح الصفقة",
+      "error": "حدث خطأ في العملية"
+    },
+    "stats": {
+      "totalDeals": "إجمالي الصفقات",
+      "activeDeals": "صفقات نشطة",
+      "completedDeals": "صفقات مكتملة",
+      "totalRevenue": "إجمالي الإيرادات",
+      "averageDealSize": "متوسط حجم الصفقة"
+    }
+  },
+  "language": {
+    "switch": "تبديل اللغة",
+    "arabic": "العربية",
+    "english": "English",
+    "current": "اللغة الحالية",
+    "rtl": "من اليمين إلى اليسار",
+    "ltr": "من اليسار إلى اليمين"
+  },
+  "theme": {
+    "light": "فاتح",
+    "dark": "داكن",
+    "auto": "تلقائي"
+  },
+  "errors": {
+    "generic": "حدث خطأ غير متوقع",
+    "network": "خطأ في الاتصال بالخادم",
+    "unauthorized": "غير مصرح لك بالوصول",
+    "forbidden": "محظور",
+    "notFound": "الصفحة غير موجودة",
+    "validation": "بيانات غير صحيحة",
+    "server": "خطأ في الخادم",
+    "timeout": "انتهت مهلة الاتصال",
+    "offline": "أنت غير متصل بالإنترنت"
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "عذراً! الصفحة غير موجودة",
+    "homeLink": "العودة للرئيسية"
+  },
+  "success": {
+    "saved": "تم الحفظ بنجاح",
+    "deleted": "تم الحذف بنجاح",
+    "updated": "تم التحديث بنجاح",
+    "created": "تم الإنشاء بنجاح",
+    "sent": "تم الإرسال بنجاح",
+    "uploaded": "تم الرفع بنجاح",
+    "downloaded": "تم التحميل بنجاح"
+  },
+  "aiRecommendations": {
+    "applyConfirm": "هل أنت متأكد من تطبيق هذه التوصية؟",
+    "rejectPrompt": "يرجى إدخال سبب الرفض (اختياري):",
+    "noReason": "لا يوجد سبب محدد",
+    "title": "التحليل الذكي",
+    "subtitle": "تحليلات الذكاء الاصطناعي والتوصيات الذكية",
+    "quickAnalysis": "تحليلات سريعة",
+    "leadScoring": "تقييم العملاء",
+    "salesForecasting": "توقع المبيعات",
+    "customerSegmentation": "تجميع العملاء",
+    "propertyValuation": "تقييم العقارات",
+    "marketAnalysis": "تحليل السوق",
+    "churnPrediction": "توقع الفقدان",
+    "priceOptimization": "تحسين الأسعار",
+    "sentimentAnalysis": "تحليل المشاعر",
+    "recommendationEngine": "محرك التوصيات",
+    "analyzing": "جاري التحليل...",
+    "runNewAnalysis": "تشغيل تحليل جديد",
+    "totalAnalyses": "إجمالي التحليلات",
+    "completed": "المكتملة",
+    "pending": "قيد المعالجة",
+    "averageConfidence": "متوسط الثقة",
+    "leadConversionRate": "معدل تحويل العملاء",
+    "predictedRevenue": "الإيرادات المتوقعة",
+    "nextMonth": "للشهر القادم",
+    "recommendedActions": {
+      "facebook": "زيادة الاستثمار في إعلانات فيسبوك",
+      "easternRegion": "التركيز على العقارات في المنطقة الشرقية",
+      "leadFollowUp": "تحسين عملية متابعة العملاء المحتملين"
+    },
+    "thisWeek": "هذا الأسبوع",
+    "smartRecommendations": "التوصيات الذكية",
+    "allAnalyses": "جميع التحليلات",
+    "analysisLog": "سجل التحليل",
+    "analysisType": "نوع التحليل",
+    "status": "الحالة",
+    "confidenceScore": "درجة الثقة",
+    "keyInsights": "الرؤى الرئيسية",
+    "executionDate": "تاريخ التنفيذ",
+    "marketTrends": "اتجاهات السوق",
+    "upwardTrend": "اتجاه صاعد",
+    "increasedDemand": "زيادة الطلب على العقارات السكنية",
+    "priceStability": "استقرار الأسعار",
+    "stablePrices": "أسعار مستقرة في جميع القطاعات",
+    "customerActivity": "نشاط العملاء",
+    "increasedInquiries": "زيادة الاستفسارات والاهتمام",
+    "growthPercentage": "نسبة النمو",
+    "priceValue": "قيمة السعر",
+    "inquiryIncrease": "زيادة الاستفسارات"
+  },
+  "aiRecommendations": {
+    "title": "الذكاء الاصطناعي والتوصيات",
+    "subtitle": "توصيات ذكية وتحليلات متقدمة لتحسين الأداء",
+    "generateRecommendations": "إنشاء توصيات",
+    "activeRecommendations": "التوصيات النشطة",
+    "needReview": "تحتاج إلى مراجعة",
+    "successRate": "معدل النجاح",
+    "appliedRecommendations": "التوصيات المطبقة",
+    "averageConfidence": "متوسط الثقة",
+    "inRecommendations": "في التوصيات",
+    "classifiedClients": "العملاء المصنفين",
+    "gradeA": "الدرجة A",
+    "category": "الفئة",
+    "allCategories": "جميع الفئات",
+    "priority": "الأولوية",
+    "allPriorities": "جميع الأولويات",
+    "urgent": "عاجلة",
+    "high": "عالية",
+    "medium": "متوسطة",
+    "low": "منخفضة",
+    "recommendations": "التوصيات",
+    "clientScoring": "تصنيف العملاء",
+    "dealForecasts": "توقعات الصفقات",
+    "smartRecommendations": "التوصيات الذكية",
+    "recommendation": "التوصية",
+    "confidence": "درجة الثقة",
+    "status": "الحالة",
+    "actions": "الإجراءات",
+    "applied": "مطبقة",
+    "rejected": "مرفوضة",
+    "expired": "منتهية",
+    "pending": "في الانتظار",
+    "apply": "تطبيق",
+    "reject": "رفض",
+    "client": "العميل",
+    "grade": "الدرجة",
+    "score": "النقاط",
+    "nextRecommendation": "التوصية التالية",
+    "gradeDistribution": "توزيع الدرجات",
+    "clientCount": "عميل",
+    "dealForecast": "توقع الصفقة",
+    "probability": "الاحتمالية",
+    "expectedValue": "القيمة المتوقعة",
+    "confidenceRange": "النطاق الثقة",
+    "recommendationsList": "التوصيات",
+    "messages": {
+      "recommendationsGenerated": "تم إنشاء التوصيات بنجاح",
+      "generateError": "حدث خطأ في إنشاء التوصيات",
+      "recommendationApplied": "تم تطبيق التوصية بنجاح",
+      "applyError": "حدث خطأ في تطبيق التوصية",
+      "recommendationRejected": "تم رفض التوصية",
+      "rejectError": "حدث خطأ في رفض التوصية"
+    },
+    "leads": "العملاء المحتملين",
+    "properties": "العقارات",
+    "deals": "الصفقات",
+    "marketing": "التسويق",
+    "operations": "العمليات",
+    "deal": "الصفقة"
+  },
+  "hardcoded": {
+    "connectionError": "خطأ في الاتصال",
+    "cannotConnect": "لا يمكن الاتصال بالخادم. تأكد من تشغيل NestJS Backend على localhost:3000",
+    "toRunBackend": "لتشغيل Backend:",
+    "lastUpdate": "آخر تحديث:",
+    "viewAll": "عرض الكل",
+    "undefined": "غير محدد",
+    "fromLastMonth": "من الشهر الماضي",
+    "totalProperties": "إجمالي العقارات",
+    "completedDeals": "الصفقات المكتملة",
+    "totalRevenue": "إجمالي الإيرادات",
+    "recentLeads": "آخر العملاء المحتملين",
+    "recentProperties": "آخر العقارات",
+    "quickActions": "الإجراءات السريعة",
+    "addClient": "إضافة عميل",
+    "addProperty": "إضافة عقار",
+    "logActivity": "تسجيل نشاط",
+    "whatsapp": "واتساب",
+    "allRightsReserved": "جميع الحقوق محفوظة",
+    "saving": "جاري الحفظ...",
+    "update": "تحديث",
+    "add": "إضافة",
+    "new": "جديد",
+    "contacted": "متابع",
+    "interested": "مهتم",
+    "deal": "صفقة",
+    "notInterested": "عدم اهتمام",
+    "available": "متاح",
+    "booked": "محجوز",
+    "sold": "مباع",
+    "rented": "مؤجر",
+    "villa": "فيلا",
+    "apartment": "شقة",
+    "land": "أرض",
+    "office": "مكتب",
+    "active": "نشط",
+    "completed": "مكتملة",
+    "pending": "معلقة",
+    "email": "إيميل",
+    "meeting": "اجتماع",
+    "call": "مكالمة",
+    "facebook": "فيسبوك",
+    "google": "جوجل",
+    "referral": "إحالة",
+    "bayut": "بيوت",
+    "replied": "تم الرد",
+    "property": "عقار",
+    "activity": "نشاط",
+    "searchInAnalytics": "البحث في التحليلات...",
+    "searchInConversations": "البحث في المحادثات...",
+    "typeMessage": "اكتب رسالة...",
+    "exportingData": "جاري تصدير البيانات...",
+    "languageChangeError": "خطأ في تغيير اللغة",
+    "serviceWorkerRegistered": "تم تسجيل Service Worker بنجاح",
+    "serviceWorkerRegistrationFailed": "فشل في تسجيل Service Worker",
+    "pwaInstallError": "خطأ في تثبيت PWA",
+    "componentRenderTime": "استغرق {time}ms في العرض",
+    "bundleAnalyzerReady": "محلل الحزم جاهز",
+    "bundleAnalyzerNotAvailable": "محلل الحزم غير متوفر",
+    "webVitalLogged": "تم تسجيل مؤشر الويب",
+    "memoryUsage": "استخدام الذاكرة",
+    "apiRequests": "طلبات API",
+    "slowApiRequest": "طلب API بطيء",
+    "settingsLoadError": "خطأ في تحميل الإعدادات من localStorage",
+    "notificationSettingsSaveError": "خطأ في حفظ إعدادات الإشعارات",
+    "securitySettingsSaveError": "خطأ في حفظ إعدادات الأمان",
+    "appearanceSettingsSaveError": "خطأ في حفظ إعدادات المظهر",
+    "integrationSettingsSaveError": "خطأ في حفظ إعدادات التكامل",
+    "settingsResetError": "خطأ في إعادة تعيين الإعدادات",
+    "useChartError": "يجب استخدام useChart داخل <ChartContainer />",
+    "useFormFieldError": "يجب استخدام useFormField داخل <FormField>",
+    "useCarouselError": "يجب استخدام useCarousel داخل <Carousel />",
+    "useSidebarError": "يجب استخدام useSidebar داخل SidebarProvider.",
+    "loadingText": "جاري التحميل...",
+    "loadingAriaLabel": "جاري التحميل",
+    "selectDateRange": "اختر نطاق التاريخ",
+    "breadcrumbMore": "المزيد",
+    "dialogClose": "إغلاق"
+  },
+  "pwa": {
+    "installPrompt": "يمكنك تثبيت التطبيق على جهازك!",
+    "installDescription": "اضغط على 'تثبيت' في الأعلى",
+    "install": "تثبيت",
+    "installedSuccess": "تم تثبيت التطبيق بنجاح!",
+    "installedDescription": "يمكنك الآن استخدام التطبيق في وضع offline",
+    "connectionRestored": "تم استعادة الاتصال بالإنترنت",
+    "offlineMode": "أنت الآن في وضع offline",
+    "offlineDescription": "ستعمل مع البيانات المحفوظة مؤقتاً",
+    "updateAvailable": "تحديث جديد متاح!",
+    "updateDescription": "أعد تحميل الصفحة للحصول على أحدث المميزات",
+    "update": "تحديث"
+  },
+  "lifecycles": {
+    "title": "دورات حياة العملاء",
+    "add": "إضافة دورة حياة جديدة",
+    "edit": "تعديل دورة حياة",
+    "delete": "حذف دورة حياة",
+    "search": "البحث في دورات حياة العملاء",
+    "filter": "فلترة دورات حياة العملاء",
+    "view": "عرض دورة حياة",
+    "types": {
+      "lead": "عميل محتمل",
+      "contacted": "تم التواصل",
+      "qualified": "مؤهل",
+      "proposal": "عرض مقدم",
+      "negotiation": "تفاوض",
+      "closed": "مكتملة",
+      "lost": "مفقودة"
+    },
+    "statuses": {
+      "new": "جديد",
+      "contacted": "تم التواصل",
+      "qualified": "مؤهل",
+      "proposal": "عرض مقدم",
+      "negotiation": "تفاوض",
+      "closed": "مكتملة",
+      "lost": "مفقودة"
+    },
+    "fields": {
+      "title": "عنوان الدورة",
+      "description": "وصف الدورة",
+      "type": "نوع الدورة",
+      "startDate": "تاريخ بداية الدورة",
+      "endDate": "تاريخ نهاية الدورة",
+      "probability": "نسبة النجاح (%)",
+      "expectedRevenue": "الإيرادات المتوقعة",
+      "notes": "ملاحظات",
+      "lead": "العميل المرتبط بالدورة",
+      "property": "العقار المرتبط بالدورة",
+      "deal": "الصفقة المرتبطة بالدورة"
+    },
+    "actions": {
+      "view": "عرض التفاصيل",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "duplicate": "نسخ",
+      "share": "مشاركة",
+      "print": "طباعة",
+      "addToFavorites": "إضافة للمفضلة",
+      "scheduleViewing": "جدولة معاينة",
+      "createDeal": "إنشاء صفقة",
+      "uploadImages": "رفع صور",
+      "manageImages": "إدارة الصور"
+    },
+    "messages": {
+      "created": "تم إنشاء دورة حياة جديدة بنجاح",
+      "updated": "تم تحديث دورة حياة بنجاح",
+      "deleted": "تم حذف دورة حياة بنجاح",
+      "deleteConfirm": "هل أنت متأكد من حذف هذه الدورة؟",
+      "noLifecycles": "لا توجد دورات حياة عملاء",
+      "loading": "جاري تحميل دورات حياة عملاء...",
+      "imagesUploaded": "تم رفع الصور بنجاح",
+      "imagesDeleted": "تم حذف الصور بنجاح",
+      "error": "حدث خطأ في العملية"
+    },
+    "stats": {
+      "totalLifecycles": "إجمالي دورات حياة عملاء",
+      "activeLifecycles": "دورات حياة عملاء نشطة",
+      "completedLifecycles": "دورات حياة عملاء مكتملة",
+      "totalRevenue": "إجمالي الإيرادات من دورات حياة عملاء"
+    },
+    "filters": {
+      "title": "فلترة وبحث دورات حياة عملاء",
+      "searchPlaceholder": "البحث بالعنوان، الوصف، أو نوع الدورة...",
+      "typePlaceholder": "نوع الدورة",
+      "statusPlaceholder": "الحالة",
+      "allTypes": "جميع الأنواع",
+      "allStatuses": "جميع الحالات"
+    },
+    "types": {
+      "all": "جميع الأنواع",
+      "lead": "عميل محتمل",
+      "contacted": "تم التواصل",
+      "qualified": "مؤهل",
+      "proposal": "عرض مقدم",
+      "negotiation": "تفاوض",
+      "closed": "مكتملة",
+      "lost": "مفقودة"
+    },
+    "statuses": {
+      "all": "جميع الحالات",
+      "new": "جديد",
+      "contacted": "تم التواصل",
+      "qualified": "مؤهل",
+      "proposal": "عرض مقدم",
+      "negotiation": "تفاوض",
+      "closed": "مكتملة",
+      "lost": "مفقودة"
+    },
+    "tableHeaders": {
+      "client": "العميل",
+      "currentStage": "المرحلة الحالية",
+      "progress": "التقدم",
+      "conversionRate": "معدل التحويل",
+      "totalDuration": "المدة الإجمالية",
+      "nextAction": "الإجراء التالي",
+      "actions": "الإجراءات"
+    },
+    "noLifecycles": "لا توجد دورات حياة عملاء",
+    "days": "يوم",
+    "noAction": "لا يوجد إجراء محدد",
+    "updateStage": "تحديث المرحلة",
+    "updateStageTitle": "تحديث مرحلة العميل",
+    "updateStageDescription": "تحديث المرحلة الحالية والإجراء التالي للعميل",
+    "currentStage": "المرحلة الحالية",
+    "nextAction": "الإجراء التالي",
+    "nextActionPlaceholder": "مثال: إرسال عرض سعر",
+    "nextActionDate": "تاريخ الإجراء التالي",
+    "notesPlaceholder": "أي ملاحظات إضافية"
+  },
+  "activities": {
+    "title": "الأنشطة",
+    "search": "إدارة وتتبع جميع أنشطة وتفاعلات العملاء",
+    "add": "إضافة نشاط",
+    "messages": {
+      "created": "تم إنشاء النشاط بنجاح",
+      "updated": "تم تحديث النشاط بنجاح",
+      "deleted": "تم حذف النشاط بنجاح",
+      "error": "حدث خطأ",
+      "deleteConfirm": "هل أنت متأكد من حذف هذا النشاط؟"
+    },
+    "stats": {
+      "totalActivities": "إجمالي الأنشطة",
+      "completedActivities": "الأنشطة المكتملة",
+      "scheduledActivities": "الأنشطة المجدولة",
+      "todayActivities": "أنشطة اليوم"
+    },
+    "filters": {
+      "title": "فلترة وبحث الأنشطة",
+      "searchPlaceholder": "البحث بالعنوان، العميل، أو الوصف...",
+      "typePlaceholder": "نوع النشاط",
+      "statusPlaceholder": "الحالة",
+      "resultPlaceholder": "النتيجة"
+    },
+    "types": {
+      "all": "جميع الأنواع",
+      "call": "مكالمة",
+      "email": "إيميل",
+      "whatsapp": "واتساب",
+      "meeting": "اجتماع",
+      "note": "ملاحظة"
+    },
+    "status": {
+      "all": "جميع الحالات",
+      "scheduled": "مجدولة",
+      "completed": "مكتملة",
+      "cancelled": "ملغية"
+    },
+    "results": {
+      "all": "جميع النتائج",
+      "interested": "مهتم",
+      "completed": "مكتمل",
+      "needsTime": "يحتاج وقت للتفكير",
+      "waitingResponse": "في انتظار الرد",
+      "cancelled": "ملغى",
+      "followUpRequired": "متابعة مطلوبة"
+    },
+    "table": {
+      "title": "قائمة الأنشطة",
+      "activity": "النشاط",
+      "type": "النوع",
+      "client": "العميل",
+      "relatedProperty": "العقار المرتبط",
+      "agent": "الوكيل",
+      "result": "النتيجة",
+      "dateTime": "التاريخ والوقت",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "form": {
+      "editActivity": "تعديل النشاط",
+      "addActivity": "إضافة نشاط جديد",
+      "editDescription": "قم بتعديل بيانات النشاط",
+      "addDescription": "أدخل بيانات النشاط الجديد",
+      "type": "نوع النشاط",
+      "typePlaceholder": "اختر نوع النشاط",
+      "result": "النتيجة",
+      "resultPlaceholder": "اختر النتيجة",
+      "subject": "الموضوع",
+      "description": "الوصف",
+      "activityDate": "تاريخ النشاط",
+      "duration": "المدة (دقائق)",
+      "nextAction": "الإجراء التالي",
+      "cancel": "إلغاء",
+      "update": "تحديث",
+      "create": "إنشاء"
+    },
+    "outcomes": {
+      "successful": "ناجح",
+      "noAnswer": "لا يجيب",
+      "interested": "مهتم",
+      "notInterested": "غير مهتم",
+      "followUpRequired": "يحتاج متابعة"
+    },
+    "schedule": {
+      "title": "جدول اليوم",
+      "noActivities": "لا توجد أنشطة مجدولة اليوم",
+      "addNewHint": "يمكنك إضافة أنشطة جديدة من الزر أعلى الصفحة"
+    },
+    "actions": {
+      "viewDetails": "عرض التفاصيل",
+      "editActivity": "تعديل النشاط",
+      "markComplete": "تحديد كمكتمل",
+      "reschedule": "إعادة جدولة",
+      "deleteActivity": "حذف النشاط"
+    },
+    "nextAction": "الإجراء التالي",
+    "duration": "المدة",
+    "priorityLevels": {
+      "low": "منخفضة",
+      "medium": "متوسطة",
+      "high": "عالية"
+    }
+  },
+  "tasks": {
+    "messages": {
+      "created": "تم إنشاء المهمة بنجاح",
+      "updated": "تم تحديث المهمة بنجاح",
+      "deleted": "تم حذف المهمة بنجاح",
+      "createError": "حدث خطأ في إنشاء المهمة",
+      "updateError": "حدث خطأ في تحديث المهمة",
+      "deleteError": "حدث خطأ في حذف المهمة"
+    },
+    "types": {
+      "call": "مكالمة",
+      "meeting": "اجتماع",
+      "visit": "زيارة",
+      "follow_up": "متابعة",
+      "reminder": "تذكير",
+      "other": "آخر"
+    },
+    "status": {
+      "pending": "معلق",
+      "in_progress": "قيد التنفيذ",
+      "completed": "مكتملة",
+      "cancelled": "ملغية"
+    },
+    "priority": {
+      "low": "منخفضة",
+      "normal": "عادية",
+      "high": "عالية",
+      "urgent": "عاجلة"
+    },
+    "form": {
+      "addNew": "إضافة مهمة جديدة",
+      "editTask": "تعديل المهمة",
+      "addNewTitle": "إضافة مهمة جديدة",
+      "editTaskTitle": "تعديل المهمة",
+      "description": "أدخل بيانات المهمة الجديدة",
+      "titlePlaceholder": "مثال: مكالمة مع العميل أحمد",
+      "meetingLink": "رابط الاجتماع"
+    }
+  },
+  "profile": {
+    "memberSince": "عضو منذ",
+    "lastLogin": "آخر دخول"
+  },
+  "reports": {
+    "exportSuccess": "تم تصدير التقرير بنجاح",
+    "exportError": "خطأ في تصدير التقرير",
+    "advanced": {
+      "title": "التقارير المتقدمة",
+      "subtitle": "تقارير وإحصائيات شاملة لجميع أنشطة النظام"
+    },
+    "filters": {
+      "periodPlaceholder": "الفترة الزمنية",
+      "typePlaceholder": "نوع التقرير",
+      "period": {
+        "day": "اليوم",
+        "week": "الأسبوع",
+        "month": "الشهر",
+        "quarter": "ربع سنة",
+        "year": "السنة"
+      },
+      "types": {
+        "sales": "تقرير المبيعات",
+        "customers": "تقرير العملاء",
+        "deals": "تقرير الصفقات",
+        "marketing": "تقرير التسويق",
+        "performance": "تقرير الأداء"
+      }
+    },
+    "metrics": {
+      "totalSales": "إجمالي المبيعات",
+      "customersCount": "عدد العملاء",
+      "activeDeals": "الصفقات النشطة",
+      "salesGrowth": "من الشهر الماضي",
+      "newCustomer": "عميل جديد",
+      "salesByTeam": "المبيعات حسب الفريق",
+      "salesByProduct": "المبيعات حسب المنتج",
+      "customerDistribution": "توزيع العملاء حسب المصدر",
+      "retentionRate": "معدل الاحتفاظ بالعملاء",
+      "retentionDescription": "معدل الاحتفاظ بالعملاء في الفترة المحددة",
+      "dealStatus": "حالة الصفقات",
+      "new": "جديدة",
+      "inProgress": "قيد التنفيذ",
+      "completed": "مكتملة",
+      "dealValue": "قيمة الصفقات",
+      "totalDealValue": "إجمالي قيمة الصفقات النشطة",
+      "dealCloseRate": "نسبة الصفقات المغلقة",
+      "marketingPerformance": "أداء الحملات التسويقية",
+      "leadSources": "مصادر العملاء",
+      "leadsCount": "عميل محتمل",
+      "teamPerformance": "أداء الفرق",
+      "kpi": "مؤشرات الأداء الرئيسية",
+      "availableProperties": "العقارات المتاحة",
+      "conversionRate": "معدل التحويل",
+      "occupancyRate": "معدل الإشغال",
+      "averageProductivity": "متوسط الإنتاجية",
+      "satisfactionRate": "معدل الرضا",
+      "responseTime": "وقت الاستجابة",
+      "growthRate": "معدل النمو",
+      "retentionRate": "معدل الاحتفاظ"
+    },
+    "table": {
+      "team": "الفريق",
+      "sales": "المبيعات",
+      "target": "الهدف",
+      "achievement": "الإنجاز",
+      "campaign": "الحملة",
+      "spend": "الإنفاق",
+      "revenue": "العائد",
+      "roi": "العائد على الاستثمار"
+    },
+    "export": {
+      "excel": "إكسل",
+      "pdf": "بي دي إف"
+    }
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "noData": "لا توجد بيانات متاحة",
+    "export": "تصدير",
+    "priority": "أولوية عالية",
+    "actions": "الإجراءات",
+    "view": "عرض"
+  },
+  "header": {
+    "search": "البحث...",
+    "notifications": "الإشعارات",
+    "newLead": "عميل محتمل جديد",
+    "newLeadDesc": "أحمد محمد مهتم بشراء شقة",
+    "appointment": "موعد اليوم",
+    "appointmentDesc": "جولة في العقار مع سارة",
+    "dealClosed": "صفقة مكتملة",
+    "dealClosedDesc": "تم إغلاق صفقة بقيمة 500,000 ريال",
+    "notifications": {
+      "newLead": "عميل محتمل جديد",
+      "newLeadDesc": "أحمد محمد مهتم بشراء شقة",
+      "appointment": "موعد اليوم",
+      "appointmentDesc": "جولة في العقار مع سارة",
+      "dealClosed": "صفقة مكتملة",
+      "dealClosedDesc": "تم إغلاق صفقة بقيمة 500,000 ريال"
+    },
+    "userMenu": {
+      "myAccount": "حسابي",
+      "profile": "الملف الشخصي",
+      "settings": "الإعدادات",
+      "help": "المساعدة",
+      "logout": "تسجيل الخروج"
+    }
+  },
+  "auditLogs": {
+    "title": "سجل العمليات",
+    "subtitle": "تتبع جميع العمليات والتغييرات في النظام",
+    "loading": "جاري تحميل سجل العمليات...",
+    "refresh": "تحديث",
+    "exportLog": "تصدير السجل",
+    "totalOperations": "إجمالي العمليات",
+    "successfulOperations": "العمليات الناجحة",
+    "failedOperations": "العمليات الفاشلة",
+    "activeUsers": "المستخدمين النشطين",
+    "recentActivity": "النشاط الأخير",
+    "detailedLogs": "سجل العمليات المفصل",
+    "searchPlaceholder": "البحث في السجل...",
+    "action": "الإجراء",
+    "allActions": "جميع الإجراءات",
+    "resourceType": "نوع المورد",
+    "allResources": "جميع الموارد",
+    "user": "المستخدم",
+    "allUsers": "جميع المستخدمين",
+    "period": "الفترة",
+    "allTimes": "جميع الأوقات",
+    "today": "اليوم",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر",
+    "thisYear": "هذا العام",
+    "details": "التفاصيل",
+    "operationDetails": "تفاصيل العملية",
+    "system": "النظام",
+    "view": "عرض",
+    "userAgent": "متصفح المستخدم",
+    "result": "النتيجة",
+    "changes": "التغييرات",
+    "additionalData": "بيانات إضافية",
+    "actions": {
+      "create": "إنشاء",
+      "update": "تحديث",
+      "delete": "حذف",
+      "login": "تسجيل دخول",
+      "logout": "تسجيل خروج",
+      "view": "عرض",
+      "export": "تصدير",
+      "import": "استيراد",
+      "settings": "إعدادات",
+      "approve": "موافقة",
+      "reject": "رفض",
+      "archive": "أرشفة",
+      "restore": "استعادة"
+    },
+    "resources": {
+      "lead": "عميل محتمل",
+      "property": "عقار",
+      "deal": "صفقة",
+      "activity": "نشاط",
+      "company": "شركة",
+      "user": "مستخدم",
+      "whatsappMessage": "رسالة واتساب",
+      "notification": "إشعار",
+      "leadSource": "مصدر عميل",
+      "subscriptionPlan": "خطة اشتراك",
+      "billingHistory": "سجل فواتير"
+    },
+    "status": {
+      "success": "نجح",
+      "failed": "فشل",
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "critical": "حرج"
+    },
+    "billing": {
+      "title": "الفواتير والمدفوعات",
+      "subtitle": "إدارة الفواتير وتتبع المدفوعات",
+      "loading": "جاري تحميل الفواتير...",
+      "newInvoice": "فاتورة جديدة",
+      "createInvoice": "إنشاء فاتورة جديدة",
+      "company": "الشركة",
+      "chooseCompany": "اختر الشركة",
+      "subscriptionPlan": "خطة الاشتراك",
+      "choosePlan": "اختر الخطة",
+      "invoiceNumber": "رقم الفاتورة",
+      "amount": "المبلغ",
+      "currency": "العملة",
+      "paymentMethod": "طريقة الدفع",
+      "billingDate": "تاريخ الفاتورة",
+      "dueDate": "تاريخ الاستحقاق",
+      "paidDate": "تاريخ الدفع",
+      "status": "حالة الفاتورة",
+      "description": "الوصف",
+      "notes": "ملاحظات",
+      "cancel": "إلغاء",
+      "saving": "جاري الحفظ...",
+      "save": "حفظ",
+      "totalRevenue": "إجمالي الإيرادات",
+      "pendingRevenue": "الإيرادات المعلقة",
+      "totalInvoices": "إجمالي الفواتير",
+      "paymentRate": "معدل الدفع",
+      "paid": "مدفوع",
+      "pending": "في الانتظار",
+      "failed": "فشل",
+      "refunded": "مسترد",
+      "currencies": {
+        "usd": "USD - دولار أمريكي",
+        "eur": "EUR - يورو",
+        "sar": "SAR - ريال سعودي",
+        "aed": "AED - درهم إماراتي"
+      },
+      "placeholders": {
+        "paymentMethod": "بطاقة ائتمان، حوالة بنكية، إلخ",
+        "description": "وصف تفصيلي للفاتورة",
+        "notes": "ملاحظات إضافية"
+      },
+      "messages": {
+        "createSuccess": "تم إنشاء الفاتورة بنجاح",
+        "createError": "حدث خطأ أثناء إنشاء الفاتورة",
+        "updateSuccess": "تم تحديث الفاتورة بنجاح",
+        "updateError": "حدث خطأ أثناء تحديث الفاتورة",
+        "deleteSuccess": "تم حذف الفاتورة بنجاح",
+        "deleteError": "حدث خطأ أثناء حذف الفاتورة"
+      },
+      "searchPlaceholder": "البحث في الفواتير...",
+      "allStatuses": "جميع الحالات",
+      "invoiceHistory": "تاريخ الفواتير",
+      "notSpecified": "غير محدد",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "confirmDelete": "هل أنت متأكد من حذف هذه الفاتورة؟",
+      "editInvoice": "تعديل الفاتورة"
+    },
+    "deals": {
+      "title": "إدارة الصفقات",
+      "subtitle": "إدارة وتتبع جميع الصفقات في النظام",
+      "add": "إضافة صفقة جديدة",
+      "edit": "تعديل الصفقة",
+      "delete": "حذف الصفقة",
+      "search": "البحث في الصفقات بالعنوان، العميل، أو العقار",
+      "stages": {
+        "prospect": "عميل محتمل",
+        "inspection": "المعاينة",
+        "proposal": "عرض مقدم",
+        "negotiation": "التفاوض",
+        "completed": "مكتملة",
+        "cancelled": "ملغية"
+      },
+      "statuses": {
+        "active": "نشط",
+        "closed": "مغلقة",
+        "cancelled": "ملغية"
+      },
+      "stats": {
+        "totalDeals": "إجمالي الصفقات",
+        "activeDeals": "الصفقات النشطة",
+        "completedDeals": "الصفقات المكتملة",
+        "totalRevenue": "إجمالي الإيرادات"
+      },
+      "filters": {
+        "title": "الفلاتر",
+        "stage": "المرحلة",
+        "status": "الحالة",
+        "agent": "الوكيل",
+        "allStages": "جميع المراحل",
+        "allStatuses": "جميع الحالات",
+        "allAgents": "جميع الوكلاء",
+        "placeholder": "اختر الحالة",
+        "placeholderStage": "اختر المرحلة"
+      },
+      "table": {
+        "title": "قائمة الصفقات",
+        "deal": "الصفقة",
+        "client": "العميل",
+        "amount": "المبلغ",
+        "commission": "العمولة",
+        "stage": "المرحلة",
+        "probability": "الاحتمالية",
+        "agent": "الوكيل",
+        "expectedDate": "التاريخ المتوقع",
+        "actions": "الإجراءات"
+      },
+      "actions": {
+        "viewDetails": "عرض التفاصيل",
+        "editDeal": "تعديل الصفقة",
+        "viewProperty": "عرض العقار",
+        "viewClient": "عرض العميل",
+        "deleteDeal": "حذف الصفقة "
+      },
+      "form": {
+        "editDeal": "تعديل الصفقة",
+        "addNewDeal": "إضافة صفقة جديدة",
+        "editDealDesc": "قم بتعديل بيانات الصفقة",
+        "addDealDesc": "أدخل بيانات الصفقة الجديدة",
+        "dealTitle": "عنوان الصفقة",
+        "status": "الحالة",
+        "dealValue": "قيمة الصفقة",
+        "commissionPercentage": "نسبة العمولة (%)",
+        "dealStage": "مرحلة الصفقة",
+        "expectedCloseDate": "تاريخ الإغلاق المتوقع",
+        "notes": "ملاحظات",
+        "cancel": "إلغاء",
+        "update": "تحديث",
+        "create": "إنشاء"
+      },
+      "statusOptions": {
+        "negotiating": "قيد التفاوض",
+        "proposalSent": "تم إرسال العرض",
+        "underReview": "قيد المراجعة",
+        "won": "مكتملة",
+        "lost": "ملغية"
+      },
+      "stageOptions": {
+        "initialContact": "التواصل الأولي",
+        "qualified": "مؤهل",
+        "proposal": "عرض",
+        "negotiation": "تفاوض",
+        "closedWon": "مكتملة",
+        "closedLost": "ملغية"
+      },
+      "summary": {
+        "performance": "ملخص الأداء",
+        "closingRate": "معدل الإغلاق",
+        "averageDealSize": "متوسط حجم الصفقة",
+        "averageCommission": "متوسط العمولة",
+        "upcomingDeals": "الصفقات القادمة للإغلاق"
+      },
+      "messages": {
+        "created": "تم إنشاء الصفقة بنجاح",
+        "updated": "تم تحديث الصفقة بنجاح",
+        "deleted": "تم حذف الصفقة بنجاح",
+        "error": "حدث خطأ",
+        "confirmDelete": "هل أنت متأكد من حذف هذه الصفقة؟"
+      }
+    },
+    "featureFlags": {
+      "title": "إدارة الميزات",
+      "subtitle": "تحكم في تفعيل وإلغاء تفعيل ميزات النظام",
+      "addNew": "ميزة جديدة",
+      "createNew": "إنشاء ميزة جديدة",
+      "editFeature": "تعديل الميزة",
+      "loading": "جاري تحميل الميزات...",
+      "stats": {
+        "totalFeatures": "إجمالي الميزات",
+        "enabled": "المفعلة",
+        "disabled": "غير المفعلة",
+        "inProduction": "في الإنتاج"
+      },
+      "form": {
+        "featureName": "اسم الميزة",
+        "featureKey": "مفتاح الميزة",
+        "description": "الوصف",
+        "category": "الفئة",
+        "environment": "البيئة",
+        "targetType": "نوع الاستهداف",
+        "targetValue": "قيمة الاستهداف",
+        "rolloutPercentage": "نسبة الطرح (%)",
+        "startDate": "تاريخ البداية",
+        "endDate": "تاريخ النهاية",
+        "tags": "العلامات (مفصولة بفاصلة)",
+        "enableFeature": "تفعيل الميزة",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "saving": "جاري الحفظ...",
+        "update": "تحديث",
+        "updating": "جاري التحديث..."
+      },
+      "placeholders": {
+        "featureName": "ميزة جديدة رائعة",
+        "featureKey": "new_awesome_feature",
+        "description": "وصف تفصيلي للميزة",
+        "category": "UI, API, Security, إلخ",
+        "targetValue": "معرف الشركة أو المستخدم",
+        "rolloutPercentage": "50",
+        "tags": "جديد, مهم, تجريبي"
+      },
+      "environments": {
+        "development": "تطوير",
+        "staging": "اختبار",
+        "production": "إنتاج"
+      },
+      "targetTypes": {
+        "all": "الكل",
+        "company": "شركة محددة",
+        "user": "مستخدم محدد",
+        "percentage": "نسبة مئوية"
+      },
+      "status": {
+        "enabled": "مفعل",
+        "disabled": "غير مفعل"
+      },
+      "filters": {
+        "search": "البحث في الميزات...",
+        "allCategories": "جميع الفئات",
+        "allEnvironments": "جميع البيئات"
+      },
+      "table": {
+        "availableFeatures": "الميزات المتاحة",
+        "feature": "الميزة",
+        "key": "المفتاح",
+        "category": "الفئة",
+        "environment": "البيئة",
+        "targeting": "الاستهداف",
+        "status": "الحالة",
+        "control": "التحكم",
+        "actions": "الإجراءات",
+        "notSpecified": "غير محدد"
+      },
+      "messages": {
+        "created": "تم إنشاء الميزة بنجاح",
+        "createError": "حدث خطأ أثناء إنشاء الميزة",
+        "updated": "تم تحديث الميزة بنجاح",
+        "updateError": "حدث خطأ أثناء تحديث الميزة",
+        "statusUpdated": "تم تحديث حالة الميزة بنجاح",
+        "statusUpdateError": "حدث خطأ أثناء تحديث حالة الميزة",
+        "deleteError": "حدث خطأ أثناء حذف الميزة",
+        "deleted": "تم حذف الميزة بنجاح",
+        "confirmDelete": "هل أنت متأكد من حذف هذه الميزة؟"
+      }
+    },
+    "dealsKanban": {
+      "title": "إدارة الصفقات - Kanban",
+      "subtitle": "عرض مرئي للصفقات وإدارتها عبر مراحل مختلفة",
+      "addNew": "صفقة جديدة",
+      "editDeal": "تعديل الصفقة",
+      "newDeal": "صفقة جديدة",
+      "addDealDesc": "أدخل بيانات الصفقة الجديدة",
+      "form": {
+        "dealTitle": "عنوان الصفقة",
+        "dealValue": "قيمة الصفقة",
+        "dealStage": "المرحلة",
+        "dealProbability": "الاحتمالية",
+        "dealCloseDate": "تاريخ الإغلاق المتوقع",
+        "dealDescription": "الوصف",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "saving": "جاري الحفظ..."
+      },
+      "placeholders": {
+        "search": "البحث في الصفقات...",
+        "dealTitle": "مثال: بيع فيلا في الرياض",
+        "dealValue": "0",
+        "dealProbability": "50",
+        "dealDescription": "وصف الصفقة وتفاصيلها"
+      },
+      "stages": {
+        "new": "جديدة",
+        "contacted": "تم التواصل",
+        "qualified": "مؤهلة",
+        "proposal": "عرض",
+        "negotiation": "مفاوضات",
+        "closedWon": "مكتملة - نجحت",
+        "closedLost": "مكتملة - فشلت"
+      },
+      "messages": {
+        "created": "تم إنشاء الصفقة بنجاح",
+        "createError": "حدث خطأ في إنشاء الصفقة",
+        "updated": "تم تحديث الصفقة بنجاح",
+        "updateError": "حدث خطأ في تحديث الصفقة",
+        "deleted": "تم حذف الصفقة بنجاح",
+        "deleteError": "حدث خطأ في حذف الصفقة",
+        "confirmDelete": "هل أنت متأكد من حذف هذه الصفقة؟",
+        "noDealsInStage": "لا توجد صفقات في هذه المرحلة"
+      },
+      "actions": {
+        "edit": "تعديل",
+        "backToNew": "العودة للجديد",
+        "closeAsWon": "إغلاق كمكتملة",
+        "closeAsLost": "إغلاق كفاشلة",
+        "delete": "حذف"
+      }
+    },
+    "leadSources": {
+      "title": "مصادر العملاء",
+      "subtitle": "إدارة وتتبع مصادر العملاء المحتملين وأدائها",
+      "addNew": "إضافة مصدر جديد",
+      "editSource": "تعديل مصدر العملاء",
+      "addSource": "إضافة مصدر جديد",
+      "editSourceDesc": "تعديل بيانات مصدر العملاء",
+      "addSourceDesc": "أدخل بيانات مصدر العملاء الجديد",
+      "form": {
+        "sourceName": "اسم المصدر",
+        "sourceType": "نوع المصدر",
+        "costPerLead": "التكلفة لكل عميل محتمل (ريال)",
+        "conversionRate": "معدل التحويل (%)",
+        "status": "الحالة",
+        "description": "الوصف",
+        "cancel": "إلغاء",
+        "add": "إضافة",
+        "update": "تحديث",
+        "saving": "جاري الحفظ..."
+      },
+      "placeholders": {
+        "sourceName": "أدخل اسم المصدر",
+        "costPerLead": "0.00",
+        "conversionRate": "0.0",
+        "description": "وصف المصدر (اختياري)"
+      },
+      "types": {
+        "facebook": "فيسبوك",
+        "google": "جوجل",
+        "website": "الموقع الإلكتروني",
+        "referral": "إحالة",
+        "whatsapp": "واتساب",
+        "bayut": "بيوت",
+        "dubizzle": "دوبيزل",
+        "propertyFinder": "بروبرتي فايندر",
+        "other": "أخرى"
+      },
+      "status": {
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "stats": {
+        "totalLeads": "إجمالي العملاء",
+        "convertedLeads": "العملاء المحولين",
+        "conversionRate": "معدل التحويل",
+        "totalCost": "إجمالي التكلفة"
+      },
+      "filters": {
+        "search": "البحث في المصادر...",
+        "allTypes": "جميع الأنواع",
+        "allStatuses": "جميع الحالات"
+      },
+      "messages": {
+        "created": "تم إنشاء مصدر العملاء بنجاح",
+        "createError": "حدث خطأ في إنشاء مصدر العملاء",
+        "updated": "تم تحديث مصدر العملاء بنجاح",
+        "updateError": "حدث خطأ في تحديث مصدر العملاء",
+        "deleted": "تم حذف مصدر العملاء بنجاح",
+        "deleteError": "حدث خطأ في حذف مصدر العملاء",
+        "confirmDelete": "هل أنت متأكد من حذف هذا المصدر؟",
+        "noSources": "لا توجد مصادر عملاء",
+        "noSourcesDesc": "لم يتم العثور على أي مصادر عملاء. ابدأ بإضافة مصدر جديد."
+      },
+      "table": {
+        "totalLeads": "إجمالي العملاء",
+        "convertedLeads": "العملاء المحولين",
+        "conversionRate": "معدل التحويل",
+        "costPerLead": "التكلفة لكل عميل",
+        "createdDate": "تاريخ الإنشاء"
+      },
+      "actions": {
+        "edit": "تعديل",
+        "delete": "حذف"
+      }
+    },
+    "marketingCampaigns": {
+      "title": "حملات التسويق",
+      "subtitle": "إدارة ومتابعة حملات التسويق والإعلانات",
+      "addNew": "حملة جديدة",
+      "editCampaign": "تعديل الحملة",
+      "newCampaign": "حملة تسويقية جديدة",
+      "editCampaignDesc": "تعديل بيانات الحملة",
+      "addCampaignDesc": "أدخل بيانات الحملة التسويقية الجديدة",
+      "form": {
+        "campaignName": "اسم الحملة",
+        "campaignType": "نوع الحملة",
+        "description": "الوصف",
+        "budget": "الميزانية",
+        "startDate": "تاريخ البداية",
+        "endDate": "تاريخ النهاية",
+        "targetAudience": "الجمهور المستهدف",
+        "subject": "موضوع الرسالة",
+        "message": "محتوى الرسالة",
+        "landingPageUrl": "رابط الصفحة",
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "saving": "جاري الحفظ..."
+      },
+      "placeholders": {
+        "search": "البحث في الحملات...",
+        "campaignName": "مثال: حملة عيد الأضحى",
+        "description": "وصف الحملة وأهدافها",
+        "budget": "0",
+        "targetAudience": "وصف الجمهور المستهدف للحملة",
+        "subject": "موضوع البريد الإلكتروني",
+        "message": "محتوى الرسالة",
+        "landingPageUrl": "https://example.com/landing-page"
+      },
+      "types": {
+        "email": "بريد إلكتروني",
+        "sms": "رسائل نصية",
+        "whatsapp": "واتساب",
+        "socialMedia": "وسائل التواصل",
+        "landingPage": "صفحة هبوط"
+      },
+      "status": {
+        "active": "نشطة",
+        "paused": "متوقفة",
+        "completed": "مكتملة",
+        "cancelled": "ملغية",
+        "draft": "مسودة"
+      },
+      "stats": {
+        "totalCampaigns": "إجمالي الحملات",
+        "totalBudget": "إجمالي الميزانية",
+        "conversionRate": "معدل التحويل",
+        "totalReach": "إجمالي الوصول",
+        "active": "نشطة",
+        "spent": "منصرف",
+        "averageConversionRate": "متوسط معدل التحويل",
+        "impressions": "عدد المشاهدات"
+      },
+      "filters": {
+        "status": "الحالة",
+        "type": "النوع",
+        "allStatuses": "جميع الحالات",
+        "allTypes": "جميع الأنواع"
+      },
+      "messages": {
+        "created": "تم إنشاء الحملة بنجاح",
+        "createError": "حدث خطأ في إنشاء الحملة",
+        "updated": "تم تحديث الحملة بنجاح",
+        "updateError": "حدث خطأ في تحديث الحملة",
+        "deleted": "تم حذف الحملة بنجاح",
+        "deleteError": "حدث خطأ في حذف الحملة",
+        "confirmDelete": "هل أنت متأكد من حذف هذه الحملة؟",
+        "noCampaigns": "لا توجد حملات تسويقية",
+        "loading": "جاري التحميل..."
+      },
+      "table": {
+        "title": "قائمة الحملات التسويقية",
+        "campaignName": "اسم الحملة",
+        "type": "النوع",
+        "status": "الحالة",
+        "budget": "الميزانية",
+        "progress": "الإنجاز",
+        "actions": "الإجراءات",
+        "impressions": "المشاهدات",
+        "clicks": "النقرات"
+      },
+      "actions": {
+        "edit": "تعديل",
+        "delete": "حذف",
+        "start": "بدء",
+        "pause": "إيقاف"
+      }
+    },
+    "paymentsSubscriptions": {
+      "title": "المدفوعات والاشتراكات",
+      "subtitle": "إدارة الاشتراكات والفواتير والمدفوعات",
+      "stats": {
+        "totalRevenue": "إجمالي الإيرادات",
+        "activeSubscriptions": "الاشتراكات النشطة",
+        "pendingInvoices": "الفواتير المعلقة",
+        "collectionRate": "معدل التحصيل",
+        "thisMonth": "هذا الشهر",
+        "outOf": "من أصل",
+        "needsFollowUp": "تحتاج إلى متابعة",
+        "paymentPercentage": "نسبة المدفوعات"
+      },
+      "tabs": {
+        "subscriptions": "الاشتراكات",
+        "payments": "الفواتير والمدفوعات"
+      },
+      "subscriptions": {
+        "addNew": "اشتراك جديد",
+        "editSubscription": "تعديل الاشتراك",
+        "newSubscription": "اشتراك جديد",
+        "editSubscriptionDesc": "تعديل بيانات الاشتراك",
+        "addSubscriptionDesc": "أدخل بيانات الاشتراك الجديد",
+        "form": {
+          "company": "الشركة",
+          "subscriptionPlan": "خطة الاشتراك",
+          "status": "الحالة",
+          "startDate": "تاريخ البداية",
+          "endDate": "تاريخ النهاية",
+          "chooseCompany": "اختر الشركة",
+          "choosePlan": "اختر الخطة",
+          "cancel": "إلغاء",
+          "save": "حفظ",
+          "saving": "جاري الحفظ..."
+        },
+        "table": {
+          "title": "قائمة الاشتراكات",
+          "company": "الشركة",
+          "plan": "الخطة",
+          "status": "الحالة",
+          "startDate": "تاريخ البداية",
+          "endDate": "تاريخ النهاية",
+          "actions": "الإجراءات",
+          "noSubscriptions": "لا توجد اشتراكات",
+          "loading": "جاري التحميل..."
+        },
+        "status": {
+          "active": "نشط",
+          "inactive": "غير نشط",
+          "expired": "منتهي",
+          "cancelled": "ملغي"
+        }
+      },
+      "payments": {
+        "addNew": "فاتورة جديدة",
+        "editPayment": "تعديل الفاتورة",
+        "newPayment": "فاتورة جديدة",
+        "editPaymentDesc": "تعديل بيانات الفاتورة",
+        "addPaymentDesc": "أدخل بيانات الفاتورة الجديدة",
+        "form": {
+          "company": "الشركة",
+          "subscriptionPlan": "خطة الاشتراك",
+          "amount": "المبلغ",
+          "currency": "العملة",
+          "paymentMethod": "طريقة الدفع",
+          "status": "الحالة",
+          "billingDate": "تاريخ الفاتورة",
+          "dueDate": "تاريخ الاستحقاق",
+          "paidDate": "تاريخ الدفع",
+          "invoiceNumber": "رقم الفاتورة",
+          "description": "الوصف",
+          "notes": "ملاحظات",
+          "chooseCompany": "اختر الشركة",
+          "choosePlan": "اختر الخطة",
+          "placeholder": {
+            "amount": "0.00",
+            "paymentMethod": "فيزا، ماستركارد، إلخ",
+            "invoiceNumber": "INV-2024-001",
+            "description": "وصف الفاتورة"
+          },
+          "cancel": "إلغاء",
+          "save": "حفظ",
+          "saving": "جاري الحفظ..."
+        },
+        "table": {
+          "title": "قائمة الفواتير والمدفوعات",
+          "company": "الشركة",
+          "invoiceNumber": "رقم الفاتورة",
+          "amount": "المبلغ",
+          "status": "الحالة",
+          "billingDate": "تاريخ الفاتورة",
+          "dueDate": "تاريخ الاستحقاق",
+          "actions": "الإجراءات",
+          "noInvoices": "لا توجد فواتير",
+          "loading": "جاري التحميل..."
+        },
+        "status": {
+          "paid": "مدفوع",
+          "pending": "في الانتظار",
+          "failed": "فشل",
+          "refunded": "مسترد"
+        }
+      },
+      "billingCycle": {
+        "monthly": "شهري",
+        "yearly": "سنوي"
+      },
+      "messages": {
+        "subscriptionCreated": "تم إنشاء الاشتراك بنجاح",
+        "subscriptionCreateError": "حدث خطأ في إنشاء الاشتراك",
+        "subscriptionUpdated": "تم تحديث الاشتراك بنجاح",
+        "subscriptionUpdateError": "حدث خطأ في تحديث الاشتراك",
+        "subscriptionDeleted": "تم حذف الاشتراك بنجاح",
+        "subscriptionDeleteError": "حدث خطأ في حذف الاشتراك",
+        "paymentCreated": "تم إنشاء الفاتورة بنجاح",
+        "paymentCreateError": "حدث خطأ في إنشاء الفاتورة",
+        "paymentUpdated": "تم تحديث الفاتورة بنجاح",
+        "paymentUpdateError": "حدث خطأ في تحديث الفاتورة",
+        "paymentDeleted": "تم حذف الفاتورة بنجاح",
+        "paymentDeleteError": "حدث خطأ في حذف الفاتورة",
+        "confirmDeleteSubscription": "هل أنت متأكد من حذف هذا الاشتراك؟",
+        "confirmDeletePayment": "هل أنت متأكد من حذف هذه الفاتورة؟"
+      },
+      "search": {
+        "subscriptions": "البحث في الاشتراكات...",
+        "invoices": "البحث في الفواتير..."
+      },
+      "filters": {
+        "allStatuses": "جميع الحالات"
+      },
+      "actions": {
+        "edit": "تعديل",
+        "delete": "حذف"
+      }
+    },
+    "properties": {
+      "title": "العقارات",
+      "search": "البحث وإدارة العقارات",
+      "add": "إضافة عقار",
+      "stats": {
+        "totalProperties": "إجمالي العقارات",
+        "availableProperties": "العقارات المتاحة",
+        "bookedProperties": "العقارات المحجوزة",
+        "averagePrice": "متوسط السعر"
+      },
+      "filters": {
+        "title": "الفلاتر والبحث",
+        "searchPlaceholder": "البحث في العقارات...",
+        "typePlaceholder": "نوع العقار",
+        "statusPlaceholder": "الحالة",
+        "pricePlaceholder": "نطاق السعر"
+      },
+      "types": {
+        "all": "جميع الأنواع",
+        "villa": "فيلا",
+        "apartment": "شقة",
+        "land": "أرض",
+        "office": "مكتب"
+      },
+      "statuses": {
+        "all": "جميع الحالات",
+        "available": "متاح",
+        "booked": "محجوز",
+        "sold": "مباع",
+        "rented": "مؤجر"
+      },
+      "priceRanges": {
+        "all": "جميع الأسعار",
+        "under-300k": "أقل من 300 ألف",
+        "300k-600k": "300 ألف - 600 ألف",
+        "600k-1m": "600 ألف - 1 مليون",
+        "over-1m": "أكثر من 1 مليون"
+      },
+      "messages": {
+        "created": "تم إنشاء العقار بنجاح",
+        "updated": "تم تحديث العقار بنجاح",
+        "deleted": "تم حذف العقار بنجاح",
+        "error": "حدث خطأ في معالجة العقار",
+        "deleteConfirm": "هل أنت متأكد من حذف هذا العقار؟",
+        "noProperties": "لا توجد عقارات",
+        "noPropertiesDesc": "لم يتم العثور على عقارات تطابق معايير البحث",
+        "resetFilters": "إعادة تعيين الفلاتر"
+      },
+      "form": {
+        "editProperty": "تعديل العقار",
+        "addNewProperty": "إضافة عقار جديد",
+        "editPropertyDesc": "قم بتعديل بيانات العقار",
+        "addPropertyDesc": "أدخل بيانات العقار الجديد",
+        "title": "العنوان",
+        "propertyType": "نوع العقار",
+        "price": "السعر",
+        "area": "المساحة",
+        "bedrooms": "غرف النوم",
+        "location": "الموقع",
+        "status": "الحالة",
+        "description": "الوصف",
+        "choosePropertyType": "اختر نوع العقار",
+        "chooseStatus": "اختر الحالة",
+        "cancel": "إلغاء",
+        "update": "تحديث",
+        "create": "إنشاء"
+      },
+      "propertyTypes": {
+        "apartment": "شقة",
+        "villa": "فيلا",
+        "office": "مكتب",
+        "shop": "محل تجاري"
+      },
+      "propertyStatuses": {
+        "available": "متاح",
+        "reserved": "محجوز",
+        "sold": "مباع",
+        "rented": "مؤجر"
+      },
+      "dropdown": {
+        "options": "خيارات",
+        "viewDetails": "عرض التفاصيل",
+        "editProperty": "تعديل العقار",
+        "addToFavorites": "إضافة للمفضلة",
+        "deleteProperty": "حذف العقار"
+      },
+      "area": "م²"
+    },
+    "rolesPermissions": {
+      "title": "إدارة الأدوار والصلاحيات",
+      "subtitle": "إدارة الأدوار والصلاحيات للمستخدمين في النظام",
+      "tabs": {
+        "roles": "الأدوار",
+        "permissions": "الصلاحيات"
+      },
+      "roles": {
+        "addNew": "إضافة دور جديد",
+        "editRole": "تعديل الدور",
+        "newRole": "إضافة دور جديد",
+        "editRoleDesc": "تعديل بيانات الدور",
+        "addRoleDesc": "أدخل بيانات الدور الجديد",
+        "form": {
+          "roleName": "اسم الدور",
+          "displayName": "الاسم المعروض",
+          "description": "الوصف",
+          "roleLevel": "مستوى الدور",
+          "active": "نشط",
+          "placeholder": {
+            "roleName": "مثال: admin, sales_manager",
+            "displayName": "مثال: مدير النظام",
+            "description": "وصف الدور وصلاحياته"
+          },
+          "cancel": "إلغاء",
+          "save": "حفظ",
+          "saving": "جاري الحفظ..."
+        },
+        "levels": {
+          "1": "1 - أعلى صلاحية",
+          "2": "2 - صلاحية عالية",
+          "3": "3 - صلاحية متوسطة",
+          "4": "4 - صلاحية منخفضة",
+          "5": "5 - صلاحية أساسية"
+        },
+        "table": {
+          "title": "قائمة الأدوار",
+          "roleName": "اسم الدور",
+          "displayName": "الاسم المعروض",
+          "level": "المستوى",
+          "status": "الحالة",
+          "users": "المستخدمون",
+          "actions": "الإجراءات",
+          "noRoles": "لا توجد أدوار",
+          "loading": "جاري التحميل..."
+        },
+        "status": {
+          "active": "نشط",
+          "inactive": "غير نشط"
+        },
+        "messages": {
+          "created": "تم إنشاء الدور بنجاح",
+          "createError": "حدث خطأ في إنشاء الدور",
+          "updated": "تم تحديث الدور بنجاح",
+          "updateError": "حدث خطأ في تحديث الدور",
+          "deleted": "تم حذف الدور بنجاح",
+          "deleteError": "حدث خطأ في حذف الدور",
+          "cannotDeleteSystem": "لا يمكن حذف الدور النظامي",
+          "confirmDelete": "هل أنت متأكد من حذف هذا الدور؟"
+        }
+      },
+      "permissions": {
+        "addNew": "إضافة صلاحية جديدة",
+        "editPermission": "تعديل الصلاحية",
+        "newPermission": "إضافة صلاحية جديدة",
+        "editPermissionDesc": "تعديل بيانات الصلاحية",
+        "addPermissionDesc": "أدخل بيانات الصلاحية الجديدة",
+        "form": {
+          "permissionName": "اسم الصلاحية",
+          "displayName": "الاسم المعروض",
+          "resource": "المورد",
+          "action": "الإجراء",
+          "scope": "النطاق",
+          "description": "الوصف",
+          "active": "نشط",
+          "placeholder": {
+            "permissionName": "مثال: leads.create",
+            "displayName": "مثال: إنشاء عميل",
+            "resource": "مثال: leads, properties, deals",
+            "description": "وصف الصلاحية"
+          },
+          "cancel": "إلغاء",
+          "save": "حفظ",
+          "saving": "جاري الحفظ..."
+        },
+        "actions": {
+          "create": "إنشاء",
+          "read": "قراءة",
+          "update": "تعديل",
+          "delete": "حذف",
+          "list": "عرض القائمة",
+          "export": "تصدير",
+          "import": "استيراد",
+          "approve": "موافقة",
+          "reject": "رفض",
+          "assign": "تعيين",
+          "manage": "إدارة"
+        },
+        "scopes": {
+          "own": "خاص",
+          "team": "الفريق",
+          "company": "الشركة",
+          "all": "الكل"
+        },
+        "table": {
+          "title": "قائمة الصلاحيات",
+          "name": "الاسم",
+          "resource": "المورد",
+          "action": "الإجراء",
+          "scope": "النطاق",
+          "status": "الحالة",
+          "actions": "الإجراءات",
+          "noPermissions": "لا توجد صلاحيات",
+          "loading": "جاري التحميل..."
+        },
+        "status": {
+          "active": "نشط",
+          "inactive": "غير نشط"
+        },
+        "messages": {
+          "created": "تم إنشاء الصلاحية بنجاح",
+          "createError": "حدث خطأ في إنشاء الصلاحية",
+          "updated": "تم تحديث الصلاحية بنجاح",
+          "updateError": "حدث خطأ في تحديث الصلاحية",
+          "deleted": "تم حذف الصلاحية بنجاح",
+          "deleteError": "حدث خطأ في حذف الصلاحية",
+          "cannotDeleteSystem": "لا يمكن حذف الصلاحية النظامية",
+          "confirmDelete": "هل أنت متأكد من حذف هذه الصلاحية؟"
+        }
+      },
+      "search": {
+        "roles": "البحث في الأدوار...",
+        "permissions": "البحث في الصلاحيات..."
+      },
+      "filters": {
+        "all": "الكل",
+        "active": "نشط",
+        "inactive": "غير نشط"
+      },
+      "actions": {
+        "edit": "تعديل",
+        "delete": "حذف"
+      }
+    },
+    "security": {
+      "title": "مراقبة الأمان",
+      "subtitle": "مراقبة الأحداث الأمنية والتهديدات",
+      "loading": "جاري تحميل بيانات الأمان...",
+      "stats": {
+        "totalEvents": "إجمالي الأحداث",
+        "critical": "حرجة",
+        "high": "عالية",
+        "blocked": "محجوبة",
+        "unresolved": "غير محلولة"
+      },
+      "threatLevel": {
+        "title": "مستوى التهديد الحالي",
+        "medium": "متوسط",
+        "basedOnEvents": "بناءً على الأحداث الأخيرة",
+        "outOf": "من أصل",
+        "low": "منخفض",
+        "high": "عالي",
+        "critical": "حرج"
+      },
+      "actions": {
+        "refresh": "تحديث",
+        "exportReport": "تصدير التقرير"
+      },
+      "tabs": {
+        "securityEvents": "الأحداث الأمنية",
+        "auditLog": "سجل المراجعة"
+      },
+      "filters": {
+        "searchEvents": "البحث في الأحداث...",
+        "allLevels": "جميع المستويات",
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "عالي",
+        "critical": "حرج",
+        "today": "اليوم",
+        "thisWeek": "هذا الأسبوع",
+        "thisMonth": "هذا الشهر",
+        "thisYear": "هذا العام"
+      },
+      "events": {
+        "title": "الأحداث الأمنية",
+        "table": {
+          "eventType": "نوع الحدث",
+          "severity": "الخطورة",
+          "description": "الوصف",
+          "user": "المستخدم",
+          "ipAddress": "عنوان IP",
+          "location": "الموقع",
+          "status": "الحالة",
+          "date": "التاريخ"
+        },
+        "types": {
+          "login_attempt": "محاولة تسجيل دخول",
+          "failed_login": "فشل تسجيل دخول",
+          "suspicious_activity": "نشاط مشبوه",
+          "data_breach": "اختراق بيانات",
+          "unauthorized_access": "وصول غير مصرح",
+          "api_abuse": "إساءة استخدام API",
+          "malware_detected": "برمجية خبيثة",
+          "ddos_attack": "هجوم DDoS"
+        },
+        "severity": {
+          "low": "منخفض",
+          "medium": "متوسط",
+          "high": "عالي",
+          "critical": "حرج"
+        },
+        "status": {
+          "blocked": "محجوب",
+          "resolved": "محلول",
+          "pending": "معلق"
+        },
+        "notSpecified": "غير محدد"
+      },
+      "audit": {
+        "title": "سجل المراجعة",
+        "table": {
+          "action": "الإجراء",
+          "resourceType": "نوع المورد",
+          "user": "المستخدم",
+          "ipAddress": "عنوان IP",
+          "changes": "التغييرات",
+          "date": "التاريخ"
+        },
+        "actions": {
+          "create": "إنشاء",
+          "update": "تحديث",
+          "delete": "حذف",
+          "login": "تسجيل دخول",
+          "logout": "تسجيل خروج",
+          "view": "عرض"
+        },
+        "system": "النظام",
+        "noChanges": "لا توجد"
+      },
+      "recentActivity": {
+        "title": "النشاط الأخير",
+        "securityEvent": "حدث أمني"
+      }
+    },
+    "settings": {
+      "title": "الإعدادات",
+      "profile": {
+        "title": "الملف الشخصي",
+        "subtitle": "إدارة معلوماتك الشخصية وإعدادات الحساب",
+        "personalInfo": "المعلومات الشخصية",
+        "uploadAvatar": "رفع صورة شخصية",
+        "avatarDescription": "JPG, GIF أو PNG. الحد الأقصى 2MB",
+        "firstName": "الاسم الأول",
+        "lastName": "اسم العائلة",
+        "username": "اسم المستخدم",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "saveProfile": "حفظ الملف الشخصي",
+        "saving": "جاري الحفظ...",
+        "success": "تم تحديث الملف الشخصي بنجاح",
+        "error": "حدث خطأ في تحديث الملف الشخصي"
+      },
+
+
+      "security": {
+        "title": "الأمان",
+        "changePassword": "تغيير كلمة المرور",
+        "currentPassword": "كلمة المرور الحالية",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور",
+        "passwordStrength": "قوة كلمة المرور",
+        "strong": "قوية",
+        "medium": "متوسطة",
+        "weak": "ضعيفة",
+        "passwordMatch": "كلمات المرور متطابقة",
+        "passwordMismatch": "كلمات المرور غير متطابقة",
+        "updatePassword": "تحديث كلمة المرور",
+        "updatingPassword": "جاري التحديث...",
+        "passwordSuccess": "تم تحديث كلمة المرور بنجاح",
+        "passwordError": "حدث خطأ في تحديث كلمة المرور",
+        "twoFactor": "المصادقة الثنائية",
+        "enableTwoFactor": "تفعيل المصادقة الثنائية",
+        "twoFactorDesc": "إضافة طبقة أمان إضافية لحسابك",
+        "loginNotifications": "إشعارات تسجيل الدخول",
+        "loginNotificationsDesc": "إشعار عند تسجيل الدخول من جهاز جديد",
+        "sessionSettings": "إعدادات الجلسة",
+        "sessionTimeoutLabel": "مهلة الجلسة",
+        "passwordExpiryLabel": "انتهاء صلاحية كلمة المرور",
+        "saveSecurity": "حفظ إعدادات الأمان"
+      },
+      "appearance": {
+        "title": "المظهر",
+        "appearanceSettings": "إعدادات المظهر",
+        "theme": "المظهر",
+        "light": "فاتح",
+        "dark": "داكن",
+        "system": "تلقائي",
+        "language": "اللغة",
+        "arabic": "العربية",
+        "english": "English",
+        "dateFormat": "تنسيق التاريخ",
+        "currency": "العملة",
+        "sar": "ريال سعودي (SAR)",
+        "usd": "دولار أمريكي (USD)",
+        "eur": "يورو (EUR)",
+        "timezone": "المنطقة الزمنية",
+        "riyadh": "الرياض (GMT+3)",
+        "dubai": "دبي (GMT+4)",
+        "london": "لندن (GMT+0)",
+        "newyork": "نيويورك (GMT-5)",
+        "compactMode": "الوضع المضغوط",
+        "compactModeDesc": "عرض أكثر كثافة للمعلومات في الشاشات الصغيرة",
+        "saveAppearance": "حفظ إعدادات المظهر"
+      },
+      "integrations": {
+        "title": "التكاملات",
+        "externalIntegrations": "التكاملات الخارجية",
+        "whatsapp": "واتساب",
+        "whatsappDesc": "إرسال واستقبال الرسائل عبر واتساب",
+        "email": "البريد الإلكتروني",
+        "emailDesc": "إرسال البريد الإلكتروني والرسائل الإخبارية",
+        "sms": "الرسائل النصية",
+        "smsDesc": "إرسال الرسائل النصية والتنبيهات",
+        "calendar": "التقويم",
+        "calendarDesc": "مزامنة المواعيد والفعاليات",
+        "connected": "متصل",
+        "disconnected": "غير متصل",
+        "webhooks": "Webhooks",
+        "enableWebhooks": "تفعيل Webhooks",
+        "webhooksDesc": "إرسال البيانات تلقائياً للأنظمة الخارجية",
+        "webhookUrl": "رابط Webhook",
+        "saveIntegrations": "حفظ إعدادات التكاملات"
+      },
+      "messages": {
+        "sectionSaved": "تم حفظ إعدادات {section} بنجاح"
+      }
+    }
+  },
+  "subscriptions": {
+    "title": "إدارة الاشتراكات",
+    "subtitle": "إدارة خطط الاشتراك واشتراكات الشركات",
+    "newSubscription": "اشتراك جديد",
+    "createSubscription": "إنشاء اشتراك جديد",
+    "company": "الشركة",
+    "selectCompany": "اختر الشركة",
+    "subscriptionPlan": "خطة الاشتراك",
+    "selectPlan": "اختر الخطة",
+    "startDate": "تاريخ البداية",
+    "endDate": "تاريخ النهاية",
+    "status": "الحالة",
+    "paymentStatus": "حالة الدفع",
+    "autoRenew": "تجديد تلقائي",
+    "save": "حفظ",
+    "saving": "جاري الحفظ...",
+    "stats": {
+      "totalSubscriptions": "إجمالي الاشتراكات",
+      "activeSubscriptions": "الاشتراكات النشطة",
+      "expiredSubscriptions": "الاشتراكات المنتهية",
+      "totalRevenue": "إجمالي الإيرادات"
+    },
+    "plans": {
+      "availablePlans": "خطط الاشتراك المتاحة",
+      "mostPopular": "الأكثر شعبية",
+      "users": "المستخدمين",
+      "month": "شهر",
+      "year": "سنة"
+    },
+    "statuses": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "expired": "منتهي الصلاحية",
+      "cancelled": "ملغي"
+    },
+    "paymentStatuses": {
+      "paid": "مدفوع",
+      "pending": "في الانتظار",
+      "failed": "فشل"
+    },
+    "messages": {
+      "subscriptionCreated": "تم إنشاء الاشتراك بنجاح",
+      "subscriptionUpdated": "تم تحديث الاشتراك بنجاح",
+      "subscriptionDeleted": "تم حذف الاشتراك بنجاح",
+      "createError": "حدث خطأ أثناء إنشاء الاشتراك",
+      "updateError": "حدث خطأ أثناء تحديث الاشتراك",
+      "deleteError": "حدث خطأ أثناء حذف الاشتراك",
+      "loadingSubscriptions": "جاري تحميل الاشتراكات...",
+      "confirmDelete": "هل أنت متأكد من حذف هذا الاشتراك؟"
+    },
+    "editSubscription": "تعديل الاشتراك"
+  },
+  "tasksAppointments": {
+    "title": "المهام والمواعيد",
+    "subtitle": "إدارة المهام والمواعيد والمتابعات",
+    "searchTasks": "البحث في المهام...",
+    "status": "الحالة",
+    "allStatuses": "جميع الحالات",
+    "type": "النوع",
+    "allTypes": "جميع الأنواع",
+    "priority": "الأولوية",
+    "allPriorities": "جميع الأولويات",
+    "taskTitle": "عنوان المهمة",
+    "taskType": "نوع المهمة",
+    "description": "الوصف",
+    "taskDescription": "وصف المهمة والتفاصيل",
+    "taskPriority": "أولوية المهمة",
+    "taskStatus": "حالة المهمة",
+    "dueDate": "تاريخ الاستحقاق",
+    "selectDate": "اختر التاريخ",
+    "assignedTo": "المسؤول عن المهمة",
+    "selectAssigned": "اختر المسؤول",
+    "team": "الفريق",
+    "selectTeam": "اختر الفريق",
+    "relatedLead": "العميل المرتبط",
+    "selectLead": "اختر العميل",
+    "relatedDeal": "الصفقة المرتبطة",
+    "selectDeal": "اختر الصفقة",
+    "relatedProperty": "العقار المرتبط",
+    "selectProperty": "اختر العقار",
+    "location": "الموقع",
+    "locationPlaceholder": "عنوان المكان",
+    "notes": "ملاحظات",
+    "additionalNotes": "ملاحظات إضافية",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "saving": "جاري الحفظ...",
+    "taskList": "قائمة المهام والمواعيد",
+    "task": "المهمة",
+    "priority": "الأولوية",
+    "status": "الحالة",
+    "deadline": "الموعد النهائي",
+    "assigned": "المسؤول",
+    "actions": "الإجراءات",
+    "loading": "جاري التحميل...",
+    "noTasks": "لا توجد مهام",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "confirmDelete": "هل أنت متأكد من حذف هذه المهمة؟"
+  },
+  "teams": {
+    "title": "إدارة الفرق",
+    "subtitle": "إدارة الفرق والأقسام وتعيين أعضاء الفريق",
+    "searchTeams": "البحث في الفرق...",
+    "teamType": "نوع الفريق",
+    "allTypes": "جميع الأنواع",
+    "all": "الكل",
+    "addNewTeam": "إضافة فريق جديد",
+    "editTeam": "تعديل الفريق",
+    "enterTeamData": "أدخل بيانات الفريق الجديد",
+    "teamName": "اسم الفريق",
+    "teamNameExample": "مثال: فريق المبيعات",
+    "description": "الوصف",
+    "teamDescriptionPlaceholder": "وصف الفريق وأهدافه",
+    "teamLeader": "قائد الفريق",
+    "selectTeamLeader": "اختر قائد الفريق",
+    "noLeader": "بدون قائد",
+    "teamMembers": "أعضاء الفريق",
+    "active": "نشط",
+    "saving": "جاري الحفظ...",
+    "save": "حفظ",
+    "teamsList": "قائمة الفرق",
+    "status": "الحالة",
+    "loading": "جاري التحميل...",
+    "noTeams": "لا توجد فرق",
+    "member": "عضو",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "types": {
+      "sales": "مبيعات",
+      "marketing": "تسويق",
+      "support": "دعم فني",
+      "management": "إدارة",
+      "development": "تطوير",
+      "operations": "عمليات"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "messages": {
+      "teamCreated": "تم إنشاء الفريق بنجاح",
+      "teamUpdated": "تم تحديث الفريق بنجاح",
+      "teamDeleted": "تم حذف الفريق بنجاح",
+      "createError": "حدث خطأ في إنشاء الفريق",
+      "updateError": "حدث خطأ في تحديث الفريق",
+      "deleteError": "حدث خطأ في حذف الفريق",
+      "confirmDelete": "هل أنت متأكد من حذف هذا الفريق؟ سيتم إزالة جميع أعضاء الفريق."
+    }
+  },
+  "usageTracking": {
+    "title": "تتبع الاستخدام",
+    "subtitle": "مراقبة استهلاك الموارد والحدود المسموحة",
+    "exportReport": "تصدير التقرير",
+    "selectCompany": "اختر الشركة",
+    "allCompanies": "جميع الشركات",
+    "selectPeriod": "اختر الفترة",
+    "loading": "جاري تحميل بيانات الاستخدام...",
+    "currentUsage": "الاستخدام الحالي",
+    "used": "مستخدم",
+    "remaining": "متبقي",
+    "usageByCompany": "الاستخدام حسب الشركة",
+    "company": "الشركة",
+    "resourceType": "نوع المورد",
+    "maxLimit": "الحد الأقصى",
+    "percentage": "النسبة المئوية",
+    "status": "الحالة",
+    "period": "الفترة",
+    "usageTrends": "اتجاهات الاستخدام",
+    "alertsAndRecommendations": "تنبيهات وتوصيات",
+    "monthly": "شهري",
+    "yearly": "سنوي",
+    "stats": {
+      "totalResources": "إجمالي الموارد",
+      "normal": "طبيعي",
+      "warning": "تحذير",
+      "exceeded": "تجاوز الحد"
+    },
+    "status": {
+      "normal": "طبيعي",
+      "warning": "تحذير",
+      "exceeded": "تم تجاوز الحد"
+    },
+    "resources": {
+      "users": "المستخدمين",
+      "leads": "العملاء المحتملين",
+      "properties": "العقارات",
+      "deals": "الصفقات",
+      "storage": "التخزين (GB)",
+      "apiCalls": "استدعاءات API",
+      "whatsappMessages": "رسائل الواتساب",
+      "emailSends": "الرسائل الإلكترونية"
+    },
+    "periods": {
+      "current": "الفترة الحالية",
+      "lastMonth": "الشهر الماضي",
+      "last3Months": "آخر 3 أشهر",
+      "lastYear": "العام الماضي"
+    },
+    "alerts": {
+      "exceededLimit": "{count} مورد تم تجاوز الحد الأقصى",
+      "exceededRecommendation": "يُنصح بترقية الخطة أو تقليل الاستخدام لتجنب انقطاع الخدمة",
+      "warningLimit": "{count} مورد يقترب من الحد الأقصى",
+      "warningRecommendation": "مراقبة الاستخدام والاستعداد لترقية الخطة إذا لزم الأمر"
+    }
+  }
+}

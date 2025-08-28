@@ -1,0 +1,29 @@
+{
+  "common": {
+    "create": "إنشاء"
+  },
+  "leads": {
+    "status": {
+      "deal": "صفقة",
+      "notInterested": "عدم اهتمام"
+    },
+    "sources": {
+      "website": "الموقع الإلكتروني",
+      "facebook": "فيسبوك",
+      "instagram": "إنستغرام",
+      "google": "جوجل",
+      "referral": "إحالة",
+      "direct": "مباشر",
+      "whatsapp": "واتساب",
+      "realEstatePortal": "بوابة عقارية",
+      "other": "أخرى"
+    },
+    "addDescription": "أدخل بيانات العميل المحتمل الجديد",
+    "fields": {
+      "statusPlaceholder": "فلترة بالحالة"
+    },
+    "actions": {
+      "sendEmail": "إرسال بريد إلكتروني"
+    }
+  }
+}

@@ -1,0 +1,2669 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "export": "Export",
+    "import": "Import",
+    "view": "View",
+    "details": "Details",
+    "actions": "Actions",
+    "status": "Status",
+    "created": "Created",
+    "updated": "Updated",
+    "total": "Total",
+    "count": "Count",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "description": "Description",
+    "notes": "Notes",
+    "date": "Date",
+    "time": "Time",
+    "amount": "Amount",
+    "currency": "Currency",
+    "percentage": "Percentage",
+    "priority": "Priority",
+    "type": "Type",
+    "category": "Category",
+    "language": "Language",
+    "theme": "Theme",
+    "features": "Features",
+    "notSpecified": "Not Specified",
+    "hours": "hours",
+    "copyright": "© 2024 EchoOps CRM. All rights reserved."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "leads": "Leads",
+    "properties": "Properties",
+    "deals": "Deals",
+    "activities": "Activities",
+    "companies": "Companies",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout",
+    "notifications": "Notifications",
+    "whatsapp": "WhatsApp",
+    "ai": "AI",
+    "payments": "Payments",
+    "users": "Users",
+    "roles": "Roles",
+    "permissions": "Permissions",
+    "leadSources": "Lead Sources",
+    "marketing": "Marketing",
+    "tasks": "Tasks",
+    "calendar": "Calendar",
+    "reports": "Reports"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "welcome": "Welcome to EchoOps CRM",
+      "email": "Email",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "loginButton": "Login",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "error": {
+        "invalid": "Invalid login credentials",
+        "required": "Please enter email and password",
+        "network": "Network connection error"
+      }
+    },
+    "register": {
+      "title": "Create New Account",
+      "subtitle": "Start your journey with EchoOps CRM",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "companyName": "Company Name",
+      "phone": "Phone Number",
+      "terms": "I agree to the terms and conditions",
+      "registerButton": "Create Account",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Login",
+      "error": {
+        "passwordMismatch": "Passwords do not match",
+        "termsRequired": "You must agree to the terms and conditions",
+        "emailExists": "Email already exists"
+      }
+    },
+    "profile": {
+      "title": "Profile",
+      "personalInfo": "Personal Information",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "preferences": "Preferences",
+      "language": "Language",
+      "theme": "Theme",
+      "notifications": "Notifications"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": {
+      "title": "Profile",
+      "subtitle": "Manage your personal information and profile picture",
+      "personalInfo": "Personal Information",
+      "username": "Username",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "avatar": "Profile Picture",
+      "uploadAvatar": "Upload Picture",
+      "removeAvatar": "Remove Picture",
+      "saveProfile": "Save Changes",
+      "saving": "Saving...",
+      "success": "Profile updated successfully",
+      "error": "Error updating profile"
+    },
+    "security": {
+      "title": "Security",
+      "subtitle": "Manage password and security settings",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password",
+      "passwordMismatch": "New password and confirmation do not match",
+      "passwordSuccess": "Password changed successfully",
+      "passwordError": "Error changing password",
+      "passwordMatch": "Passwords match",
+      "passwordMismatch": "Passwords do not match",
+      "updatingPassword": "Updating...",
+      "updatePassword": "Update Password",
+      "passwordStrength": "Password Strength:",
+      "strong": "Strong",
+      "medium": "Medium",
+      "weak": "Weak",
+      "twoFactor": "Two-Factor Authentication",
+      "enableTwoFactor": "Enable Two-Factor Authentication",
+      "twoFactorDesc": "Additional protection for your account using an authenticator app",
+      "sessionTimeout": "Session Timeout",
+      "minutes": "minutes",
+      "loginNotifications": "Login Notifications",
+      "loginNotificationsDesc": "Notification when logging in from a new device",
+      "sessionSettings": "Session Settings",
+      "sessionTimeoutLabel": "Session Timeout (minutes)",
+      "passwordExpiry": "Password Expiry",
+      "passwordExpiryLabel": "Password Expiry (days)",
+      "saveSecurity": "Save Security Settings",
+      "days": "days"
+    },
+
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Manage and view all system notifications",
+      "refresh": "Refresh",
+      "markAllRead": "Mark All as Read",
+      "stats": {
+        "totalNotifications": "Total Notifications",
+        "unread": "Unread",
+        "read": "Read",
+        "readRate": "Read Rate"
+      },
+      "filters": {
+        "search": "Search notifications...",
+        "type": "Type",
+        "allTypes": "All Types",
+        "priority": "Priority",
+        "allPriorities": "All Priorities",
+        "status": "Status",
+        "allStatuses": "All Statuses",
+        "unread": "Unread",
+        "read": "Read",
+        "archived": "Archived",
+        "actions": "Actions",
+        "selectedCount": "Actions ({count})"
+      },
+      "table": {
+        "notification": "Notification",
+        "type": "Type",
+        "priority": "Priority",
+        "status": "Status",
+        "date": "Date",
+        "actions": "Actions"
+      },
+      "types": {
+        "info": "Info",
+        "success": "Success",
+        "warning": "Warning",
+        "error": "Error",
+        "reminder": "Reminder"
+      },
+      "priorities": {
+        "urgent": "Urgent",
+        "high": "High",
+        "normal": "Normal",
+        "low": "Low"
+      },
+      "statuses": {
+        "archived": "Archived",
+        "read": "Read",
+        "unread": "Unread"
+      },
+      "actions": {
+        "markRead": "Mark as Read",
+        "archive": "Archive",
+        "delete": "Delete",
+        "viewDetails": "View Details",
+        "markAllRead": "Mark all notifications as read",
+        "archiveNotification": "Notification archived",
+        "deleteNotification": "Notification deleted",
+        "markReadSuccess": "Notification marked as read",
+        "deleteAllSuccess": "All notifications deleted",
+        "error": "An error occurred"
+      },
+      "pagination": {
+        "showing": "Showing {from} to {to} of {total} notifications",
+        "previous": "Previous",
+        "next": "Next",
+        "of": "of"
+      },
+      "empty": {
+        "title": "No Notifications",
+        "description": "No notifications found matching the specified criteria",
+        "notifications": "notifications"
+      },
+      "dangerZone": {
+        "title": "Danger Zone",
+        "deleteAll": "Delete All Notifications",
+        "deleteAllDesc": "All notifications will be permanently deleted and this action cannot be undone",
+        "deleteAllButton": "Delete All"
+      },
+      "bulk": {
+        "noSelection": "Please select notifications to perform actions on",
+        "selectAll": "Select All"
+      }
+    },
+    "company": {
+      "activities": {
+        "leadCreated": "New lead created",
+        "dealCompleted": "Deal completed",
+        "propertyAdded": "New property added",
+        "profileUpdated": "Profile updated",
+        "hoursAgo": "2 hours ago",
+        "yesterday": "Yesterday",
+        "daysAgo": "3 days ago",
+        "weekAgo": "1 week ago"
+      },
+      "roles": {
+        "admin": "Admin",
+        "manager": "Manager",
+        "agent": "Agent",
+        "user": "User"
+      },
+      "memberSince": "Member since",
+      "lastLogin": "Last login"
+    },
+    "companies": {
+      "title": "Companies Management",
+      "subtitle": "Manage and track all companies in the system",
+      "addCompany": "Add New Company",
+      "editCompany": "Edit Company",
+      "deleteCompany": "Delete Company",
+      "editCompanyDesc": "Edit company information",
+      "addCompanyDesc": "Enter new company details",
+      "companyName": "Company Name",
+      "companyNamePlaceholder": "Enter company name",
+      "emailPlaceholder": "Enter email address",
+      "phonePlaceholder": "Enter phone number",
+      "addressPlaceholder": "Enter address",
+      "cityPlaceholder": "Enter city",
+      "status": "Status",
+      "subscriptionType": "Subscription Type",
+      "employeesCount": "Number of Employees",
+      "employeesPlaceholder": "Enter number of employees",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "update": "Update",
+      "add": "Add",
+      "searchCompanies": "Search companies...",
+      "allStatuses": "All Statuses",
+      "allSubscriptions": "All Subscriptions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "basic": "Basic",
+      "premium": "Premium",
+      "enterprise": "Enterprise",
+      "noCompanies": "No Companies",
+      "noCompaniesDesc": "No companies found. Start by adding a new company.",
+      "employees": "employees",
+      "createdDate": "Created Date",
+      "successCreate": "Company created successfully",
+      "errorCreate": "Error creating company",
+      "successUpdate": "Company updated successfully",
+      "errorUpdate": "Error updating company",
+      "successDelete": "Company deleted successfully",
+      "errorDelete": "Error deleting company",
+      "confirmDelete": "Are you sure you want to delete this company?",
+      "edit": "Edit",
+      "delete": "Delete",
+      "city": "City"
+    },
+    "analytics": {
+      "title": "Analytics & Reports",
+      "subtitle": "Comprehensive analysis of sales performance, customers, and activities",
+      "exportReport": "Export Report",
+      "refresh": "Refresh",
+      "periods": {
+        "day": "Daily",
+        "week": "Weekly",
+        "month": "Monthly",
+        "quarter": "Quarterly",
+        "year": "Yearly"
+      },
+      "kpis": {
+        "totalRevenue": "Total Revenue",
+        "totalDeals": "Total Deals",
+        "totalLeads": "Total Leads",
+        "conversionRate": "Conversion Rate",
+        "lastMonth": "vs last month"
+      },
+      "charts": {
+        "monthlyRevenue": "Monthly Revenue",
+        "leadSources": "Lead Sources",
+        "dealsByStatus": "Deals by Status",
+        "activitySummary": "Activity Summary",
+        "dealsTrend": "Monthly Deals Trend"
+      },
+      "data": {
+        "months": {
+          "january": "January",
+          "february": "February",
+          "march": "March",
+          "april": "April",
+          "may": "May",
+          "june": "June"
+        },
+        "leadSources": {
+          "facebook": "Facebook",
+          "google": "Google",
+          "whatsapp": "WhatsApp",
+          "referral": "Referral",
+          "other": "Other"
+        },
+        "dealStatuses": {
+          "new": "New",
+          "inProgress": "In Progress",
+          "completed": "Completed",
+          "cancelled": "Cancelled"
+        },
+        "activityTypes": {
+          "calls": "Calls",
+          "emails": "Emails",
+          "whatsapp": "WhatsApp",
+          "meetings": "Meetings"
+        }
+      },
+      "summary": {
+        "topSalesRep": "Top Sales Representative",
+        "topRegions": "Top Selling Regions",
+        "popularPropertyTypes": "Most Popular Property Types",
+        "deals": "deals",
+        "revenue": "Revenue",
+        "percentage": "of total activities"
+      },
+      "regions": {
+        "riyadh": "Riyadh",
+        "jeddah": "Jeddah",
+        "dammam": "Dammam"
+      },
+      "propertyTypes": {
+        "villa": "Villa",
+        "apartment": "Apartment",
+        "land": "Land",
+        "office": "Office"
+      },
+      "salesReps": {
+        "ahmedMohamed": "Ahmed Mohamed",
+        "saraAli": "Sara Ali",
+        "mohamedAhmed": "Mohamed Ahmed"
+      },
+      "units": {
+        "million": "M",
+        "sar": "SAR"
+      },
+      "labels": {
+        "month": "Month",
+        "revenue": "Revenue",
+        "dealsCount": "Deals Count",
+        "percentage": "Percentage"
+      }
+    },
+    "company": {
+      "title": "Company",
+      "subtitle": "Company settings and information",
+      "companyInfo": "Company Information",
+      "companyName": "Company Name",
+      "companyEmail": "Company Email",
+      "companyPhone": "Company Phone",
+      "companyAddress": "Company Address",
+      "companyWebsite": "Company Website",
+      "companyDescription": "Company Description",
+      "saveCompany": "Save Company Settings",
+      "saving": "Saving...",
+      "success": "Company settings updated successfully",
+      "error": "Error updating company settings"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Manage notification preferences",
+      "notificationMethods": "Notification Methods",
+      "emailNotifications": "Email Notifications",
+      "emailNotificationsDesc": "Receive notifications via email",
+      "smsNotifications": "SMS Messages",
+      "smsNotificationsDesc": "Receive notifications via SMS",
+      "pushNotifications": "Push Notifications",
+      "pushNotificationsDesc": "Instant notifications in browser",
+      "notificationTypes": "Notification Types",
+      "newLeads": "New Leads",
+      "dealUpdates": "Deal Updates",
+      "systemAlerts": "System Alerts",
+      "marketingEmails": "Marketing Emails",
+      "activityReminders": "Activity Reminders",
+      "whatsappMessages": "WhatsApp Messages",
+      "reportSchedule": "Report Schedule",
+      "reports": "Reports",
+      "never": "No Reports",
+      "saveNotifications": "Save Notification Settings",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "subtitle": "Customize application appearance",
+      "theme": "Theme",
+      "language": "Language",
+      "dateFormat": "Date Format",
+      "currency": "Currency",
+      "timezone": "Timezone",
+      "compactMode": "Compact Mode"
+    },
+    "integrations": {
+      "title": "Integrations",
+      "subtitle": "Manage external integrations",
+      "whatsapp": "WhatsApp Business API",
+      "email": "Email Service",
+      "sms": "SMS Service",
+      "calendar": "Google Calendar",
+      "crm": "CRM System",
+      "webhooks": "Webhooks",
+      "connected": "Connected",
+      "notConnected": "Not Connected",
+      "connect": "Connect",
+      "disconnect": "Disconnect",
+      "configure": "Configure"
+    },
+    "messages": {
+      "saved": "Settings saved successfully",
+      "error": "Error saving settings",
+      "sectionSaved": "{{section}} settings saved successfully"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {{name}}",
+    "overview": "Overview",
+    "statistics": {
+      "totalLeads": "Total Leads",
+      "totalProperties": "Total Properties",
+      "totalDeals": "Total Deals",
+      "totalRevenue": "Total Revenue",
+      "conversionRate": "Conversion Rate",
+      "activeDeals": "Active Deals",
+      "pendingActivities": "Pending Activities",
+      "monthlyGrowth": "Monthly Growth",
+      "completedDeals": "Completed Deals"
+    },
+    "recent": {
+      "activities": "Recent Activities",
+      "leads": "New Leads",
+      "properties": "Recently Added Properties",
+      "deals": "New Deals"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "addLead": "Add Lead",
+      "addProperty": "Add Property",
+      "createDeal": "Create Deal",
+      "scheduleActivity": "Schedule Activity"
+    }
+  },
+  "leads": {
+    "title": "Leads",
+    "add": "Add Lead",
+    "edit": "Edit Lead",
+    "delete": "Delete Lead",
+    "search": "Search Leads",
+    "filter": "Filter Leads",
+    "export": "Export Leads",
+    "import": "Import Leads",
+    "pipeline": {
+      "title": "Lead Pipeline",
+      "new": "New",
+      "contacted": "Contacted",
+      "qualified": "Qualified",
+      "proposal": "Proposal",
+      "negotiation": "Negotiation",
+      "closed": "Closed",
+      "lost": "Lost"
+    },
+    "fields": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "budgetMin": "Minimum Budget",
+      "budgetMax": "Maximum Budget",
+      "preferredLocation": "Preferred Location",
+      "propertyType": "Property Type",
+      "timeline": "Timeline",
+      "source": "Source",
+      "status": "Status",
+      "priority": "Priority",
+      "assignedTo": "Assigned To",
+      "notes": "Notes",
+      "lastContact": "Last Contact",
+      "nextFollowUp": "Next Follow-up",
+      "interest": "Interest",
+      "budget": "Budget",
+      "agent": "Agent"
+    },
+    "priorities": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "timelines": {
+      "immediately": "Immediately",
+      "1_month": "1 Month",
+      "3_months": "3 Months",
+      "6_months": "6 Months",
+      "1_year": "1 Year",
+      "flexible": "Flexible"
+    },
+    "sources": {
+      "website": "Website",
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "google": "Google",
+      "referral": "Referral",
+      "direct": "Direct",
+      "other": "Other"
+    },
+    "actions": {
+      "call": "Call",
+      "email": "Send Email",
+      "whatsapp": "WhatsApp",
+      "meeting": "Schedule Meeting",
+      "viewProfile": "View Profile",
+      "edit": "Edit",
+      "delete": "Delete",
+      "convert": "Convert to Deal",
+      "addActivity": "Add Activity"
+    },
+    "messages": {
+      "created": "Lead created successfully",
+      "updated": "Lead updated successfully",
+      "deleted": "Lead deleted successfully",
+      "deleteConfirm": "Are you sure you want to delete this lead?",
+      "noLeads": "No leads found",
+      "loading": "Loading leads...",
+      "error": "An error occurred"
+    },
+    "stats": {
+      "totalLeads": "Total Leads",
+      "newLeads": "New Leads",
+      "potentialDeals": "Potential Deals",
+      "conversionRate": "Conversion Rate"
+    },
+    "filters": {
+      "title": "Filter and Search Leads",
+      "searchPlaceholder": "Search by name, phone, or email...",
+      "statusPlaceholder": "Filter by status",
+      "sourcePlaceholder": "Filter by source",
+      "allStatuses": "All statuses",
+      "allSources": "All sources"
+    },
+    "status": {
+      "all": "All statuses",
+      "جديد": "New",
+      "متابع": "Contacted",
+      "مهتم": "Interested",
+      "صفقة": "Deal",
+      "عدم اهتمام": "Not Interested",
+      "new": "New",
+      "contacted": "Contacted",
+      "interested": "Interested"
+    },
+    "sources": {
+      "all": "All sources",
+      "فيسبوك": "Facebook",
+      "جوجل": "Google",
+      "إحالة": "Referral",
+      "واتساب": "WhatsApp",
+      "بوابة عقارية": "Real Estate Portal"
+    },
+    "table": {
+      "title": "Leads List",
+      "clientName": "Client Name",
+      "contact": "Contact",
+      "source": "Source",
+      "status": "Status",
+      "interest": "Interest",
+      "budget": "Budget",
+      "agent": "Agent",
+      "lastContact": "Last Contact",
+      "actions": "Actions"
+    }
+  },
+  "properties": {
+    "title": "Properties",
+    "add": "Add Property",
+    "edit": "Edit Property",
+    "delete": "Delete Property",
+    "search": "Search Properties",
+    "filter": "Filter Properties",
+    "view": "View Property",
+    "types": {
+      "apartment": "Apartment",
+      "villa": "Villa",
+      "office": "Office",
+      "shop": "Shop",
+      "land": "Land",
+      "warehouse": "Warehouse"
+    },
+    "statuses": {
+      "available": "Available",
+      "sold": "Sold",
+      "rented": "Rented",
+      "under_contract": "Under Contract",
+      "pending": "Pending",
+      "off_market": "Off Market",
+      "booked": "Booked"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "type": "Type",
+      "price": "Price",
+      "currency": "Currency",
+      "city": "City",
+      "district": "District",
+      "address": "Full Address",
+      "coordinates": "Coordinates",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "area": "Area (sqm)",
+      "parking": "Parking Spaces",
+      "floor": "Floor",
+      "totalFloors": "Total Floors",
+      "yearBuilt": "Year Built",
+      "furnished": "Furnished",
+      "features": "Features",
+      "images": "Images",
+      "status": "Status",
+      "owner": "Owner",
+      "agent": "Agent",
+      "commission": "Commission"
+    },
+    "features": {
+      "pool": "Swimming Pool",
+      "garden": "Garden",
+      "gym": "Gym",
+      "parking": "Parking",
+      "elevator": "Elevator",
+      "security": "Security",
+      "balcony": "Balcony",
+      "terrace": "Terrace",
+      "basement": "Basement",
+      "attic": "Attic",
+      "fireplace": "Fireplace",
+      "airConditioning": "Air Conditioning",
+      "heating": "Heating",
+      "internet": "Internet",
+      "cableTV": "Cable TV"
+    },
+    "actions": {
+      "view": "View Details",
+      "edit": "Edit",
+      "delete": "Delete",
+      "duplicate": "Duplicate",
+      "share": "Share",
+      "print": "Print",
+      "addToFavorites": "Add to Favorites",
+      "scheduleViewing": "Schedule Viewing",
+      "createDeal": "Create Deal",
+      "uploadImages": "Upload Images",
+      "manageImages": "Manage Images"
+    },
+    "messages": {
+      "created": "Property created successfully",
+      "updated": "Property updated successfully",
+      "deleted": "Property deleted successfully",
+      "deleteConfirm": "Are you sure you want to delete this property?",
+      "noProperties": "No properties found",
+      "loading": "Loading properties...",
+      "imagesUploaded": "Images uploaded successfully",
+      "imagesDeleted": "Images deleted successfully",
+      "error": "An error occurred"
+    },
+    "stats": {
+      "totalProperties": "Total Properties",
+      "availableProperties": "Available Properties",
+      "bookedProperties": "Booked Properties",
+      "soldProperties": "Sold Properties",
+      "averagePrice": "Average Price"
+    },
+    "filters": {
+      "title": "Filter and Search Properties",
+      "searchPlaceholder": "Search by title, location, or area...",
+      "typePlaceholder": "Property Type",
+      "statusPlaceholder": "Status",
+      "pricePlaceholder": "Price Range",
+      "allTypes": "All types",
+      "allStatuses": "All statuses",
+      "allPrices": "All prices"
+    },
+    "types": {
+      "all": "All types",
+      "فيلا": "Villa",
+      "شقة": "Apartment",
+      "أرض": "Land",
+      "مكتب": "Office"
+    },
+    "statuses": {
+      "all": "All statuses",
+      "متاح": "Available",
+      "محجوز": "Booked",
+      "مباع": "Sold",
+      "مؤجر": "Rented"
+    },
+    "priceRanges": {
+      "all": "All prices",
+      "under-300k": "Under 300k",
+      "300k-600k": "300k-600k",
+      "600k-1m": "600k-1M",
+      "over-1m": "Over 1M"
+    }
+  },
+  "deals": {
+    "title": "Deals",
+    "add": "Add Deal",
+    "edit": "Edit Deal",
+    "delete": "Delete Deal",
+    "view": "View Deal",
+    "kanban": "Kanban View",
+    "pipeline": {
+      "title": "Deal Pipeline",
+      "initial_inquiry": "Initial Inquiry",
+      "property_showing": "Property Showing",
+      "proposal_submitted": "Proposal Submitted",
+      "negotiation": "Negotiation",
+      "initial_agreement": "Initial Agreement",
+      "deal_closed": "Deal Closed",
+      "post_sale_followup": "Post-Sale Follow-up"
+    },
+    "fields": {
+      "title": "Deal Title",
+      "description": "Deal Description",
+      "amount": "Deal Amount",
+      "currency": "Currency",
+      "probability": "Success Probability (%)",
+      "expectedCloseDate": "Expected Close Date",
+      "actualCloseDate": "Actual Close Date",
+      "commission": "Commission",
+      "commissionPercentage": "Commission Percentage (%)",
+      "status": "Status",
+      "stage": "Stage",
+      "lead": "Lead",
+      "property": "Property",
+      "assignedTo": "Assigned To",
+      "notes": "Notes",
+      "nextSteps": "Next Steps",
+      "competitors": "Competitors",
+      "objections": "Objections"
+    },
+    "actions": {
+      "view": "View Details",
+      "edit": "Edit",
+      "delete": "Delete",
+      "moveStage": "Move to Stage",
+      "addActivity": "Add Activity",
+      "addNote": "Add Note",
+      "scheduleFollowUp": "Schedule Follow-up",
+      "generateContract": "Generate Contract",
+      "closeDeal": "Close Deal",
+      "reopenDeal": "Reopen Deal"
+    },
+    "messages": {
+      "created": "Deal created successfully",
+      "updated": "Deal updated successfully",
+      "deleted": "Deal deleted successfully",
+      "stageChanged": "Deal stage changed successfully",
+      "deleteConfirm": "Are you sure you want to delete this deal?",
+      "noDeals": "No deals found",
+      "loading": "Loading deals...",
+      "dealClosed": "Deal closed successfully",
+      "dealReopened": "Deal reopened successfully",
+      "error": "An error occurred"
+    },
+    "stats": {
+      "totalDeals": "Total Deals",
+      "activeDeals": "Active Deals",
+      "completedDeals": "Completed Deals",
+      "totalRevenue": "Total Revenue",
+      "averageDealSize": "Average Deal Size"
+    }
+  },
+  "language": {
+    "switch": "Switch Language",
+    "arabic": "العربية",
+    "english": "English",
+    "current": "Current Language",
+    "rtl": "Right to Left",
+    "ltr": "Left to Right"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "auto": "Auto"
+  },
+  "errors": {
+    "generic": "An unexpected error occurred",
+    "network": "Network connection error",
+    "unauthorized": "You are not authorized to access",
+    "forbidden": "Access forbidden",
+    "notFound": "Page not found",
+    "validation": "Invalid data",
+    "server": "Server error",
+    "timeout": "Connection timeout",
+    "offline": "You are offline"
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Oops! Page not found",
+    "homeLink": "Return to Home"
+  },
+  "success": {
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully",
+    "updated": "Updated successfully",
+    "created": "Created successfully",
+    "sent": "Sent successfully",
+    "uploaded": "Uploaded successfully",
+    "downloaded": "Downloaded successfully"
+  },
+  "common": {
+    "loading": "Loading...",
+    "noData": "No data available",
+    "export": "Export",
+    "priority": "High Priority",
+    "actions": "Actions",
+    "view": "View"
+  },
+  "aiRecommendations": {
+    "applyConfirm": "Are you sure you want to apply this recommendation?",
+    "rejectPrompt": "Please enter a reason for rejection (optional):",
+    "noReason": "No specific reason",
+    "title": "AI Analysis",
+    "subtitle": "AI-powered analytics and smart recommendations",
+    "quickAnalysis": "Quick Analysis",
+    "leadScoring": "Lead Scoring",
+    "salesForecasting": "Sales Forecasting",
+    "customerSegmentation": "Customer Segmentation",
+    "propertyValuation": "Property Valuation",
+    "marketAnalysis": "Market Analysis",
+    "churnPrediction": "Churn Prediction",
+    "priceOptimization": "Price Optimization",
+    "sentimentAnalysis": "Sentiment Analysis",
+    "recommendationEngine": "Recommendation Engine",
+    "analyzing": "Analyzing...",
+    "runNewAnalysis": "Run New Analysis",
+    "totalAnalyses": "Total Analyses",
+    "completed": "Completed",
+    "pending": "Pending",
+    "averageConfidence": "Average Confidence",
+    "leadConversionRate": "Lead Conversion Rate",
+    "predictedRevenue": "Predicted Revenue",
+    "nextMonth": "for next month",
+    "thisWeek": "this week",
+    "smartRecommendations": "Smart Recommendations",
+    "allAnalyses": "All Analyses",
+    "analysisLog": "Analysis Log",
+    "analysisType": "Analysis Type",
+    "status": "Status",
+    "confidenceScore": "Confidence Score",
+    "keyInsights": "Key Insights",
+    "executionDate": "Execution Date",
+    "marketTrends": "Market Trends",
+    "upwardTrend": "Upward Trend",
+    "increasedDemand": "Increased demand in residential properties",
+    "priceStability": "Price Stability",
+    "stablePrices": "Stable prices across all segments",
+    "customerActivity": "Customer Activity",
+    "increasedInquiries": "Increased inquiries and interest",
+    "growthPercentage": "Growth Percentage",
+    "priceValue": "Price Value",
+    "inquiryIncrease": "Inquiry Increase",
+    "highValueLeads": "High Value Leads",
+    "messages": {
+      "recommendationsGenerated": "Recommendations generated successfully",
+      "generateError": "Error generating recommendations",
+      "recommendationApplied": "Recommendation applied successfully",
+      "applyError": "Error applying recommendation",
+      "recommendationRejected": "Recommendation rejected",
+      "rejectError": "Error rejecting recommendation"
+    },
+    "leads": "Leads",
+    "properties": "Properties",
+    "deals": "Deals",
+    "marketing": "Marketing",
+    "operations": "Operations",
+    "deal": "Deal",
+    "smartRecommendations": "Smart Recommendations",
+    "recommendedActions": {
+      "facebook": "Increase investment in Facebook ads",
+      "easternRegion": "Focus on properties in the Eastern region",
+      "leadFollowUp": "Improve lead follow-up process"
+    }
+  },
+  "hardcoded": {
+    "connectionError": "Connection Error",
+    "cannotConnect": "Cannot connect to server. Make sure NestJS Backend is running on localhost:3000",
+    "toRunBackend": "To run Backend:",
+    "lastUpdate": "Last update:",
+    "viewAll": "View All",
+    "undefined": "Undefined",
+    "fromLastMonth": "from last month",
+    "totalProperties": "Total Properties",
+    "completedDeals": "Completed Deals",
+    "totalRevenue": "Total Revenue",
+    "recentLeads": "Recent Leads",
+    "recentProperties": "Recent Properties",
+    "quickActions": "Quick Actions",
+    "addClient": "Add Client",
+    "addProperty": "Add Property",
+    "logActivity": "Log Activity",
+    "whatsapp": "WhatsApp",
+    "allRightsReserved": "All rights reserved",
+    "saving": "Saving...",
+    "update": "Update",
+    "add": "Add",
+    "new": "New",
+    "contacted": "Contacted",
+    "interested": "Interested",
+    "deal": "Deal",
+    "notInterested": "Not Interested",
+    "available": "Available",
+    "booked": "Booked",
+    "sold": "Sold",
+    "rented": "Rented",
+    "villa": "Villa",
+    "apartment": "Apartment",
+    "land": "Land",
+    "office": "Office",
+    "active": "Active",
+    "completed": "Completed",
+    "pending": "Pending",
+    "email": "Email",
+    "meeting": "Meeting",
+    "call": "Call",
+    "facebook": "Facebook",
+    "google": "Google",
+    "referral": "Referral",
+    "bayut": "Bayut",
+    "replied": "Replied",
+    "property": "Property",
+    "activity": "Activity",
+    "searchInAnalytics": "Search in analytics...",
+    "searchInConversations": "Search in conversations...",
+    "typeMessage": "Type a message...",
+    "exportingData": "Exporting data...",
+    "languageChangeError": "Error changing language",
+    "serviceWorkerRegistered": "Service Worker registered successfully",
+    "serviceWorkerRegistrationFailed": "Service Worker registration failed",
+    "pwaInstallError": "Error installing PWA",
+    "componentRenderTime": "took {time}ms to render",
+    "bundleAnalyzerReady": "Bundle analyzer ready",
+    "bundleAnalyzerNotAvailable": "Bundle analyzer not available",
+    "webVitalLogged": "Web Vital logged",
+    "memoryUsage": "Memory Usage",
+    "apiRequests": "API Requests",
+    "slowApiRequest": "Slow API request",
+    "settingsLoadError": "Error loading settings from localStorage",
+    "notificationSettingsSaveError": "Error saving notification settings",
+    "securitySettingsSaveError": "Error saving security settings",
+    "appearanceSettingsSaveError": "Error saving appearance settings",
+    "integrationSettingsSaveError": "Error saving integration settings",
+    "settingsResetError": "Error resetting settings",
+    "useChartError": "useChart must be used within a <ChartContainer />",
+    "useFormFieldError": "useFormField should be used within <FormField>",
+    "useCarouselError": "useCarousel must be used within a <Carousel />",
+    "useSidebarError": "useSidebar must be used within a SidebarProvider.",
+    "loadingText": "Loading...",
+    "loadingAriaLabel": "Loading",
+    "selectDateRange": "Pick a date range",
+    "breadcrumbMore": "More",
+    "dialogClose": "Close"
+  },
+  "pwa": {
+    "installPrompt": "You can install the app on your device!",
+    "installDescription": "Click 'Install' at the top",
+    "install": "Install",
+    "installedSuccess": "App installed successfully!",
+    "installedDescription": "You can now use the app offline",
+    "connectionRestored": "Internet connection restored",
+    "offlineMode": "You are now offline",
+    "offlineDescription": "You will work with cached data",
+    "updateAvailable": "New update available!",
+    "updateDescription": "Reload the page to get the latest features",
+    "update": "Update",
+    "features": {
+      "offline": "Offline Usage",
+      "offlineDesc": "Use the app without internet connection",
+      "autoUpdate": "Auto Update",
+      "autoUpdateDesc": "Gets updates automatically",
+      "notifications": "Instant Notifications",
+      "notificationsDesc": "Receive notifications even when app is closed",
+      "faster": "Faster Experience",
+      "fasterDesc": "Faster loading and improved performance"
+    },
+    "installTitle": "Install EchoOps CRM App",
+    "installSubtitle": "Get the best experience with the app installed on your device",
+    "installApp": "Install App"
+  },
+  "reports": {
+    "exportSuccess": "Report exported successfully",
+    "exportError": "Error exporting report",
+    "advanced": {
+      "title": "Advanced Reports",
+      "subtitle": "Comprehensive reports and statistics for all system activities"
+    },
+    "filters": {
+      "periodPlaceholder": "Time Period",
+      "typePlaceholder": "Report Type",
+      "period": {
+        "day": "Day",
+        "week": "Week",
+        "month": "Month",
+        "quarter": "Quarter",
+        "year": "Year"
+      },
+      "types": {
+        "sales": "Sales Report",
+        "customers": "Customers Report",
+        "deals": "Deals Report",
+        "marketing": "Marketing Report",
+        "performance": "Performance Report"
+      }
+    },
+    "metrics": {
+      "totalSales": "Total Sales",
+      "customersCount": "Customers Count",
+      "activeDeals": "Active Deals",
+      "salesGrowth": "from last month",
+      "newCustomer": "new customer",
+      "salesByTeam": "Sales by Team",
+      "salesByProduct": "Sales by Product",
+      "customerDistribution": "Customer Distribution by Source",
+      "retentionRate": "Customer Retention Rate",
+      "retentionDescription": "Customer retention rate for the specified period",
+      "dealStatus": "Deal Status",
+      "new": "New",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "dealValue": "Deal Value",
+      "totalDealValue": "Total value of active deals",
+      "dealCloseRate": "Deal Close Rate",
+      "marketingPerformance": "Marketing Campaign Performance",
+      "leadSources": "Lead Sources",
+      "leadsCount": "leads",
+      "teamPerformance": "Team Performance",
+      "kpi": "Key Performance Indicators",
+      "availableProperties": "Available Properties",
+      "conversionRate": "Conversion Rate",
+      "occupancyRate": "Occupancy Rate",
+      "averageProductivity": "Average Productivity",
+      "satisfactionRate": "Satisfaction Rate",
+      "responseTime": "Response Time",
+      "growthRate": "Growth Rate",
+      "retentionRate": "Retention Rate"
+    },
+    "table": {
+      "team": "Team",
+      "sales": "Sales",
+      "target": "Target",
+      "achievement": "Achievement",
+      "campaign": "Campaign",
+      "spend": "Spend",
+      "revenue": "Revenue",
+      "roi": "ROI"
+    },
+    "export": {
+      "excel": "Excel",
+      "pdf": "PDF"
+    }
+  },
+  "lifecycles": {
+    "title": "Lead Lifecycles",
+    "subtitle": "Manage and track the lifecycle of leads from initial contact to deal closure",
+    "tableHeaders": {
+      "client": "Client",
+      "currentStage": "Current Stage",
+      "progress": "Progress",
+      "conversionRate": "Conversion Rate",
+      "totalDuration": "Total Duration",
+      "nextAction": "Next Action",
+      "actions": "Actions"
+    },
+    "noLifecycles": "No lead lifecycles found",
+    "days": "days",
+    "noAction": "No action specified",
+    "updateStage": "Update Stage",
+    "updateStageTitle": "Update Lead Stage",
+    "updateStageDescription": "Update the current stage and next action for the lead",
+    "currentStage": "Current Stage",
+    "nextAction": "Next Action",
+    "nextActionPlaceholder": "Example: Send price quote",
+    "nextActionDate": "Next Action Date",
+    "notesPlaceholder": "Any additional notes"
+  },
+  "activities": {
+    "title": "Activities",
+    "search": "Manage and track all customer activities and interactions",
+    "add": "Add Activity",
+    "messages": {
+      "created": "Activity created successfully",
+      "updated": "Activity updated successfully",
+      "deleted": "Activity deleted successfully",
+      "error": "Error occurred",
+      "deleteConfirm": "Are you sure you want to delete this activity?"
+    },
+    "stats": {
+      "totalActivities": "Total Activities",
+      "completedActivities": "Completed Activities",
+      "scheduledActivities": "Scheduled Activities",
+      "todayActivities": "Today's Activities"
+    },
+    "filters": {
+      "title": "Filter and Search Activities",
+      "searchPlaceholder": "Search by title, client, or description...",
+      "typePlaceholder": "Activity Type",
+      "statusPlaceholder": "Status",
+      "resultPlaceholder": "Result"
+    },
+    "types": {
+      "all": "All Types",
+      "call": "Call",
+      "email": "Email",
+      "whatsapp": "WhatsApp",
+      "meeting": "Meeting",
+      "note": "Note"
+    },
+    "status": {
+      "all": "All Statuses",
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "results": {
+      "all": "All Results",
+      "interested": "Interested",
+      "completed": "Completed",
+      "needsTime": "Needs Time to Think",
+      "waitingResponse": "Waiting for Response",
+      "cancelled": "Cancelled",
+      "followUpRequired": "Follow Up Required"
+    },
+    "table": {
+      "title": "Activities List",
+      "activity": "Activity",
+      "type": "Type",
+      "client": "Client",
+      "relatedProperty": "Related Property",
+      "agent": "Agent",
+      "result": "Result",
+      "dateTime": "Date & Time",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "form": {
+      "editActivity": "Edit Activity",
+      "addActivity": "Add New Activity",
+      "editDescription": "Edit activity data",
+      "addDescription": "Enter new activity data",
+      "type": "Activity Type",
+      "typePlaceholder": "Choose activity type",
+      "result": "Result",
+      "resultPlaceholder": "Choose result",
+      "subject": "Subject",
+      "description": "Description",
+      "activityDate": "Activity Date",
+      "duration": "Duration (minutes)",
+      "nextAction": "Next Action",
+      "cancel": "Cancel",
+      "update": "Update",
+      "create": "Create"
+    },
+    "outcomes": {
+      "successful": "Successful",
+      "noAnswer": "No Answer",
+      "interested": "Interested",
+      "notInterested": "Not Interested",
+      "followUpRequired": "Follow Up Required"
+    },
+    "schedule": {
+      "title": "Today's Schedule",
+      "noActivities": "No activities scheduled today",
+      "addNewHint": "You can add new activities from the button above"
+    },
+    "actions": {
+      "viewDetails": "View Details",
+      "editActivity": "Edit Activity",
+      "markComplete": "Mark as Complete",
+      "reschedule": "Reschedule",
+      "deleteActivity": "Delete Activity"
+    },
+    "nextAction": "Next Action",
+    "duration": "Duration",
+    "priorityLevels": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    }
+  },
+  "tasks": {
+    "messages": {
+      "created": "Task created successfully",
+      "updated": "Task updated successfully",
+      "deleted": "Task deleted successfully",
+      "createError": "Error creating task",
+      "updateError": "Error updating task",
+      "deleteError": "Error deleting task"
+    },
+    "types": {
+      "call": "Call",
+      "meeting": "Meeting",
+      "visit": "Visit",
+      "follow_up": "Follow Up",
+      "reminder": "Reminder",
+      "other": "Other"
+    },
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "priority": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "form": {
+      "addNew": "Add New Task",
+      "editTask": "Edit Task",
+      "addNewTitle": "Add New Task",
+      "editTaskTitle": "Edit Task",
+      "description": "Enter new task data",
+      "titlePlaceholder": "Example: Call with client Ahmed",
+      "meetingLink": "Meeting Link"
+    }
+  },
+  "header": {
+    "search": "Search...",
+    "notifications": "Notifications",
+    "newLead": "New Lead",
+    "newLeadDesc": "Ahmed Mohamed is interested in buying an apartment",
+    "appointment": "Today's Appointment",
+    "appointmentDesc": "Property tour with Sara",
+    "dealClosed": "Deal Closed",
+    "dealClosedDesc": "Deal closed for 500,000 SAR",
+    "notifications": {
+      "newLead": "New Lead",
+      "newLeadDesc": "Ahmed Mohamed is interested in buying an apartment",
+      "appointment": "Today's Appointment",
+      "appointmentDesc": "Property tour with Sara",
+      "dealClosed": "Deal Closed",
+      "dealClosedDesc": "Deal closed for 500,000 SAR"
+    },
+    "userMenu": {
+      "myAccount": "My Account",
+      "profile": "Profile",
+      "settings": "Settings",
+      "help": "Help",
+      "logout": "Logout"
+    }
+  },
+  "profile": {
+    "memberSince": "Member since",
+    "lastLogin": "Last login"
+  },
+  "auditLogs": {
+    "title": "Audit Logs",
+    "subtitle": "Track all operations and changes in the system",
+    "loading": "Loading audit logs...",
+    "refresh": "Refresh",
+    "exportLog": "Export Log",
+    "totalOperations": "Total Operations",
+    "successfulOperations": "Successful Operations",
+    "failedOperations": "Failed Operations",
+    "activeUsers": "Active Users",
+    "recentActivity": "Recent Activity",
+    "detailedLogs": "Detailed Audit Logs",
+    "searchPlaceholder": "Search in logs...",
+    "action": "Action",
+    "allActions": "All Actions",
+    "resourceType": "Resource Type",
+    "allResources": "All Resources",
+    "user": "User",
+    "allUsers": "All Users",
+    "period": "Period",
+    "allTimes": "All Times",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "thisYear": "This Year",
+    "details": "Details",
+    "operationDetails": "Operation Details",
+    "system": "System",
+    "view": "View",
+    "userAgent": "User Agent",
+    "result": "Result",
+    "changes": "Changes",
+    "additionalData": "Additional Data",
+    "actions": {
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
+      "login": "Login",
+      "logout": "Logout",
+      "view": "View",
+      "export": "Export",
+      "import": "Import",
+      "settings": "Settings",
+      "approve": "Approve",
+      "reject": "Reject",
+      "archive": "Archive",
+      "restore": "Restore"
+    },
+    "resources": {
+      "lead": "Lead",
+      "property": "Property",
+      "deal": "Deal",
+      "activity": "Activity",
+      "company": "Company",
+      "user": "User",
+      "whatsappMessage": "WhatsApp Message",
+      "notification": "Notification",
+      "leadSource": "Lead Source",
+      "subscriptionPlan": "Subscription Plan",
+      "billingHistory": "Billing History"
+    },
+    "status": {
+      "success": "Success",
+      "failed": "Failed",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "billing": {
+      "title": "Billing & Payments",
+      "subtitle": "Manage invoices and track payments",
+      "loading": "Loading invoices...",
+      "newInvoice": "New Invoice",
+      "createInvoice": "Create New Invoice",
+      "company": "Company",
+      "chooseCompany": "Choose Company",
+      "subscriptionPlan": "Subscription Plan",
+      "choosePlan": "Choose Plan",
+      "invoiceNumber": "Invoice Number",
+      "amount": "Amount",
+      "currency": "Currency",
+      "paymentMethod": "Payment Method",
+      "billingDate": "Billing Date",
+      "dueDate": "Due Date",
+      "paidDate": "Paid Date",
+      "status": "Invoice Status",
+      "description": "Description",
+      "notes": "Notes",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save",
+      "totalRevenue": "Total Revenue",
+      "pendingRevenue": "Pending Revenue",
+      "totalInvoices": "Total Invoices",
+      "paymentRate": "Payment Rate",
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Failed",
+      "refunded": "Refunded",
+      "currencies": {
+        "usd": "USD - US Dollar",
+        "eur": "EUR - Euro",
+        "sar": "SAR - Saudi Riyal",
+        "aed": "AED - UAE Dirham"
+      },
+      "placeholders": {
+        "paymentMethod": "Credit card, bank transfer, etc.",
+        "description": "Detailed invoice description",
+        "notes": "Additional notes"
+      },
+      "messages": {
+        "createSuccess": "Invoice created successfully",
+        "createError": "Error creating invoice",
+        "updateSuccess": "Invoice updated successfully",
+        "updateError": "Error updating invoice",
+        "deleteSuccess": "Invoice deleted successfully",
+        "deleteError": "Error deleting invoice"
+      },
+      "searchPlaceholder": "Search in invoices...",
+      "allStatuses": "All Statuses",
+      "invoiceHistory": "Invoice History",
+      "notSpecified": "Not Specified",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this invoice?",
+      "editInvoice": "Edit Invoice"
+    },
+    "deals": {
+      "title": "Deals Management",
+      "subtitle": "Manage and track all deals in the system",
+      "add": "Add New Deal",
+      "edit": "Edit Deal",
+      "delete": "Delete Deal",
+      "search": "Search deals by title, client, or property",
+      "stages": {
+        "prospect": "Prospect",
+        "inspection": "Inspection",
+        "proposal": "Proposal",
+        "negotiation": "Negotiation",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "statuses": {
+        "active": "Active",
+        "closed": "Closed",
+        "cancelled": "Cancelled"
+      },
+      "stats": {
+        "totalDeals": "Total Deals",
+        "activeDeals": "Active Deals",
+        "completedDeals": "Completed Deals",
+        "totalRevenue": "Total Revenue"
+      },
+      "filters": {
+        "title": "Filters",
+        "stage": "Stage",
+        "status": "Status",
+        "agent": "Agent",
+        "allStages": "All Stages",
+        "allStatuses": "All Statuses",
+        "allAgents": "All Agents",
+        "placeholder": "Choose Status",
+        "placeholderStage": "Choose Stage"
+      },
+      "table": {
+        "title": "Deals List",
+        "deal": "Deal",
+        "client": "Client",
+        "amount": "Amount",
+        "commission": "Commission",
+        "stage": "Stage",
+        "probability": "Probability",
+        "agent": "Agent",
+        "expectedDate": "Expected Date",
+        "actions": "Actions"
+      },
+      "actions": {
+        "viewDetails": "View Details",
+        "editDeal": "Edit Deal",
+        "viewProperty": "View Property",
+        "viewClient": "View Client",
+        "deleteDeal": "Delete Deal"
+      },
+      "form": {
+        "editDeal": "Edit Deal",
+        "addNewDeal": "Add New Deal",
+        "editDealDesc": "Edit deal information",
+        "addDealDesc": "Enter new deal information",
+        "dealTitle": "Deal Title",
+        "status": "Status",
+        "dealValue": "Deal Value",
+        "commissionPercentage": "Commission Percentage (%)",
+        "dealStage": "Deal Stage",
+        "expectedCloseDate": "Expected Close Date",
+        "notes": "Notes",
+        "cancel": "Cancel",
+        "update": "Update",
+        "create": "Create"
+      },
+      "statusOptions": {
+        "negotiating": "Negotiating",
+        "proposalSent": "Proposal Sent",
+        "underReview": "Under Review",
+        "won": "Won",
+        "lost": "Lost"
+      },
+      "stageOptions": {
+        "initialContact": "Initial Contact",
+        "qualified": "Qualified",
+        "proposal": "Proposal",
+        "negotiation": "Negotiation",
+        "closedWon": "Closed Won",
+        "closedLost": "Closed Lost"
+      },
+      "summary": {
+        "performance": "Performance Summary",
+        "closingRate": "Closing Rate",
+        "averageDealSize": "Average Deal Size",
+        "averageCommission": "Average Commission",
+        "upcomingDeals": "Upcoming Deals to Close"
+      },
+      "messages": {
+        "created": "Deal created successfully",
+        "updated": "Deal updated successfully",
+        "deleted": "Deal deleted successfully",
+        "error": "Error occurred",
+        "confirmDelete": "Are you sure you want to delete this deal?"
+      }
+    },
+    "featureFlags": {
+      "title": "Feature Flags Management",
+      "subtitle": "Control enabling and disabling system features",
+      "addNew": "New Feature",
+      "createNew": "Create New Feature",
+      "editFeature": "Edit Feature",
+      "loading": "Loading features...",
+      "stats": {
+        "totalFeatures": "Total Features",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "inProduction": "In Production"
+      },
+      "form": {
+        "featureName": "Feature Name",
+        "featureKey": "Feature Key",
+        "description": "Description",
+        "category": "Category",
+        "environment": "Environment",
+        "targetType": "Target Type",
+        "targetValue": "Target Value",
+        "rolloutPercentage": "Rollout Percentage (%)",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "tags": "Tags (comma separated)",
+        "enableFeature": "Enable Feature",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving...",
+        "update": "Update",
+        "updating": "Updating..."
+      },
+      "placeholders": {
+        "featureName": "Awesome new feature",
+        "featureKey": "new_awesome_feature",
+        "description": "Detailed feature description",
+        "category": "UI, API, Security, etc.",
+        "targetValue": "Company or user ID",
+        "rolloutPercentage": "50",
+        "tags": "new, important, experimental"
+      },
+      "environments": {
+        "development": "Development",
+        "staging": "Staging",
+        "production": "Production"
+      },
+      "targetTypes": {
+        "all": "All",
+        "company": "Specific Company",
+        "user": "Specific User",
+        "percentage": "Percentage"
+      },
+      "status": {
+        "enabled": "Enabled",
+        "disabled": "Disabled"
+      },
+      "filters": {
+        "search": "Search features...",
+        "allCategories": "All Categories",
+        "allEnvironments": "All Environments"
+      },
+      "table": {
+        "availableFeatures": "Available Features",
+        "feature": "Feature",
+        "key": "Key",
+        "category": "Category",
+        "environment": "Environment",
+        "targeting": "Targeting",
+        "status": "Status",
+        "control": "Control",
+        "actions": "Actions",
+        "notSpecified": "Not Specified"
+      },
+      "messages": {
+        "created": "Feature created successfully",
+        "createError": "Error occurred while creating feature",
+        "updated": "Feature updated successfully",
+        "updateError": "Error occurred while updating feature",
+        "statusUpdated": "Feature status updated successfully",
+        "statusUpdateError": "Error occurred while updating feature status",
+        "deleted": "Feature deleted successfully",
+        "deleteError": "Error occurred while deleting feature",
+        "confirmDelete": "Are you sure you want to delete this feature?"
+      }
+    },
+    "dealsKanban": {
+      "title": "Deals Management - Kanban",
+      "subtitle": "Visual view of deals and their management across different stages",
+      "addNew": "New Deal",
+      "editDeal": "Edit Deal",
+      "newDeal": "New Deal",
+      "addDealDesc": "Enter new deal information",
+      "form": {
+        "dealTitle": "Deal Title",
+        "dealValue": "Deal Value",
+        "dealStage": "Stage",
+        "dealProbability": "Probability",
+        "dealCloseDate": "Expected Close Date",
+        "dealDescription": "Description",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving..."
+      },
+      "placeholders": {
+        "search": "Search deals...",
+        "dealTitle": "Example: Villa sale in Riyadh",
+        "dealValue": "0",
+        "dealProbability": "50",
+        "dealDescription": "Deal description and details"
+      },
+      "stages": {
+        "new": "New",
+        "contacted": "Contacted",
+        "qualified": "Qualified",
+        "proposal": "Proposal",
+        "negotiation": "Negotiations",
+        "closedWon": "Completed - Won",
+        "closedLost": "Completed - Lost"
+      },
+      "messages": {
+        "created": "Deal created successfully",
+        "createError": "Error occurred while creating deal",
+        "updated": "Deal updated successfully",
+        "updateError": "Error occurred while updating deal",
+        "deleted": "Deal deleted successfully",
+        "deleteError": "Error occurred while deleting deal",
+        "confirmDelete": "Are you sure you want to delete this deal?",
+        "noDealsInStage": "No deals in this stage"
+      },
+      "actions": {
+        "edit": "Edit",
+        "backToNew": "Back to New",
+        "closeAsWon": "Close as Won",
+        "closeAsLost": "Close as Lost",
+        "delete": "Delete"
+      }
+    },
+    "leadSources": {
+      "title": "Lead Sources",
+      "subtitle": "Manage and track lead sources and their performance",
+      "addNew": "Add New Source",
+      "editSource": "Edit Lead Source",
+      "addSource": "Add New Source",
+      "editSourceDesc": "Edit lead source data",
+      "addSourceDesc": "Enter new lead source data",
+      "form": {
+        "sourceName": "Source Name",
+        "sourceType": "Source Type",
+        "costPerLead": "Cost per Lead (SAR)",
+        "conversionRate": "Conversion Rate (%)",
+        "status": "Status",
+        "description": "Description",
+        "cancel": "Cancel",
+        "add": "Add",
+        "update": "Update",
+        "saving": "Saving..."
+      },
+      "placeholders": {
+        "sourceName": "Enter source name",
+        "costPerLead": "0.00",
+        "conversionRate": "0.0",
+        "description": "Source description (optional)"
+      },
+      "types": {
+        "facebook": "Facebook",
+        "google": "Google",
+        "website": "Website",
+        "referral": "Referral",
+        "whatsapp": "WhatsApp",
+        "bayut": "Bayut",
+        "dubizzle": "Dubizzle",
+        "propertyFinder": "Property Finder",
+        "other": "Other"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "stats": {
+        "totalLeads": "Total Leads",
+        "convertedLeads": "Converted Leads",
+        "conversionRate": "Conversion Rate",
+        "totalCost": "Total Cost"
+      },
+      "filters": {
+        "search": "Search sources...",
+        "allTypes": "All Types",
+        "allStatuses": "All Statuses"
+      },
+      "messages": {
+        "created": "Lead source created successfully",
+        "createError": "Error occurred while creating lead source",
+        "updated": "Lead source updated successfully",
+        "updateError": "Error occurred while updating lead source",
+        "deleted": "Lead source deleted successfully",
+        "deleteError": "Error occurred while deleting lead source",
+        "confirmDelete": "Are you sure you want to delete this source?",
+        "noSources": "No lead sources found",
+        "noSourcesDesc": "No lead sources were found. Start by adding a new source."
+      },
+      "table": {
+        "totalLeads": "Total Leads",
+        "convertedLeads": "Converted Leads",
+        "conversionRate": "Conversion Rate",
+        "costPerLead": "Cost per Lead",
+        "createdDate": "Created Date"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "marketingCampaigns": {
+      "title": "Marketing Campaigns",
+      "subtitle": "Manage and track marketing campaigns and advertisements",
+      "addNew": "New Campaign",
+      "editCampaign": "Edit Campaign",
+      "newCampaign": "New Marketing Campaign",
+      "editCampaignDesc": "Edit campaign data",
+      "addCampaignDesc": "Enter new marketing campaign data",
+      "form": {
+        "campaignName": "Campaign Name",
+        "campaignType": "Campaign Type",
+        "description": "Description",
+        "budget": "Budget",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "targetAudience": "Target Audience",
+        "subject": "Message Subject",
+        "message": "Message Content",
+        "landingPageUrl": "Landing Page URL",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving..."
+      },
+      "placeholders": {
+        "search": "Search campaigns...",
+        "campaignName": "Example: Eid Al-Adha Campaign",
+        "description": "Campaign description and objectives",
+        "budget": "0",
+        "targetAudience": "Description of campaign target audience",
+        "subject": "Email subject",
+        "message": "Message content",
+        "landingPageUrl": "https://example.com/landing-page"
+      },
+      "types": {
+        "email": "Email",
+        "sms": "SMS",
+        "whatsapp": "WhatsApp",
+        "socialMedia": "Social Media",
+        "landingPage": "Landing Page"
+      },
+      "status": {
+        "active": "Active",
+        "paused": "Paused",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "draft": "Draft"
+      },
+      "stats": {
+        "totalCampaigns": "Total Campaigns",
+        "totalBudget": "Total Budget",
+        "conversionRate": "Conversion Rate",
+        "totalReach": "Total Reach",
+        "active": "active",
+        "spent": "spent",
+        "averageConversionRate": "Average conversion rate",
+        "impressions": "impressions"
+      },
+      "filters": {
+        "status": "Status",
+        "type": "Type",
+        "allStatuses": "All Statuses",
+        "allTypes": "All Types"
+      },
+      "messages": {
+        "created": "Campaign created successfully",
+        "createError": "Error occurred while creating campaign",
+        "updated": "Campaign updated successfully",
+        "updateError": "Error occurred while updating campaign",
+        "deleted": "Campaign deleted successfully",
+        "deleteError": "Error occurred while deleting campaign",
+        "confirmDelete": "Are you sure you want to delete this campaign?",
+        "noCampaigns": "No marketing campaigns",
+        "loading": "Loading..."
+      },
+      "table": {
+        "title": "Marketing Campaigns List",
+        "campaignName": "Campaign Name",
+        "type": "Type",
+        "status": "Status",
+        "budget": "Budget",
+        "progress": "Progress",
+        "actions": "Actions",
+        "impressions": "Impressions",
+        "clicks": "Clicks"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "start": "Start",
+        "pause": "Pause"
+      }
+    },
+    "paymentsSubscriptions": {
+      "title": "Payments & Subscriptions",
+      "subtitle": "Manage subscriptions, invoices and payments",
+      "stats": {
+        "totalRevenue": "Total Revenue",
+        "activeSubscriptions": "Active Subscriptions",
+        "pendingInvoices": "Pending Invoices",
+        "collectionRate": "Collection Rate",
+        "thisMonth": "This Month",
+        "outOf": "out of",
+        "needsFollowUp": "Needs Follow-up",
+        "paymentPercentage": "Payment Percentage"
+      },
+      "tabs": {
+        "subscriptions": "Subscriptions",
+        "payments": "Invoices & Payments"
+      },
+      "subscriptions": {
+        "addNew": "New Subscription",
+        "editSubscription": "Edit Subscription",
+        "newSubscription": "New Subscription",
+        "editSubscriptionDesc": "Edit subscription data",
+        "addSubscriptionDesc": "Enter new subscription data",
+        "form": {
+          "company": "Company",
+          "subscriptionPlan": "Subscription Plan",
+          "status": "Status",
+          "startDate": "Start Date",
+          "endDate": "End Date",
+          "chooseCompany": "Choose Company",
+          "choosePlan": "Choose Plan",
+          "cancel": "Cancel",
+          "save": "Save",
+          "saving": "Saving..."
+        },
+        "table": {
+          "title": "Subscriptions List",
+          "company": "Company",
+          "plan": "Plan",
+          "status": "Status",
+          "startDate": "Start Date",
+          "endDate": "End Date",
+          "actions": "Actions",
+          "noSubscriptions": "No subscriptions",
+          "loading": "Loading..."
+        },
+        "status": {
+          "active": "Active",
+          "inactive": "Inactive",
+          "expired": "Expired",
+          "cancelled": "Cancelled"
+        }
+      },
+      "payments": {
+        "addNew": "New Invoice",
+        "editPayment": "Edit Invoice",
+        "newPayment": "New Invoice",
+        "editPaymentDesc": "Edit invoice data",
+        "addPaymentDesc": "Enter new invoice data",
+        "form": {
+          "company": "Company",
+          "subscriptionPlan": "Subscription Plan",
+          "amount": "Amount",
+          "currency": "Currency",
+          "paymentMethod": "Payment Method",
+          "status": "Status",
+          "billingDate": "Invoice Date",
+          "dueDate": "Due Date",
+          "paidDate": "Payment Date",
+          "invoiceNumber": "Invoice Number",
+          "description": "Description",
+          "notes": "Notes",
+          "chooseCompany": "Choose Company",
+          "choosePlan": "Choose Plan",
+          "placeholder": {
+            "amount": "0.00",
+            "paymentMethod": "Visa, Mastercard, etc.",
+            "invoiceNumber": "INV-2024-001",
+            "description": "Invoice description"
+          },
+          "cancel": "Cancel",
+          "save": "Save",
+          "saving": "Saving..."
+        },
+        "table": {
+          "title": "Invoices & Payments List",
+          "company": "Company",
+          "invoiceNumber": "Invoice Number",
+          "amount": "Amount",
+          "status": "Status",
+          "billingDate": "Invoice Date",
+          "dueDate": "Due Date",
+          "actions": "Actions",
+          "noInvoices": "No invoices",
+          "loading": "Loading..."
+        },
+        "status": {
+          "paid": "Paid",
+          "pending": "Pending",
+          "failed": "Failed",
+          "refunded": "Refunded"
+        }
+      },
+      "billingCycle": {
+        "monthly": "Monthly",
+        "yearly": "Yearly"
+      },
+      "messages": {
+        "subscriptionCreated": "Subscription created successfully",
+        "subscriptionCreateError": "Error occurred while creating subscription",
+        "subscriptionUpdated": "Subscription updated successfully",
+        "subscriptionUpdateError": "Error occurred while updating subscription",
+        "subscriptionDeleted": "Subscription deleted successfully",
+        "subscriptionDeleteError": "Error occurred while deleting subscription",
+        "paymentCreated": "Invoice created successfully",
+        "paymentCreateError": "Error occurred while creating invoice",
+        "paymentUpdated": "Invoice updated successfully",
+        "paymentUpdateError": "Error occurred while updating invoice",
+        "paymentDeleted": "Invoice deleted successfully",
+        "paymentDeleteError": "Error occurred while deleting invoice",
+        "confirmDeleteSubscription": "Are you sure you want to delete this subscription?",
+        "confirmDeletePayment": "Are you sure you want to delete this invoice?"
+      },
+      "search": {
+        "subscriptions": "Search subscriptions...",
+        "invoices": "Search invoices..."
+      },
+      "filters": {
+        "allStatuses": "All Statuses"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "properties": {
+      "title": "Properties",
+      "search": "Search and manage real estate properties",
+      "add": "Add Property",
+      "stats": {
+        "totalProperties": "Total Properties",
+        "availableProperties": "Available Properties",
+        "bookedProperties": "Booked Properties",
+      "averagePrice": "Average Price"
+      },
+      "filters": {
+        "title": "Filters & Search",
+        "searchPlaceholder": "Search properties...",
+        "typePlaceholder": "Property Type",
+        "statusPlaceholder": "Status",
+        "pricePlaceholder": "Price Range"
+      },
+      "types": {
+        "all": "All Types",
+        "villa": "Villa",
+        "apartment": "Apartment",
+        "land": "Land",
+        "office": "Office"
+      },
+      "statuses": {
+        "all": "All Statuses",
+        "available": "Available",
+        "booked": "Booked",
+        "sold": "Sold",
+        "rented": "Rented"
+      },
+      "priceRanges": {
+        "all": "All Prices",
+        "under-300k": "Under 300K",
+        "300k-600k": "300K - 600K",
+        "600k-1m": "600K - 1M",
+        "over-1m": "Over 1M"
+      },
+      "messages": {
+        "created": "Property created successfully",
+        "updated": "Property updated successfully",
+        "deleted": "Property deleted successfully",
+        "error": "Error occurred while processing property",
+        "deleteConfirm": "Are you sure you want to delete this property?",
+        "noProperties": "No properties found",
+        "noPropertiesDesc": "No properties match your search criteria",
+        "resetFilters": "Reset Filters"
+      },
+      "form": {
+        "editProperty": "Edit Property",
+        "addNewProperty": "Add New Property",
+        "editPropertyDesc": "Edit property data",
+        "addPropertyDesc": "Enter new property data",
+        "title": "Title",
+        "propertyType": "Property Type",
+        "price": "Price",
+        "area": "Area",
+        "bedrooms": "Bedrooms",
+        "location": "Location",
+        "status": "Status",
+        "description": "Description",
+        "choosePropertyType": "Choose property type",
+        "chooseStatus": "Choose status",
+        "cancel": "Cancel",
+        "update": "Update",
+        "create": "Create"
+      },
+      "propertyTypes": {
+        "apartment": "Apartment",
+        "villa": "Villa",
+        "office": "Office",
+        "shop": "Shop"
+      },
+      "propertyStatuses": {
+        "available": "Available",
+        "reserved": "Reserved",
+        "sold": "Sold",
+        "rented": "Rented"
+      },
+      "dropdown": {
+        "options": "Options",
+        "viewDetails": "View Details",
+        "editProperty": "Edit Property",
+        "addToFavorites": "Add to Favorites",
+        "deleteProperty": "Delete Property"
+      },
+      "area": "m²"
+    },
+    "rolesPermissions": {
+      "title": "Roles & Permissions Management",
+      "subtitle": "Manage user roles and permissions in the system",
+      "tabs": {
+        "roles": "Roles",
+        "permissions": "Permissions"
+      },
+      "roles": {
+        "addNew": "Add New Role",
+        "editRole": "Edit Role",
+        "newRole": "Add New Role",
+        "editRoleDesc": "Edit role data",
+        "addRoleDesc": "Enter new role data",
+        "form": {
+          "roleName": "Role Name",
+          "displayName": "Display Name",
+          "description": "Description",
+          "roleLevel": "Role Level",
+          "active": "Active",
+          "placeholder": {
+            "roleName": "Example: admin, sales_manager",
+            "displayName": "Example: System Administrator",
+            "description": "Role description and permissions"
+          },
+          "cancel": "Cancel",
+          "save": "Save",
+          "saving": "Saving..."
+        },
+        "levels": {
+          "1": "1 - Highest Permission",
+          "2": "2 - High Permission",
+          "3": "3 - Medium Permission",
+          "4": "4 - Low Permission",
+          "5": "5 - Basic Permission"
+        },
+        "table": {
+          "title": "Roles List",
+          "roleName": "Role Name",
+          "displayName": "Display Name",
+          "level": "Level",
+          "status": "Status",
+          "users": "Users",
+          "actions": "Actions",
+          "noRoles": "No roles found",
+          "loading": "Loading..."
+        },
+        "status": {
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "messages": {
+          "created": "Role created successfully",
+          "createError": "Error occurred while creating role",
+          "updated": "Role updated successfully",
+          "updateError": "Error occurred while updating role",
+          "deleted": "Role deleted successfully",
+          "deleteError": "Error occurred while deleting role",
+          "cannotDeleteSystem": "Cannot delete system role",
+          "confirmDelete": "Are you sure you want to delete this role?"
+        }
+      },
+      "permissions": {
+        "addNew": "Add New Permission",
+        "editPermission": "Edit Permission",
+        "newPermission": "Add New Permission",
+        "editPermissionDesc": "Edit permission data",
+        "addPermissionDesc": "Enter new permission data",
+        "form": {
+          "permissionName": "Permission Name",
+          "displayName": "Display Name",
+          "resource": "Resource",
+          "action": "Action",
+          "scope": "Scope",
+          "description": "Description",
+          "active": "Active",
+          "placeholder": {
+            "permissionName": "Example: leads.create",
+            "displayName": "Example: Create Lead",
+            "resource": "Example: leads, properties, deals",
+            "description": "Permission description"
+          },
+          "cancel": "Cancel",
+          "save": "Save",
+          "saving": "Saving..."
+        },
+        "actions": {
+          "create": "Create",
+          "read": "Read",
+          "update": "Update",
+          "delete": "Delete",
+          "list": "List",
+          "export": "Export",
+          "import": "Import",
+          "approve": "Approve",
+          "reject": "Reject",
+          "assign": "Assign",
+          "manage": "Manage"
+        },
+        "scopes": {
+          "own": "Own",
+          "team": "Team",
+          "company": "Company",
+          "all": "All"
+        },
+        "table": {
+          "title": "Permissions List",
+          "name": "Name",
+          "resource": "Resource",
+          "action": "Action",
+          "scope": "Scope",
+          "status": "Status",
+          "actions": "Actions",
+          "noPermissions": "No permissions found",
+          "loading": "Loading..."
+        },
+        "status": {
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "messages": {
+          "created": "Permission created successfully",
+          "createError": "Error occurred while creating permission",
+          "updated": "Permission updated successfully",
+          "updateError": "Error occurred while updating permission",
+          "deleted": "Permission deleted successfully",
+          "deleteError": "Error occurred while deleting permission",
+          "cannotDeleteSystem": "Cannot delete system permission",
+          "confirmDelete": "Are you sure you want to delete this permission?"
+        }
+      },
+      "search": {
+        "roles": "Search roles...",
+        "permissions": "Search permissions..."
+      },
+      "filters": {
+        "all": "All",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "security": {
+      "title": "Security Monitoring",
+      "subtitle": "Monitor security events and threats",
+      "loading": "Loading security data...",
+      "stats": {
+        "totalEvents": "Total Events",
+        "critical": "Critical",
+        "high": "High",
+        "blocked": "Blocked",
+        "unresolved": "Unresolved"
+      },
+      "threatLevel": {
+        "title": "Current Threat Level",
+        "medium": "Medium",
+        "basedOnEvents": "Based on recent events",
+        "outOf": "out of",
+        "low": "Low",
+        "high": "High",
+        "critical": "Critical"
+      },
+      "actions": {
+        "refresh": "Refresh",
+        "exportReport": "Export Report"
+      },
+      "tabs": {
+        "securityEvents": "Security Events",
+        "auditLog": "Audit Log"
+      },
+      "filters": {
+        "searchEvents": "Search events...",
+        "allLevels": "All Levels",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical",
+        "today": "Today",
+        "thisWeek": "This Week",
+        "thisMonth": "This Month",
+        "thisYear": "This Year"
+      },
+      "events": {
+        "title": "Security Events",
+        "table": {
+          "eventType": "Event Type",
+          "severity": "Severity",
+          "description": "Description",
+          "user": "User",
+          "ipAddress": "IP Address",
+          "location": "Location",
+          "status": "Status",
+          "date": "Date"
+        },
+        "types": {
+          "login_attempt": "Login Attempt",
+          "failed_login": "Failed Login",
+          "suspicious_activity": "Suspicious Activity",
+          "data_breach": "Data Breach",
+          "unauthorized_access": "Unauthorized Access",
+          "api_abuse": "API Abuse",
+          "malware_detected": "Malware Detected",
+          "ddos_attack": "DDoS Attack"
+        },
+        "severity": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High",
+          "critical": "Critical"
+        },
+        "status": {
+          "blocked": "Blocked",
+          "resolved": "Resolved",
+          "pending": "Pending"
+        },
+        "notSpecified": "Not Specified"
+      },
+      "audit": {
+        "title": "Audit Log",
+        "table": {
+          "action": "Action",
+          "resourceType": "Resource Type",
+          "user": "User",
+          "ipAddress": "IP Address",
+          "changes": "Changes",
+          "date": "Date"
+        },
+        "actions": {
+          "create": "Create",
+          "update": "Update",
+          "delete": "Delete",
+          "login": "Login",
+          "logout": "Logout",
+          "view": "View"
+        },
+        "system": "System",
+        "noChanges": "None"
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "securityEvent": "Security Event"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "profile": {
+        "title": "Profile",
+        "subtitle": "Manage your personal information and account settings",
+        "personalInfo": "Personal Information",
+        "uploadAvatar": "Upload Avatar",
+        "avatarDescription": "JPG, GIF or PNG. Maximum 2MB",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "username": "Username",
+        "email": "Email",
+        "phone": "Phone",
+        "saveProfile": "Save Profile",
+        "saving": "Saving...",
+        "success": "Profile updated successfully",
+        "error": "Error occurred while updating profile"
+      },
+      "company": {
+        "title": "Company",
+        "companyInfo": "Company Information",
+        "companyName": "Company Name",
+        "companyEmail": "Company Email",
+        "companyPhone": "Company Phone",
+        "companyWebsite": "Company Website",
+        "companyAddress": "Company Address",
+        "companyDescription": "Company Description",
+        "saveCompany": "Save Company",
+        "saving": "Saving...",
+        "success": "Company updated successfully",
+        "error": "Error occurred while updating company"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "notificationMethods": "Notification Methods",
+        "emailNotifications": "Email Notifications",
+        "emailNotificationsDesc": "Receive notifications via email",
+        "smsNotifications": "SMS Notifications",
+        "smsNotificationsDesc": "Receive notifications via SMS",
+        "pushNotifications": "Push Notifications",
+        "pushNotificationsDesc": "Receive push notifications",
+        "notificationTypes": "Notification Types",
+        "newLeads": "New Leads",
+        "dealUpdates": "Deal Updates",
+        "systemAlerts": "System Alerts",
+        "activityReminders": "Activity Reminders",
+        "whatsappMessages": "WhatsApp Messages",
+        "reports": "Reports",
+        "reportSchedule": "Report Schedule",
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "never": "Never",
+        "saveNotifications": "Save Notifications"
+      },
+      "security": {
+        "title": "Security",
+        "changePassword": "Change Password",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password",
+        "passwordStrength": "Password Strength",
+        "strong": "Strong",
+        "medium": "Medium",
+        "weak": "Weak",
+        "passwordMatch": "Passwords match",
+        "passwordMismatch": "Passwords do not match",
+        "updatePassword": "Update Password",
+        "updatingPassword": "Updating...",
+        "passwordSuccess": "Password updated successfully",
+        "passwordError": "Error occurred while updating password",
+        "twoFactor": "Two-Factor Authentication",
+        "enableTwoFactor": "Enable Two-Factor Authentication",
+        "twoFactorDesc": "Add an extra layer of security to your account",
+        "loginNotifications": "Login Notifications",
+        "loginNotificationsDesc": "Notify when logging in from a new device",
+        "sessionSettings": "Session Settings",
+        "sessionTimeoutLabel": "Session Timeout",
+        "passwordExpiryLabel": "Password Expiry",
+        "saveSecurity": "Save Security Settings"
+      },
+      "appearance": {
+        "title": "Appearance",
+        "appearanceSettings": "Appearance Settings",
+        "theme": "Theme",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
+        "language": "Language",
+        "arabic": "Arabic",
+        "english": "English",
+        "dateFormat": "Date Format",
+        "currency": "Currency",
+        "sar": "Saudi Riyal (SAR)",
+        "usd": "US Dollar (USD)",
+        "eur": "Euro (EUR)",
+        "timezone": "Timezone",
+        "riyadh": "Riyadh (GMT+3)",
+        "dubai": "Dubai (GMT+4)",
+        "london": "London (GMT+0)",
+        "newyork": "New York (GMT-5)",
+        "compactMode": "Compact Mode",
+        "compactModeDesc": "Display more dense information on small screens",
+        "saveAppearance": "Save Appearance Settings"
+      },
+      "integrations": {
+        "title": "Integrations",
+        "externalIntegrations": "External Integrations",
+        "whatsapp": "WhatsApp",
+        "whatsappDesc": "Send and receive messages via WhatsApp",
+        "email": "Email",
+        "emailDesc": "Send emails and newsletters",
+        "sms": "SMS",
+        "smsDesc": "Send text messages and alerts",
+        "calendar": "Calendar",
+        "calendarDesc": "Sync appointments and events",
+        "connected": "Connected",
+        "disconnected": "Disconnected",
+        "webhooks": "Webhooks",
+        "enableWebhooks": "Enable Webhooks",
+        "webhooksDesc": "Automatically send data to external systems",
+        "webhookUrl": "Webhook URL",
+        "saveIntegrations": "Save Integration Settings"
+      },
+      "messages": {
+        "sectionSaved": "{section} settings saved successfully"
+      }
+    }
+  },
+  "subscriptions": {
+    "title": "Subscription Management",
+    "subtitle": "Manage subscription plans and company subscriptions",
+    "newSubscription": "New Subscription",
+    "createSubscription": "Create New Subscription",
+    "company": "Company",
+    "selectCompany": "Select Company",
+    "subscriptionPlan": "Subscription Plan",
+    "selectPlan": "Select Plan",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "status": "Status",
+    "paymentStatus": "Payment Status",
+    "autoRenew": "Auto Renew",
+    "save": "Save",
+    "saving": "Saving...",
+    "stats": {
+      "totalSubscriptions": "Total Subscriptions",
+      "activeSubscriptions": "Active Subscriptions",
+      "expiredSubscriptions": "Expired Subscriptions",
+      "totalRevenue": "Total Revenue"
+    },
+    "plans": {
+      "availablePlans": "Available Subscription Plans",
+      "mostPopular": "Most Popular",
+      "users": "Users",
+      "month": "month",
+      "year": "year"
+    },
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    },
+    "paymentStatuses": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "messages": {
+      "subscriptionCreated": "Subscription created successfully",
+      "subscriptionUpdated": "Subscription updated successfully",
+      "subscriptionDeleted": "Subscription deleted successfully",
+      "createError": "Error occurred while creating subscription",
+      "updateError": "Error occurred while updating subscription",
+      "deleteError": "Error occurred while deleting subscription",
+      "loadingSubscriptions": "Loading subscriptions...",
+      "confirmDelete": "Are you sure you want to delete this subscription?"
+    },
+    "editSubscription": "Edit Subscription"
+  },
+  "tasksAppointments": {
+    "title": "Tasks & Appointments",
+    "subtitle": "Manage tasks, appointments and follow-ups",
+    "searchTasks": "Search tasks...",
+    "status": "Status",
+    "allStatuses": "All Statuses",
+    "type": "Type",
+    "allTypes": "All Types",
+    "priority": "Priority",
+    "allPriorities": "All Priorities",
+    "taskTitle": "Task Title",
+    "taskType": "Task Type",
+    "description": "Description",
+    "taskDescription": "Task description and details",
+    "taskPriority": "Task Priority",
+    "taskStatus": "Task Status",
+    "dueDate": "Due Date",
+    "selectDate": "Select Date",
+    "assignedTo": "Assigned To",
+    "selectAssigned": "Select Assigned",
+    "team": "Team",
+    "selectTeam": "Select Team",
+    "relatedLead": "Related Lead",
+    "selectLead": "Select Lead",
+    "relatedDeal": "Related Deal",
+    "selectDeal": "Select Deal",
+    "relatedProperty": "Related Property",
+    "selectProperty": "Select Property",
+    "location": "Location",
+    "locationPlaceholder": "Location address",
+    "notes": "Notes",
+    "additionalNotes": "Additional notes",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "taskList": "Tasks & Appointments List",
+    "task": "Task",
+    "priority": "Priority",
+    "status": "Status",
+    "deadline": "Deadline",
+    "assigned": "Assigned",
+    "actions": "Actions",
+    "loading": "Loading...",
+    "noTasks": "No tasks found",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this task?"
+  },
+  "teams": {
+    "title": "Team Management",
+    "subtitle": "Manage teams, departments and assign team members",
+    "searchTeams": "Search teams...",
+    "teamType": "Team Type",
+    "allTypes": "All Types",
+    "all": "All",
+    "addNewTeam": "Add New Team",
+    "editTeam": "Edit Team",
+    "enterTeamData": "Enter new team data",
+    "teamName": "Team Name",
+    "teamNameExample": "Example: Sales Team",
+    "description": "Description",
+    "teamDescriptionPlaceholder": "Team description and goals",
+    "teamLeader": "Team Leader",
+    "selectTeamLeader": "Select Team Leader",
+    "noLeader": "No Leader",
+    "teamMembers": "Team Members",
+    "active": "Active",
+    "saving": "Saving...",
+    "save": "Save",
+    "teamsList": "Teams List",
+    "status": "Status",
+    "loading": "Loading...",
+    "noTeams": "No teams found",
+    "member": "member",
+    "edit": "Edit",
+    "delete": "Delete",
+    "types": {
+      "sales": "Sales",
+      "marketing": "Marketing",
+      "support": "Technical Support",
+      "management": "Management",
+      "development": "Development",
+      "operations": "Operations"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "messages": {
+      "teamCreated": "Team created successfully",
+      "teamUpdated": "Team updated successfully",
+      "teamDeleted": "Team deleted successfully",
+      "createError": "Error occurred while creating team",
+      "updateError": "Error occurred while updating team",
+      "deleteError": "Error occurred while deleting team",
+      "confirmDelete": "Are you sure you want to delete this team? All team members will be removed."
+    }
+  },
+  "usageTracking": {
+    "title": "Usage Tracking",
+    "subtitle": "Monitor resource consumption and allowed limits",
+    "exportReport": "Export Report",
+    "selectCompany": "Select Company",
+    "allCompanies": "All Companies",
+    "selectPeriod": "Select Period",
+    "loading": "Loading usage data...",
+    "currentUsage": "Current Usage",
+    "used": "used",
+    "remaining": "remaining",
+    "usageByCompany": "Usage by Company",
+    "company": "Company",
+    "resourceType": "Resource Type",
+    "maxLimit": "Max Limit",
+    "percentage": "Percentage",
+    "status": "Status",
+    "period": "Period",
+    "usageTrends": "Usage Trends",
+    "alertsAndRecommendations": "Alerts and Recommendations",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "stats": {
+      "totalResources": "Total Resources",
+      "normal": "Normal",
+      "warning": "Warning",
+      "exceeded": "Exceeded"
+    },
+    "status": {
+      "normal": "Normal",
+      "warning": "Warning",
+      "exceeded": "Limit Exceeded"
+    },
+    "resources": {
+      "users": "Users",
+      "leads": "Leads",
+      "properties": "Properties",
+      "deals": "Deals",
+      "storage": "Storage (GB)",
+      "apiCalls": "API Calls",
+      "whatsappMessages": "WhatsApp Messages",
+      "emailSends": "Email Messages"
+    },
+    "periods": {
+      "current": "Current Period",
+      "lastMonth": "Last Month",
+      "last3Months": "Last 3 Months",
+      "lastYear": "Last Year"
+    },
+    "alerts": {
+      "exceededLimit": "{count} resources exceeded the limit",
+      "exceededRecommendation": "It is recommended to upgrade the plan or reduce usage to avoid service interruption",
+      "warningLimit": "{count} resources approaching the limit",
+      "warningRecommendation": "Monitor usage and be prepared to upgrade the plan if necessary"
+    }
+  }
+}

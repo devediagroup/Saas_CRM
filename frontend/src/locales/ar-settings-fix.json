@@ -1,0 +1,55 @@
+{
+  "settings": {
+    "company": {
+      "title": "بيانات الشركة",
+      "companyInfo": "معلومات الشركة",
+      "companyName": "اسم الشركة",
+      "companyEmail": "البريد الإلكتروني للشركة",
+      "companyPhone": "هاتف الشركة",
+      "companyWebsite": "الموقع الإلكتروني",
+      "companyAddress": "العنوان",
+      "companyDescription": "وصف الشركة",
+      "saveCompany": "حفظ بيانات الشركة",
+      "saving": "جاري الحفظ..."
+    },
+    "profile": {
+      "avatarDescription": "JPG, GIF أو PNG. الحد الأقصى 2MB"
+    },
+    "security": {
+      "oneHour": "ساعة واحدة",
+      "twoHours": "ساعتان",
+      "hours": "ساعات",
+      "oneYear": "سنة واحدة",
+      "neverExpires": "لا تنتهي صلاحيتها"
+    },
+    "appearance": {
+      "appearanceSettings": "إعدادات المظهر",
+      "light": "فاتح",
+      "dark": "داكن",
+      "system": "تلقائي",
+      "arabic": "العربية",
+      "english": "English",
+      "sar": "ريال سعودي (SAR)",
+      "usd": "دولار أمريكي (USD)",
+      "eur": "يورو (EUR)",
+      "riyadh": "الرياض (GMT+3)",
+      "dubai": "دبي (GMT+4)",
+      "london": "لندن (GMT+0)",
+      "newyork": "نيويورك (GMT-5)",
+      "compactModeDesc": "عرض أكثر كثافة للمعلومات في الشاشات الصغيرة",
+      "saveAppearance": "حفظ إعدادات المظهر"
+    },
+    "integrations": {
+      "externalIntegrations": "التكاملات الخارجية",
+      "whatsappDesc": "إرسال واستقبال الرسائل عبر واتساب",
+      "emailDesc": "إرسال البريد الإلكتروني والرسائل الإخبارية",
+      "smsDesc": "إرسال الرسائل النصية والتنبيهات",
+      "calendarDesc": "مزامنة المواعيد والفعاليات",
+      "connected": "متصل",
+      "disconnected": "غير متصل",
+      "enableWebhooks": "تفعيل Webhooks",
+      "webhooksDesc": "إرسال البيانات تلقائياً للأنظمة الخارجية",
+      "saveIntegrations": "حفظ إعدادات التكاملات"
+    }
+  }
+}

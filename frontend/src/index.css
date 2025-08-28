@@ -1,0 +1,437 @@
+/* Import Arabic Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* EchoOps Real Estate CRM Design System 
+   Based on EchoOps brand colors with RTL support
+   All colors are HSL format for consistency
+*/
+
+@layer base {
+  :root {
+    /* EchoOps Brand Colors */
+    --primary-blue: 215 69% 18%;        /* #12274a - Primary Blue */
+    --accent-green: 133 64% 47%;        /* #3fb654 - Success Green */
+    --accent-orange: 22 92% 55%;        /* #f47721 - Warning Orange */
+    --neutral-gray: 200 6% 82%;         /* #d0d1d2 - Neutral Gray */
+    
+    /* Background & Surface Colors */
+    --background: 215 25% 97%;           /* #f8fafc - Light Background */
+    --surface: 0 0% 100%;               /* Pure White */
+    --surface-elevated: 210 17% 98%;    /* Slightly elevated surface */
+    
+    /* Text Colors */
+    --text-primary: 218 34% 18%;        /* #1e293b - Primary Text */
+    --text-secondary: 215 20% 58%;      /* #64748b - Secondary Text */
+    --text-muted: 215 16% 47%;          /* Muted text */
+    --text-on-primary: 0 0% 100%;       /* White text on primary */
+    
+    /* Status Colors */
+    --success: 133 64% 47%;             /* Green for success */
+    --warning: 22 92% 55%;              /* Orange for warnings */
+    --error: 0 84% 60%;                 /* Red for errors */
+    --info: 210 98% 78%;                /* Blue for info */
+    
+    /* Semantic Mappings */
+    --background: var(--background);
+    --foreground: var(--text-primary);
+    
+    --card: var(--surface);
+    --card-foreground: var(--text-primary);
+    
+    --popover: var(--surface);
+    --popover-foreground: var(--text-primary);
+    
+    --primary: var(--primary-blue);
+    --primary-foreground: var(--text-on-primary);
+    
+    --secondary: var(--neutral-gray);
+    --secondary-foreground: var(--text-primary);
+    
+    --muted: 215 25% 95%;
+    --muted-foreground: var(--text-muted);
+    
+    --accent: var(--accent-green);
+    --accent-foreground: var(--text-on-primary);
+    
+    --destructive: var(--error);
+    --destructive-foreground: var(--text-on-primary);
+    
+    --border: 215 25% 90%;
+    --input: 215 25% 92%;
+    --ring: var(--primary-blue);
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary-blue)), hsl(var(--accent-green)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--accent-green)), hsl(var(--accent-orange)));
+    --gradient-surface: linear-gradient(180deg, hsl(var(--surface)), hsl(var(--surface-elevated)));
+    
+    /* Shadows */
+    --shadow-soft: 0 2px 8px -2px hsl(var(--primary-blue) / 0.1);
+    --shadow-medium: 0 4px 12px -2px hsl(var(--primary-blue) / 0.15);
+    --shadow-strong: 0 8px 25px -5px hsl(var(--primary-blue) / 0.25);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s ease-out;
+    
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  
+  /* Dark theme (optional future enhancement) */
+  .dark {
+    --background: var(--primary-blue);
+    --foreground: var(--text-on-primary);
+    --card: 215 69% 15%;
+    --card-foreground: var(--text-on-primary);
+    --primary: var(--accent-green);
+    --secondary: 215 69% 20%;
+  }
+  
+  /* Base Element Styles */
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  /* RTL Support */
+  [dir="rtl"] {
+    direction: rtl;
+  }
+  
+  [dir="rtl"] .ltr-force {
+    direction: ltr;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "kern" 1;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Arabic text optimization */
+  .arabic-text {
+    font-family: 'Cairo', 'Amiri', 'Noto Sans Arabic', sans-serif;
+    line-height: 1.8;
+    letter-spacing: 0;
+  }
+  
+  /* Scrollbar styles */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+}
+
+@layer components {
+  /* CRM Specific Components */
+  .crm-card {
+    @apply bg-card border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow;
+  }
+  
+  .crm-card-header {
+    @apply p-6 border-b border-border;
+  }
+  
+  .crm-card-content {
+    @apply p-6;
+  }
+  
+  .status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .status-active {
+    @apply bg-accent/10 text-accent border border-accent/20;
+  }
+  
+  .status-inactive {
+    @apply bg-destructive/10 text-destructive border border-destructive/20;
+  }
+  
+  .status-pending {
+    @apply bg-warning/10 text-warning border border-warning/20;
+  }
+  
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+  
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: hsl(var(--surface) / 0.8);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+}
+
+@layer utilities {
+  /* RTL utilities */
+  .rtl\:mr-auto[dir="rtl"] {
+    margin-right: auto;
+    margin-left: unset;
+  }
+
+  .rtl\:ml-auto[dir="rtl"] {
+    margin-left: auto;
+    margin-right: unset;
+  }
+
+  .rtl\:text-right[dir="rtl"] {
+    text-align: right;
+  }
+
+  .rtl\:text-left[dir="rtl"] {
+    text-align: left;
+  }
+
+  /* Enhanced RTL Support */
+  [dir="rtl"] .mr-2 {
+    margin-right: 0.5rem;
+    margin-left: 0;
+  }
+
+  [dir="rtl"] .ml-2 {
+    margin-left: 0.5rem;
+    margin-right: 0;
+  }
+
+  [dir="rtl"] .mr-4 {
+    margin-right: 1rem;
+    margin-left: 0;
+  }
+
+  [dir="rtl"] .ml-4 {
+    margin-left: 1rem;
+    margin-right: 0;
+  }
+
+  [dir="rtl"] .flex-row-reverse {
+    flex-direction: row;
+  }
+
+  [dir="rtl"] .justify-between {
+    justify-content: space-between;
+  }
+
+  [dir="rtl"] .justify-end {
+    justify-content: flex-end;
+  }
+
+  [dir="rtl"] .justify-start {
+    justify-content: flex-start;
+  }
+
+  [dir="rtl"] .text-left {
+    text-align: right;
+  }
+
+  [dir="rtl"] .text-right {
+    text-align: left;
+  }
+
+  [dir="rtl"] .float-left {
+    float: right;
+  }
+
+  [dir="rtl"] .float-right {
+    float: left;
+  }
+
+  [dir="rtl"] .border-l {
+    border-left-width: 0;
+    border-right-width: 1px;
+  }
+
+  [dir="rtl"] .border-r {
+    border-right-width: 0;
+    border-left-width: 1px;
+  }
+
+  [dir="rtl"] .border-l-0 {
+    border-left-width: 0;
+    border-right-width: 0;
+  }
+
+  [dir="rtl"] .border-r-0 {
+    border-right-width: 0;
+    border-left-width: 0;
+  }
+
+  [dir="rtl"] .pl-4 {
+    padding-left: 0;
+    padding-right: 1rem;
+  }
+
+  [dir="rtl"] .pr-4 {
+    padding-right: 0;
+    padding-left: 1rem;
+  }
+
+  [dir="rtl"] .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  [dir="rtl"] .py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Icon rotation for RTL */
+  [dir="rtl"] .transform {
+    transform: scaleX(-1);
+  }
+
+  [dir="rtl"] .lucide {
+    transform: scaleX(-1);
+  }
+
+  /* Specific icon overrides for RTL */
+  [dir="rtl"] .lucide-chevron-left {
+    transform: scaleX(1);
+  }
+
+  [dir="rtl"] .lucide-chevron-right {
+    transform: scaleX(-1);
+  }
+
+  [dir="rtl"] .lucide-arrow-left {
+    transform: scaleX(1);
+  }
+
+  [dir="rtl"] .lucide-arrow-right {
+    transform: scaleX(-1);
+  }
+
+  /* Dropdown and menu positioning */
+  [dir="rtl"] .dropdown-menu-content {
+    right: auto;
+    left: 0;
+  }
+
+  /* Form elements */
+  [dir="rtl"] input[type="text"],
+  [dir="rtl"] input[type="email"],
+  [dir="rtl"] input[type="password"],
+  [dir="rtl"] textarea,
+  [dir="rtl"] select {
+    text-align: right;
+  }
+
+  /* Table alignment */
+  [dir="rtl"] th,
+  [dir="rtl"] td {
+    text-align: right;
+  }
+
+  [dir="rtl"] th:first-child,
+  [dir="rtl"] td:first-child {
+    text-align: right;
+  }
+
+  [dir="rtl"] th:last-child,
+  [dir="rtl"] td:last-child {
+    text-align: left;
+  }
+
+  /* Navigation */
+  [dir="rtl"] .navbar-brand {
+    margin-right: 0;
+    margin-left: auto;
+  }
+
+  /* Sidebar adjustments */
+  [dir="rtl"] .sidebar {
+    right: 0;
+    left: auto;
+  }
+
+  /* Modal and overlay */
+  [dir="rtl"] .modal {
+    text-align: right;
+  }
+
+  /* Toast notifications */
+  [dir="rtl"] .toast {
+    right: auto;
+    left: 1rem;
+  }
+
+  /* Pagination */
+  [dir="rtl"] .pagination .page-link {
+    margin-right: 0.25rem;
+    margin-left: 0;
+  }
+
+  /* Form validation */
+  [dir="rtl"] .form-error {
+    text-align: right;
+  }
+
+  /* Loading spinners */
+  [dir="rtl"] .spinner {
+    margin-right: 0.5rem;
+    margin-left: 0;
+  }
+
+  /* Animation adjustments */
+  [dir="rtl"] .slide-in-right {
+    transform: translateX(100%);
+  }
+
+  [dir="rtl"] .slide-in-left {
+    transform: translateX(-100%);
+  }
+
+  /* Font adjustments for better RTL display */
+  [dir="rtl"] {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  /* Better spacing for Arabic text */
+  [dir="rtl"] p,
+  [dir="rtl"] div,
+  [dir="rtl"] span {
+    letter-spacing: 0.01em;
+    line-height: 1.6;
+  }
+}
