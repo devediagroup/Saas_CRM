@@ -32,6 +32,7 @@ import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { Badge } from "@/components/ui/badge";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { api } from "@/lib/api";
+import { toast } from "sonner";
 
 const Analytics = () => {
   const { t } = useTranslation();
