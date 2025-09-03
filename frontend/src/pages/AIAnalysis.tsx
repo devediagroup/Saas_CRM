@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
@@ -10,12 +11,12 @@ import { Input } from '../components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
 import { Textarea } from '../components/ui/textarea';
 import { toast } from 'sonner';
-import { 
-  Brain, 
-  TrendingUp, 
+import {
+  Brain,
+  TrendingUp,
   TrendingDown,
-  Target, 
-  Users, 
+  Target,
+  Users,
   Building,
   DollarSign,
   Calendar,
@@ -39,7 +40,7 @@ import {
   Pause,
   Settings
 } from 'lucide-react';
-import { apiClient } from '../lib/api';
+import { api } from '../lib/api';
 import { useTranslation } from 'react-i18next';
 
 interface AIAnalysis {
@@ -68,17 +69,17 @@ export default function AIAnalysis() {
   // Fetch AI analyses
   const { data: analyses = [], isLoading: isLoadingAnalyses } = useQuery({
     queryKey: ['ai-analyses'],
-    queryFn: () => apiClient.get('/ai-analyses?sort[0]=createdAt:desc').then(res => res.data.data || [])
+    queryFn: () => api.getActivities().then(res => res.data.data || [])
   });
 
   // Run new analysis mutation
   const runAnalysisMutation = useMutation({
-    mutationFn: (analysisType: string) => 
-      apiClient.post('/ai-analyses', { 
-        data: { 
+    mutationFn: (analysisType: string) =>
+      api.createActivity({
+        data: {
           analysis_type: analysisType,
           status: 'pending'
-        } 
+        }
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-analyses'] });
@@ -157,10 +158,10 @@ export default function AIAnalysis() {
   // Filter analyses
   const filteredAnalyses = analyses.filter((analysis: AIAnalysis) => {
     const matchesType = selectedAnalysisType === 'all' || analysis.analysis_type === selectedAnalysisType;
-    const matchesSearch = 
+    const matchesSearch =
       analysis.analysis_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       getAnalysisTypeLabel(analysis.analysis_type).includes(searchTerm);
-    
+
     return matchesType && matchesSearch;
   });
 
@@ -168,22 +169,24 @@ export default function AIAnalysis() {
   const totalAnalyses = analyses.length;
   const completedAnalyses = analyses.filter((a: AIAnalysis) => a.status === 'completed').length;
   const pendingAnalyses = analyses.filter((a: AIAnalysis) => a.status === 'pending').length;
-  const avgConfidence = analyses.length > 0 
-    ? analyses.reduce((sum: number, a: AIAnalysis) => sum + (a.confidence_score || 0), 0) / analyses.length 
+  const avgConfidence = analyses.length > 0
+    ? analyses.reduce((sum: number, a: AIAnalysis) => sum + (a.confidence_score || 0), 0) / analyses.length
     : 0;
 
-  // Mock insights data for demonstration
-  const mockInsights = {
-    lead_conversion_rate: 23.5,
-    top_performing_source: t('leads.sources.facebook'),
-    predicted_monthly_revenue: 45000,
-    high_value_leads: 12,
-    market_trend: t('analytics.marketTrend.up'),
-    recommended_actions: [
-      t('aiRecommendations.recommendedActions.facebook'),
-      t('aiRecommendations.recommendedActions.easternRegion'),
-      t('aiRecommendations.recommendedActions.leadFollowUp')
-    ]
+  // استبدال البيانات الوهمية ببيانات حقيقية من API
+  const { data: realInsights, isLoading: insightsLoading } = useQuery({
+    queryKey: ['aiInsights'],
+    queryFn: () => api.getDashboard()
+  });
+
+  // استخدام البيانات الحقيقية مع fallback للقيم الافتراضية
+  const insights = realInsights?.data || {
+    lead_conversion_rate: 0,
+    top_performing_source: t('leadSources.unknown'),
+    predicted_monthly_revenue: 0,
+    high_value_leads: 0,
+    market_trend: t('analytics.marketTrend.stable'),
+    recommended_actions: []
   };
 
   if (isLoadingAnalyses) {
@@ -213,7 +216,7 @@ export default function AIAnalysis() {
               <Download className="ml-2 h-4 w-4" />
               {t('common.export')}
             </Button>
-            <Button 
+            <Button
               className="bg-blue-600 hover:bg-blue-700"
               disabled={isRunningAnalysis}
             >
@@ -233,8 +236,8 @@ export default function AIAnalysis() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="h-20 flex-col"
                 onClick={() => handleRunAnalysis('lead_scoring')}
                 disabled={isRunningAnalysis}
@@ -242,8 +245,8 @@ export default function AIAnalysis() {
                 <Target className="h-6 w-6 mb-2 text-green-500" />
                 <span className="text-sm">{t('aiRecommendations.leadScoring')}</span>
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="h-20 flex-col"
                 onClick={() => handleRunAnalysis('sales_forecasting')}
                 disabled={isRunningAnalysis}
@@ -251,8 +254,8 @@ export default function AIAnalysis() {
                 <TrendingUp className="h-6 w-6 mb-2 text-blue-500" />
                 <span className="text-sm">{t('aiRecommendations.salesForecasting')}</span>
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="h-20 flex-col"
                 onClick={() => handleRunAnalysis('market_analysis')}
                 disabled={isRunningAnalysis}
@@ -260,8 +263,8 @@ export default function AIAnalysis() {
                 <BarChart3 className="h-6 w-6 mb-2 text-indigo-500" />
                 <span className="text-sm">{t('aiRecommendations.marketAnalysis')}</span>
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="h-20 flex-col"
                 onClick={() => handleRunAnalysis('churn_prediction')}
                 disabled={isRunningAnalysis}
@@ -338,9 +341,9 @@ export default function AIAnalysis() {
             <CardContent>
               <div className="text-center">
                 <div className="text-4xl font-bold text-green-600 mb-2">
-                  {mockInsights.lead_conversion_rate}%
+                  {insights.lead_conversion_rate}%
                 </div>
-                <Progress value={mockInsights.lead_conversion_rate} className="h-2 mb-2" />
+                <Progress value={insights.lead_conversion_rate} className="h-2 mb-2" />
                 <p className="text-sm text-gray-600">{t('hardcoded.fromLastMonth')}</p>
               </div>
             </CardContent>
@@ -356,7 +359,7 @@ export default function AIAnalysis() {
             <CardContent>
               <div className="text-center">
                 <div className="text-4xl font-bold text-blue-600 mb-2">
-                  ${mockInsights.predicted_monthly_revenue.toLocaleString()}
+                  ${insights.predicted_monthly_revenue.toLocaleString()}
                 </div>
                 <p className="text-sm text-gray-600">{t('aiRecommendations.nextMonth')}</p>
                 <div className="flex items-center justify-center mt-2">
@@ -377,7 +380,7 @@ export default function AIAnalysis() {
             <CardContent>
               <div className="text-center">
                 <div className="text-4xl font-bold text-purple-600 mb-2">
-                  {mockInsights.high_value_leads}
+                  {insights.high_value_leads}
                 </div>
                 <p className="text-sm text-gray-600">{t('aiRecommendations.thisWeek')}</p>
                 <Badge className="bg-purple-100 text-purple-800 mt-2">
@@ -398,7 +401,7 @@ export default function AIAnalysis() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockInsights.recommended_actions.map((recommendation, index) => (
+              {insights.recommended_actions.map((recommendation, index) => (
                 <div key={index} className="flex items-start p-4 bg-blue-50 rounded-lg">
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -445,11 +448,11 @@ export default function AIAnalysis() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">{t('aiRecommendations.allAnalyses')}</SelectItem>
-                                    <SelectItem value="lead_scoring">{t('aiRecommendations.leadScoring')}</SelectItem>
-                <SelectItem value="sales_forecasting">{t('aiRecommendations.salesForecasting')}</SelectItem>
-                <SelectItem value="customer_segmentation">{t('aiRecommendations.customerSegmentation')}</SelectItem>
-                <SelectItem value="market_analysis">{t('aiRecommendations.marketAnalysis')}</SelectItem>
-                <SelectItem value="churn_prediction">{t('aiRecommendations.churnPrediction')}</SelectItem>
+                    <SelectItem value="lead_scoring">{t('aiRecommendations.leadScoring')}</SelectItem>
+                    <SelectItem value="sales_forecasting">{t('aiRecommendations.salesForecasting')}</SelectItem>
+                    <SelectItem value="customer_segmentation">{t('aiRecommendations.customerSegmentation')}</SelectItem>
+                    <SelectItem value="market_analysis">{t('aiRecommendations.marketAnalysis')}</SelectItem>
+                    <SelectItem value="churn_prediction">{t('aiRecommendations.churnPrediction')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -550,14 +553,14 @@ export default function AIAnalysis() {
                 <p className="text-sm text-green-600 mt-1">{t('aiRecommendations.increasedDemand')}</p>
                 <div className="text-2xl font-bold text-green-700 mt-2">{t('aiRecommendations.growthPercentage')}</div>
               </div>
-              
+
               <div className="text-center p-4 bg-blue-50 rounded-lg">
                 <DollarSign className="h-8 w-8 text-blue-500 mx-auto mb-2" />
                 <h3 className="font-semibold text-blue-800">{t('aiRecommendations.priceStability')}</h3>
                 <p className="text-sm text-blue-600 mt-1">{t('aiRecommendations.stablePrices')}</p>
                 <div className="text-2xl font-bold text-blue-700 mt-2">{t('aiRecommendations.priceValue')}</div>
               </div>
-              
+
               <div className="text-center p-4 bg-purple-50 rounded-lg">
                 <Users className="h-8 w-8 text-purple-500 mx-auto mb-2" />
                 <h3 className="font-semibold text-purple-800">{t('aiRecommendations.customerActivity')}</h3>

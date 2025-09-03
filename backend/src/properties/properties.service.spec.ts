@@ -2,32 +2,38 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PropertiesService } from './properties.service';
-import { Property, PropertyType, PropertyStatus, ListingType } from './entities/property.entity';
+import { Property } from './entities/property.entity';
+import { PermissionsService } from '../auth/permissions.service';
+import { ForbiddenException } from '@nestjs/common';
 
 describe('PropertiesService', () => {
   let service: PropertiesService;
   let repository: Repository<Property>;
+  let permissionsService: PermissionsService;
 
-  const mockProperty: Property = {
-    id: 'test-id',
-    title: 'Test Property',
-    description: 'Test Description',
-    property_type: PropertyType.APARTMENT,
-    status: PropertyStatus.AVAILABLE,
-    listing_type: ListingType.SALE,
-    price: 100000,
-    bedrooms: 2,
-    bathrooms: 1,
-    area: 100,
-    address: 'Test Address',
-    city: 'Test City',
-    country: 'Test Country',
-    company_id: 'company-id',
+  const mockProperty = {
+    id: 1,
+    title: 'شقة فاخرة في الرياض',
+    description: 'شقة فاخرة في قلب الرياض مع إطلالة رائعة',
+    property_type: 'apartment',
+    status: 'available',
+    price: 500000,
+    area: 150,
+    bedrooms: 3,
+    bathrooms: 2,
+    parking_spaces: 2,
+    floor_number: 5,
+    project_id: '123e4567-e89b-12d3-a456-426614174000',
+    developer_id: '123e4567-e89b-12d3-a456-426614174001',
+    location: 'الرياض، المملكة العربية السعودية',
+    address: 'شارع الملك فهد، الرياض',
+    latitude: 24.7136,
+    longitude: 46.6753,
+    images: ['image1.jpg', 'image2.jpg'],
+    features: ['مكيف مركزي', 'مصعد', 'مسبح'],
+    company_id: '123e4567-e89b-12d3-a456-426614174002',
     created_at: new Date(),
     updated_at: new Date(),
-    view_count: 0,
-    inquiry_count: 0,
-    is_featured: false,
   };
 
   const mockRepository = {
@@ -36,14 +42,21 @@ describe('PropertiesService', () => {
     find: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
-    remove: jest.fn(),
+    delete: jest.fn(),
     createQueryBuilder: jest.fn(() => ({
       where: jest.fn().mockReturnThis(),
       andWhere: jest.fn().mockReturnThis(),
-      leftJoinAndSelect: jest.fn().mockReturnThis(),
       orderBy: jest.fn().mockReturnThis(),
       getMany: jest.fn().mockResolvedValue([mockProperty]),
+      getOne: jest.fn().mockResolvedValue(mockProperty),
     })),
+  };
+
+  const mockPermissionsService = {
+    checkPermission: jest.fn(),
+    getCompanyId: jest
+      .fn()
+      .mockResolvedValue('123e4567-e89b-12d3-a456-426614174002'),
   };
 
   beforeEach(async () => {
@@ -54,15 +67,16 @@ describe('PropertiesService', () => {
           provide: getRepositoryToken(Property),
           useValue: mockRepository,
         },
+        {
+          provide: PermissionsService,
+          useValue: mockPermissionsService,
+        },
       ],
     }).compile();
 
     service = module.get<PropertiesService>(PropertiesService);
     repository = module.get<Repository<Property>>(getRepositoryToken(Property));
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
+    permissionsService = module.get<PermissionsService>(PermissionsService);
   });
 
   it('should be defined', () => {
@@ -70,255 +84,381 @@ describe('PropertiesService', () => {
   });
 
   describe('create', () => {
-    it('should create a property', async () => {
-      const createDto = {
-        title: 'New Property',
-        description: 'New Description',
-        property_type: PropertyType.APARTMENT,
-        price: 150000,
+    it('should create a new property when user has permission', async () => {
+      const createPropertyDto = {
+        title: 'شقة فاخرة في الرياض',
+        description: 'شقة فاخرة في قلب الرياض مع إطلالة رائعة',
+        property_type: 'apartment',
+        status: 'available',
+        price: 500000,
+        area: 150,
         bedrooms: 3,
         bathrooms: 2,
-        area: 150,
-        address: 'New Address',
-        city: 'New City',
-        country: 'New Country',
-        company_id: 'company-id',
+        parking_spaces: 2,
+        floor_number: 5,
+        project_id: '123e4567-e89b-12d3-a456-426614174000',
+        developer_id: '123e4567-e89b-12d3-a456-426614174001',
+        location: 'الرياض، المملكة العربية السعودية',
+        address: 'شارع الملك فهد، الرياض',
+        latitude: 24.7136,
+        longitude: 46.6753,
+        images: ['image1.jpg', 'image2.jpg'],
+        features: ['مكيف مركزي', 'مصعد', 'مسبح'],
       };
 
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
       mockRepository.create.mockReturnValue(mockProperty);
       mockRepository.save.mockResolvedValue(mockProperty);
 
-      const result = await service.create(createDto);
+      const result = await service.create(createPropertyDto, userId);
 
-      expect(mockRepository.create).toHaveBeenCalledWith(createDto);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.create',
+      );
+      expect(mockRepository.create).toHaveBeenCalledWith({
+        ...createPropertyDto,
+        company_id: companyId,
+      });
       expect(mockRepository.save).toHaveBeenCalledWith(mockProperty);
       expect(result).toEqual(mockProperty);
+    });
+
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const createPropertyDto = {
+        title: 'شقة فاخرة في الرياض',
+        price: 500000,
+      };
+
+      const userId = 'user-123';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
+
+      await expect(service.create(createPropertyDto, userId)).rejects.toThrow(
+        ForbiddenException,
+      );
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.create',
+      );
     });
   });
 
   describe('findAll', () => {
-    it('should return all properties for a company', async () => {
-      mockRepository.find.mockResolvedValue([mockProperty]);
+    it('should return all properties when user has permission', async () => {
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
 
-      const result = await service.findAll('company-id');
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({
-        where: { company_id: 'company-id' },
-        relations: ['company'],
-        order: { created_at: 'DESC' },
-      });
+      const result = await service.findAll(userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.read',
+      );
       expect(result).toEqual([mockProperty]);
+    });
+
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const userId = 'user-123';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
+
+      await expect(service.findAll(userId)).rejects.toThrow(ForbiddenException);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.read',
+      );
     });
   });
 
   describe('findOne', () => {
-    it('should return a property by id', async () => {
-      mockRepository.findOne.mockResolvedValue(mockProperty);
+    it('should return a property when user has permission', async () => {
+      const propertyId = '1';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
 
-      const result = await service.findOne('test-id');
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'deals', 'activities'],
-      });
+      const result = await service.findOne(propertyId, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.read',
+      );
       expect(result).toEqual(mockProperty);
     });
 
-    it('should throw NotFoundException when property not found', async () => {
-      mockRepository.findOne.mockResolvedValue(null);
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const propertyId = '1';
+      const userId = 'user-123';
 
-      await expect(service.findOne('nonexistent-id')).rejects.toThrow('Property with ID nonexistent-id not found');
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
+
+      await expect(service.findOne(propertyId, userId)).rejects.toThrow(
+        ForbiddenException,
+      );
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.read',
+      );
     });
   });
 
   describe('update', () => {
-    it('should update a property', async () => {
-      const updateDto = { title: 'Updated Title' };
-      const updatedProperty = { ...mockProperty, ...updateDto };
+    it('should update a property when user has permission', async () => {
+      const propertyId = '1';
+      const updatePropertyDto = {
+        title: 'شقة فاخرة محدثة في الرياض',
+        price: 550000,
+        status: 'reserved',
+      };
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
 
-      mockRepository.findOne.mockResolvedValue(mockProperty);
-      mockRepository.save.mockResolvedValue(updatedProperty);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+      mockRepository.update.mockResolvedValue({ affected: 1 });
 
-      const result = await service.update('test-id', updateDto);
+      const result = await service.update(
+        propertyId,
+        updatePropertyDto,
+        userId,
+      );
 
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'deals', 'activities'],
-      });
-      expect(mockRepository.save).toHaveBeenCalledWith(updatedProperty);
-      expect(result).toEqual(updatedProperty);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.update',
+      );
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { id: propertyId, company_id: companyId },
+        updatePropertyDto,
+      );
+      expect(result).toEqual({ affected: 1 });
+    });
+
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const propertyId = '1';
+      const updatePropertyDto = { title: 'عنوان محدث' };
+      const userId = 'user-123';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
+
+      await expect(
+        service.update(propertyId, updatePropertyDto, userId),
+      ).rejects.toThrow(ForbiddenException);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.update',
+      );
     });
   });
 
   describe('remove', () => {
-    it('should remove a property', async () => {
-      mockRepository.findOne.mockResolvedValue(mockProperty);
-      mockRepository.remove.mockResolvedValue(mockProperty);
+    it('should remove a property when user has permission', async () => {
+      const propertyId = '1';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
 
-      await service.remove('test-id');
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+      mockRepository.delete.mockResolvedValue({ affected: 1 });
 
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'deals', 'activities'],
+      const result = await service.remove(propertyId, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.delete',
+      );
+      expect(mockRepository.delete).toHaveBeenCalledWith({
+        id: propertyId,
+        company_id: companyId,
       });
-      expect(mockRepository.remove).toHaveBeenCalledWith(mockProperty);
+      expect(result).toEqual({ affected: 1 });
+    });
+
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const propertyId = '1';
+      const userId = 'user-123';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
+
+      await expect(service.remove(propertyId, userId)).rejects.toThrow(
+        ForbiddenException,
+      );
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.delete',
+      );
     });
   });
 
-  describe('getPropertiesByStatus', () => {
-    it('should return properties by status', async () => {
-      mockRepository.find.mockResolvedValue([mockProperty]);
+  describe('getPropertiesByProject', () => {
+    it('should return properties by project when user has permission', async () => {
+      const projectId = '123e4567-e89b-12d3-a456-426614174000';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
 
-      const result = await service.getPropertiesByStatus('company-id', PropertyStatus.AVAILABLE);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({
-        where: {
-          company_id: 'company-id',
-          status: PropertyStatus.AVAILABLE,
-        },
-        relations: ['company'],
-      });
-      expect(result).toEqual([mockProperty]);
-    });
-  });
+      const result = await service.getPropertiesByProject(projectId, userId);
 
-  describe('getPropertiesByType', () => {
-    it('should return properties by type', async () => {
-      mockRepository.find.mockResolvedValue([mockProperty]);
-
-      const result = await service.getPropertiesByType('company-id', PropertyType.APARTMENT);
-
-      expect(mockRepository.find).toHaveBeenCalledWith({
-        where: {
-          company_id: 'company-id',
-          property_type: PropertyType.APARTMENT,
-        },
-        relations: ['company'],
-      });
-      expect(result).toEqual([mockProperty]);
-    });
-  });
-
-  describe('searchProperties', () => {
-    it('should search properties', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        leftJoinAndSelect: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue([mockProperty]),
-      };
-
-      mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
-
-      const result = await service.searchProperties('company-id', 'test search');
-
-      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith('property');
-      expect(mockQueryBuilder.where).toHaveBeenCalledWith('property.company_id = :companyId', { companyId: 'company-id' });
-      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
-        '(property.title LIKE :search OR property.description LIKE :search OR property.address LIKE :search OR property.city LIKE :search)',
-        { search: '%test search%' }
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.read',
       );
       expect(result).toEqual([mockProperty]);
     });
   });
 
-  describe('getPropertyStats', () => {
-    it('should return property statistics', async () => {
-      const properties = [
-        { ...mockProperty, status: PropertyStatus.AVAILABLE, property_type: PropertyType.APARTMENT },
-        { ...mockProperty, status: PropertyStatus.SOLD, property_type: PropertyType.VILLA },
-      ];
+  describe('getPropertiesByDeveloper', () => {
+    it('should return properties by developer when user has permission', async () => {
+      const developerId = '123e4567-e89b-12d3-a456-426614174001';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
 
-      mockRepository.find.mockResolvedValue(properties);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      const result = await service.getPropertyStats('company-id');
+      const result = await service.getPropertiesByDeveloper(
+        developerId,
+        userId,
+      );
 
-      expect(mockRepository.find).toHaveBeenCalledWith({
-        where: { company_id: 'company-id' },
-        relations: ['company'],
-        order: { created_at: 'DESC' },
-      });
-      expect(result).toEqual({
-        total: 2,
-        byStatus: {
-          [PropertyStatus.AVAILABLE]: 1,
-          [PropertyStatus.RESERVED]: 0,
-          [PropertyStatus.SOLD]: 1,
-          [PropertyStatus.RENTED]: 0,
-          [PropertyStatus.UNDER_CONSTRUCTION]: 0,
-          [PropertyStatus.OFF_MARKET]: 0,
-        },
-        byType: {
-          [PropertyType.APARTMENT]: 1,
-          [PropertyType.VILLA]: 1,
-          [PropertyType.OFFICE]: 0,
-          [PropertyType.SHOP]: 0,
-          [PropertyType.LAND]: 0,
-          [PropertyType.WAREHOUSE]: 0,
-        },
-        byListingType: {
-          [ListingType.SALE]: 2,
-          [ListingType.RENT]: 0,
-        },
-        featured: 0,
-        totalViews: 0,
-        totalInquiries: 0,
-        averagePrice: 100000,
-      });
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.read',
+      );
+      expect(result).toEqual([mockProperty]);
     });
   });
 
-  describe('updatePropertyStatus', () => {
-    it('should update property status', async () => {
-      const updatedProperty = { ...mockProperty, status: PropertyStatus.SOLD };
+  describe('getPropertiesByProjectAndDeveloper', () => {
+    it('should return properties by project and developer when user has permission', async () => {
+      const projectId = '123e4567-e89b-12d3-a456-426614174000';
+      const developerId = '123e4567-e89b-12d3-a456-426614174001';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
 
-      mockRepository.findOne.mockResolvedValue(mockProperty);
-      mockRepository.save.mockResolvedValue(updatedProperty);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      const result = await service.updatePropertyStatus('test-id', PropertyStatus.SOLD);
+      const result = await service.getPropertiesByProjectAndDeveloper(
+        projectId,
+        developerId,
+        userId,
+      );
 
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'deals', 'activities'],
-      });
-      expect(mockRepository.save).toHaveBeenCalledWith(updatedProperty);
-      expect(result).toEqual(updatedProperty);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.read',
+      );
+      expect(result).toEqual([mockProperty]);
     });
   });
 
-  describe('incrementViewCount', () => {
-    it('should increment property view count', async () => {
-      const updatedProperty = { ...mockProperty, view_count: 1 };
+  describe('updateStatus', () => {
+    it('should update property status when user has permission', async () => {
+      const propertyId = '1';
+      const status = 'sold';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
 
-      mockRepository.findOne.mockResolvedValue(mockProperty);
-      mockRepository.save.mockResolvedValue(updatedProperty);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+      mockRepository.update.mockResolvedValue({ affected: 1 });
 
-      const result = await service.incrementViewCount('test-id');
+      const result = await service.updateStatus(propertyId, status, userId);
 
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'deals', 'activities'],
-      });
-      expect(mockRepository.save).toHaveBeenCalledWith(updatedProperty);
-      expect(result).toEqual(updatedProperty);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.update',
+      );
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { id: propertyId, company_id: companyId },
+        { status },
+      );
+      expect(result).toEqual({ affected: 1 });
     });
   });
 
-  describe('incrementInquiryCount', () => {
-    it('should increment property inquiry count', async () => {
-      const updatedProperty = { ...mockProperty, inquiry_count: 1 };
+  describe('incrementView', () => {
+    it('should increment property view count when user has permission', async () => {
+      const propertyId = '1';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
 
-      mockRepository.findOne.mockResolvedValue(mockProperty);
-      mockRepository.save.mockResolvedValue(updatedProperty);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+      mockRepository.update.mockResolvedValue({ affected: 1 });
 
-      const result = await service.incrementInquiryCount('test-id');
+      const result = await service.incrementView(propertyId, userId);
 
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'deals', 'activities'],
-      });
-      expect(mockRepository.save).toHaveBeenCalledWith(updatedProperty);
-      expect(result).toEqual(updatedProperty);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.update',
+      );
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { id: propertyId, company_id: companyId },
+        { view_count: expect.any(Function) },
+      );
+      expect(result).toEqual({ affected: 1 });
+    });
+  });
+
+  describe('incrementInquiry', () => {
+    it('should increment property inquiry count when user has permission', async () => {
+      const propertyId = '1';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+      mockRepository.update.mockResolvedValue({ affected: 1 });
+
+      const result = await service.incrementInquiry(propertyId, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.update',
+      );
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { id: propertyId, company_id: companyId },
+        { inquiry_count: expect.any(Function) },
+      );
+      expect(result).toEqual({ affected: 1 });
+    });
+  });
+
+  describe('searchProperties', () => {
+    it('should search properties when user has permission', async () => {
+      const searchParams = {
+        property_type: 'apartment',
+        min_price: 300000,
+        max_price: 800000,
+        location: 'الرياض',
+      };
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174002';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+
+      const result = await service.searchProperties(searchParams, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'properties.read',
+      );
+      expect(result).toEqual([mockProperty]);
     });
   });
 });

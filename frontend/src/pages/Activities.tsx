@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Phone, 
-  Mail, 
-  MessageSquare, 
+import {
+  Plus,
+  Search,
+  Filter,
+  Phone,
+  Mail,
+  MessageSquare,
   Calendar as CalendarIcon,
   User,
   Building2,
@@ -57,6 +57,8 @@ import { Textarea } from "@/components/ui/textarea";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Can, CanAny } from "@/components/PermissionGuard";
 
 interface Activity {
   id: number;
@@ -78,6 +80,7 @@ interface Activity {
 
 const Activities = () => {
   const { t } = useTranslation();
+  const { can, canCRUD } = usePermissions();
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -231,19 +234,19 @@ const Activities = () => {
 
   const getResultColor = (result: string) => {
     switch (result) {
-      case 'interested': 
+      case 'interested':
         return 'bg-green-100 text-green-800 border-green-200';
-      case 'completed': 
+      case 'completed':
         return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'needsTime': 
+      case 'needsTime':
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'waitingResponse': 
+      case 'waitingResponse':
         return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'cancelled': 
+      case 'cancelled':
         return 'bg-red-100 text-red-800 border-red-200';
-      case 'followUpRequired': 
+      case 'followUpRequired':
         return 'bg-purple-100 text-purple-800 border-purple-200';
-      default: 
+      default:
         return 'bg-gray-100 text-gray-800 border-green-200';
     }
   };
@@ -267,20 +270,20 @@ const Activities = () => {
   };
 
   const filteredActivities = activities.filter(activity => {
-    const matchesSearch = !searchTerm || 
-                         (activity.subject && activity.subject.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                         (activity.description && activity.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = !searchTerm ||
+      (activity.subject && activity.subject.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (activity.description && activity.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesType = typeFilter === 'all' || activity.type === typeFilter;
     const matchesStatus = statusFilter === 'all' || activity.status === statusFilter;
     const matchesResult = resultFilter === 'all' || activity.result === resultFilter;
-    
+
     return matchesSearch && matchesType && matchesStatus && matchesResult;
   });
 
   const totalActivities = activities.length;
   const completedActivities = activities.filter(a => a.status === 'completed').length;
   const scheduledActivities = activities.filter(a => a.status === 'scheduled').length;
-  const todayActivities = activities.filter(a => 
+  const todayActivities = activities.filter(a =>
     getScheduledAt(a) && new Date(getScheduledAt(a)).toDateString() === new Date().toDateString()
   ).length;
 
@@ -295,10 +298,12 @@ const Activities = () => {
               {t('activities.search')}
             </p>
           </div>
-          <Button className="gradient-primary" onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
-            {t('activities.add')}
-          </Button>
+          <Can permission="activities.create">
+            <Button className="gradient-primary" onClick={() => setIsCreateDialogOpen(true)}>
+              <Plus className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
+              {t('activities.add')}
+            </Button>
+          </Can>
         </div>
 
         {/* Stats Cards */}
@@ -316,7 +321,7 @@ const Activities = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="crm-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -330,7 +335,7 @@ const Activities = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="crm-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -344,7 +349,7 @@ const Activities = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="crm-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -379,7 +384,7 @@ const Activities = () => {
                   />
                 </div>
               </div>
-              
+
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger className="w-full sm:w-[150px]">
                   <SelectValue placeholder={t('activities.filters.typePlaceholder')} />
@@ -393,7 +398,7 @@ const Activities = () => {
                   <SelectItem value="note">{t('activities.types.note')}</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full sm:w-[150px]">
                   <SelectValue placeholder={t('activities.filters.statusPlaceholder')} />
@@ -405,19 +410,19 @@ const Activities = () => {
                   <SelectItem value="cancelled">{t('activities.status.cancelled')}</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select value={resultFilter} onValueChange={setResultFilter}>
                 <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder={t('activities.filters.resultPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('activities.results.all')}</SelectItem>
-                                  <SelectItem value="interested">{t('activities.results.interested')}</SelectItem>
-                <SelectItem value="completed">{t('activities.results.completed')}</SelectItem>
-                <SelectItem value="needsTime">{t('activities.results.needsTime')}</SelectItem>
-                <SelectItem value="waitingResponse">{t('activities.results.waitingResponse')}</SelectItem>
-                <SelectItem value="cancelled">{t('activities.results.cancelled')}</SelectItem>
-                <SelectItem value="followUpRequired">{t('activities.results.followUpRequired')}</SelectItem>
+                  <SelectItem value="interested">{t('activities.results.interested')}</SelectItem>
+                  <SelectItem value="completed">{t('activities.results.completed')}</SelectItem>
+                  <SelectItem value="needsTime">{t('activities.results.needsTime')}</SelectItem>
+                  <SelectItem value="waitingResponse">{t('activities.results.waitingResponse')}</SelectItem>
+                  <SelectItem value="cancelled">{t('activities.results.cancelled')}</SelectItem>
+                  <SelectItem value="followUpRequired">{t('activities.results.followUpRequired')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -535,10 +540,12 @@ const Activities = () => {
                               <Eye className="ml-2 h-4 w-4" />
                               {t('activities.actions.viewDetails')}
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEdit(activity)}>
-                              <Edit className="ml-2 h-4 w-4" />
-                              {t('activities.actions.editActivity')}
-                            </DropdownMenuItem>
+                            <Can permission="activities.update">
+                              <DropdownMenuItem onClick={() => handleEdit(activity)}>
+                                <Edit className="ml-2 h-4 w-4" />
+                                {t('activities.actions.editActivity')}
+                              </DropdownMenuItem>
+                            </Can>
                             <DropdownMenuItem>
                               <CheckCircle className="ml-2 h-4 w-4" />
                               {t('activities.actions.markComplete')}
@@ -547,10 +554,12 @@ const Activities = () => {
                               <CalendarIcon className="ml-2 h-4 w-4" />
                               {t('activities.actions.reschedule')}
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(activity.id)}>
-                              <Trash2 className="ml-2 h-4 w-4" />
-                              {t('activities.actions.deleteActivity')}
-                            </DropdownMenuItem>
+                            <Can permission="activities.delete">
+                              <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(activity.id)}>
+                                <Trash2 className="ml-2 h-4 w-4" />
+                                {t('activities.actions.deleteActivity')}
+                              </DropdownMenuItem>
+                            </Can>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -570,7 +579,7 @@ const Activities = () => {
           <CardContent>
             <div className="space-y-4">
               {activities
-                .filter(a => 
+                .filter(a =>
                   getScheduledAt(a) && new Date(getScheduledAt(a)).toDateString() === new Date().toDateString() &&
                   a.status === 'scheduled'
                 )
@@ -600,16 +609,16 @@ const Activities = () => {
                     </div>
                   </div>
                 ))}
-              {activities.filter(a => 
+              {activities.filter(a =>
                 getScheduledAt(a) && new Date(getScheduledAt(a)).toDateString() === new Date().toDateString() &&
                 a.status === 'scheduled'
               ).length === 0 && (
-                <div className="text-center py-8">
-                  <CalendarIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">{t('activities.schedule.noActivities')}</h3>
-                  <p className="text-muted-foreground">{t('activities.schedule.addNewHint')}</p>
-                </div>
-              )}
+                  <div className="text-center py-8">
+                    <CalendarIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">{t('activities.schedule.noActivities')}</h3>
+                    <p className="text-muted-foreground">{t('activities.schedule.addNewHint')}</p>
+                  </div>
+                )}
             </div>
           </CardContent>
         </Card>
@@ -634,31 +643,31 @@ const Activities = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="type" className="arabic-text">{t('activities.form.type')}</Label>
-                  <Select value={formData.type} onValueChange={(value) => setFormData({...formData, type: value})}>
+                  <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
                     <SelectTrigger className="arabic-text">
-                                              <SelectValue placeholder={t('activities.form.typePlaceholder')} />
+                      <SelectValue placeholder={t('activities.form.typePlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
-                                              <SelectItem value="Call">{t('activities.types.call')}</SelectItem>
-                        <SelectItem value="Meeting">{t('activities.types.meeting')}</SelectItem>
-                        <SelectItem value="Email">{t('activities.types.email')}</SelectItem>
-                        <SelectItem value="WhatsApp">{t('activities.types.whatsapp')}</SelectItem>
-                        <SelectItem value="Visit">{t('activities.types.visit')}</SelectItem>
+                      <SelectItem value="Call">{t('activities.types.call')}</SelectItem>
+                      <SelectItem value="Meeting">{t('activities.types.meeting')}</SelectItem>
+                      <SelectItem value="Email">{t('activities.types.email')}</SelectItem>
+                      <SelectItem value="WhatsApp">{t('activities.types.whatsapp')}</SelectItem>
+                      <SelectItem value="Visit">{t('activities.types.visit')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="outcome" className="arabic-text">{t('activities.form.result')}</Label>
-                  <Select value={formData.outcome} onValueChange={(value) => setFormData({...formData, outcome: value})}>
+                  <Select value={formData.outcome} onValueChange={(value) => setFormData({ ...formData, outcome: value })}>
                     <SelectTrigger className="arabic-text">
-                                              <SelectValue placeholder={t('activities.form.resultPlaceholder')} />
+                      <SelectValue placeholder={t('activities.form.resultPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
-                                              <SelectItem value="Successful">{t('activities.outcomes.successful')}</SelectItem>
-                        <SelectItem value="No Answer">{t('activities.outcomes.noAnswer')}</SelectItem>
-                        <SelectItem value="Interested">{t('activities.outcomes.interested')}</SelectItem>
-                        <SelectItem value="Not Interested">{t('activities.outcomes.notInterested')}</SelectItem>
-                        <SelectItem value="Follow Up Required">{t('activities.outcomes.followUpRequired')}</SelectItem>
+                      <SelectItem value="Successful">{t('activities.outcomes.successful')}</SelectItem>
+                      <SelectItem value="No Answer">{t('activities.outcomes.noAnswer')}</SelectItem>
+                      <SelectItem value="Interested">{t('activities.outcomes.interested')}</SelectItem>
+                      <SelectItem value="Not Interested">{t('activities.outcomes.notInterested')}</SelectItem>
+                      <SelectItem value="Follow Up Required">{t('activities.outcomes.followUpRequired')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -669,7 +678,7 @@ const Activities = () => {
                 <Input
                   id="subject"
                   value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   className="arabic-text"
                   required
                 />
@@ -680,7 +689,7 @@ const Activities = () => {
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="arabic-text"
                   rows={3}
                 />
@@ -693,7 +702,7 @@ const Activities = () => {
                     id="activity_date"
                     type="datetime-local"
                     value={formData.activity_date}
-                    onChange={(e) => setFormData({...formData, activity_date: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, activity_date: e.target.value })}
                     className="arabic-text"
                   />
                 </div>
@@ -703,7 +712,7 @@ const Activities = () => {
                     id="duration"
                     type="number"
                     value={formData.duration}
-                    onChange={(e) => setFormData({...formData, duration: parseInt(e.target.value)})}
+                    onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) })}
                     className="arabic-text"
                   />
                 </div>
@@ -714,7 +723,7 @@ const Activities = () => {
                 <Input
                   id="next_action"
                   value={formData.next_action}
-                  onChange={(e) => setFormData({...formData, next_action: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, next_action: e.target.value })}
                   className="arabic-text"
                 />
               </div>
@@ -728,7 +737,7 @@ const Activities = () => {
                   {t('activities.form.cancel')}
                 </Button>
                 <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending} className="arabic-text">
-                                      {editingActivity ? t('activities.form.update') : t('activities.form.create')}
+                  {editingActivity ? t('activities.form.update') : t('activities.form.create')}
                 </Button>
               </div>
             </form>

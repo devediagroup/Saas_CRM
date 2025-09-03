@@ -1,17 +1,24 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 export enum SubscriptionPlan {
   FREE = 'free',
   BASIC = 'basic',
   PRO = 'pro',
-  ENTERPRISE = 'enterprise'
+  ENTERPRISE = 'enterprise',
 }
 
 export enum CompanyStatus {
   ACTIVE = 'active',
   SUSPENDED = 'suspended',
-  INACTIVE = 'inactive'
+  INACTIVE = 'inactive',
 }
 
 @Entity('companies')
@@ -64,14 +71,14 @@ export class Company {
   @Column({
     type: 'enum',
     enum: SubscriptionPlan,
-    default: SubscriptionPlan.FREE
+    default: SubscriptionPlan.FREE,
   })
   subscription_plan: SubscriptionPlan;
 
   @Column({
     type: 'enum',
     enum: CompanyStatus,
-    default: CompanyStatus.ACTIVE
+    default: CompanyStatus.ACTIVE,
   })
   status: CompanyStatus;
 
@@ -103,6 +110,6 @@ export class Company {
   updated_at: Date;
 
   // Relations
-  @OneToMany(() => User, user => user.company)
+  @OneToMany(() => User, (user) => user.company)
   users: User[];
 }

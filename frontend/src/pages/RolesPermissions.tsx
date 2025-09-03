@@ -56,6 +56,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import apiClient from "@/lib/api";
 import { toast } from "sonner";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Can, CanAny } from "@/components/PermissionGuard";
 
 interface Role {
   id: number;
@@ -85,6 +87,7 @@ interface Permission {
 
 const RolesPermissions = () => {
   const { t } = useTranslation();
+  const { can, canCRUD } = usePermissions();
   const [activeTab, setActiveTab] = useState("roles");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -389,13 +392,14 @@ const RolesPermissions = () => {
                 </Select>
               </div>
 
-              <Dialog open={isCreateRoleDialogOpen} onOpenChange={setIsCreateRoleDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    {t('rolesPermissions.roles.addNew')}
-                  </Button>
-                </DialogTrigger>
+              <Can permission="users.create">
+                <Dialog open={isCreateRoleDialogOpen} onOpenChange={setIsCreateRoleDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t('rolesPermissions.roles.addNew')}
+                    </Button>
+                  </DialogTrigger>
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle className="arabic-text">
@@ -487,7 +491,8 @@ const RolesPermissions = () => {
                     </div>
                   </form>
                 </DialogContent>
-              </Dialog>
+                </Dialog>
+              </Can>
             </div>
 
             {/* Roles Table */}
@@ -560,21 +565,25 @@ const RolesPermissions = () => {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  onClick={() => handleEditRole(role)}
-                                  className="arabic-text"
-                                >
-                                  <Edit className="h-4 w-4 ml-2" />
-                                  {t('rolesPermissions.actions.edit')}
-                                </DropdownMenuItem>
-                                {!role.is_system && (
+                                <Can permission="users.update">
                                   <DropdownMenuItem
-                                    onClick={() => handleDeleteRole(role)}
-                                    className="arabic-text text-red-600"
+                                    onClick={() => handleEditRole(role)}
+                                    className="arabic-text"
                                   >
-                                    <Trash2 className="h-4 w-4 ml-2" />
-                                    {t('rolesPermissions.actions.delete')}
+                                    <Edit className="h-4 w-4 ml-2" />
+                                    {t('rolesPermissions.actions.edit')}
                                   </DropdownMenuItem>
+                                </Can>
+                                {!role.is_system && (
+                                  <Can permission="users.delete">
+                                    <DropdownMenuItem
+                                      onClick={() => handleDeleteRole(role)}
+                                      className="arabic-text text-red-600"
+                                    >
+                                      <Trash2 className="h-4 w-4 ml-2" />
+                                      {t('rolesPermissions.actions.delete')}
+                                    </DropdownMenuItem>
+                                  </Can>
                                 )}
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -613,13 +622,14 @@ const RolesPermissions = () => {
                 </Select>
               </div>
 
-              <Dialog open={isCreatePermissionDialogOpen} onOpenChange={setIsCreatePermissionDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    {t('rolesPermissions.permissions.addNew')}
-                  </Button>
-                </DialogTrigger>
+              <Can permission="settings.update">
+                <Dialog open={isCreatePermissionDialogOpen} onOpenChange={setIsCreatePermissionDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      {t('rolesPermissions.permissions.addNew')}
+                    </Button>
+                  </DialogTrigger>
                 <DialogContent className="max-w-md">
                   <DialogHeader>
                     <DialogTitle className="arabic-text">
@@ -745,7 +755,8 @@ const RolesPermissions = () => {
                     </div>
                   </form>
                 </DialogContent>
-              </Dialog>
+                </Dialog>
+              </Can>
             </div>
 
             {/* Permissions Table */}
@@ -824,21 +835,25 @@ const RolesPermissions = () => {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  onClick={() => handleEditPermission(permission)}
-                                  className="arabic-text"
-                                >
-                                  <Edit className="h-4 w-4 ml-2" />
-                                  {t('rolesPermissions.actions.edit')}
-                                </DropdownMenuItem>
-                                {!permission.is_system && (
+                                <Can permission="settings.update">
                                   <DropdownMenuItem
-                                    onClick={() => handleDeletePermission(permission)}
-                                    className="arabic-text text-red-600"
+                                    onClick={() => handleEditPermission(permission)}
+                                    className="arabic-text"
                                   >
-                                    <Trash2 className="h-4 w-4 ml-2" />
-                                    {t('rolesPermissions.actions.delete')}
+                                    <Edit className="h-4 w-4 ml-2" />
+                                    {t('rolesPermissions.actions.edit')}
                                   </DropdownMenuItem>
+                                </Can>
+                                {!permission.is_system && (
+                                  <Can permission="settings.update">
+                                    <DropdownMenuItem
+                                      onClick={() => handleDeletePermission(permission)}
+                                      className="arabic-text text-red-600"
+                                    >
+                                      <Trash2 className="h-4 w-4 ml-2" />
+                                      {t('rolesPermissions.actions.delete')}
+                                    </DropdownMenuItem>
+                                  </Can>
                                 )}
                               </DropdownMenuContent>
                             </DropdownMenu>

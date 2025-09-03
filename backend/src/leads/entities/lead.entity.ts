@@ -1,7 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 import { User } from '../../users/entities/user.entity';
 import { LeadSource } from './lead-source.entity';
+import { Property } from '../../properties/entities/property.entity';
 import { Deal } from '../../deals/entities/deal.entity';
 import { Activity } from '../../activities/entities/activity.entity';
 
@@ -12,14 +22,14 @@ export enum LeadStatus {
   PROPOSAL = 'proposal',
   NEGOTIATION = 'negotiation',
   CLOSED_WON = 'closed_won',
-  CLOSED_LOST = 'closed_lost'
+  CLOSED_LOST = 'closed_lost',
 }
 
 export enum LeadPriority {
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high',
-  URGENT = 'urgent'
+  URGENT = 'urgent',
 }
 
 @Entity('leads')
@@ -93,14 +103,14 @@ export class Lead {
   @Column({
     type: 'enum',
     enum: LeadStatus,
-    default: LeadStatus.NEW
+    default: LeadStatus.NEW,
   })
   status: LeadStatus;
 
   @Column({
     type: 'enum',
     enum: LeadPriority,
-    default: LeadPriority.MEDIUM
+    default: LeadPriority.MEDIUM,
   })
   priority: LeadPriority;
 
@@ -153,10 +163,17 @@ export class Lead {
   @JoinColumn({ name: 'lead_source_id' })
   lead_source: LeadSource;
 
-  @OneToMany(() => Deal, deal => deal.lead)
+  @Column('uuid', { nullable: true })
+  unit_id: string;
+
+  @ManyToOne(() => Property, { nullable: true })
+  @JoinColumn({ name: 'unit_id' })
+  unit: Property;
+
+  @OneToMany(() => Deal, (deal) => deal.lead)
   deals: Deal[];
 
-  @OneToMany(() => Activity, activity => activity.lead)
+  @OneToMany(() => Activity, (activity) => activity.lead)
   activities: Activity[];
 
   // Virtual fields

@@ -1,5 +1,19 @@
-import { Controller, Post, Get, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { WhatsAppService } from './whatsapp.service';
 import type { WhatsAppMessage } from './whatsapp.service';
 import { WhatsAppChat } from './entities/whatsapp-chat.entity';
@@ -25,7 +39,10 @@ export class WhatsAppController {
 
   @Post('send/lead-welcome')
   @ApiOperation({ summary: 'Send welcome message to lead' })
-  @ApiResponse({ status: 200, description: 'Welcome message sent successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Welcome message sent successfully',
+  })
   async sendLeadWelcomeMessage(
     @Body() body: { phoneNumber: string; leadName: string },
     @User('companyId') companyId: string,
@@ -39,7 +56,10 @@ export class WhatsAppController {
 
   @Post('send/property-details')
   @ApiOperation({ summary: 'Send property details via WhatsApp' })
-  @ApiResponse({ status: 200, description: 'Property details sent successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Property details sent successfully',
+  })
   async sendPropertyDetails(
     @Body() body: { phoneNumber: string; propertyData: any },
     @User('companyId') companyId: string,
@@ -52,7 +72,10 @@ export class WhatsAppController {
 
   @Post('send/appointment-reminder')
   @ApiOperation({ summary: 'Send appointment reminder' })
-  @ApiResponse({ status: 200, description: 'Appointment reminder sent successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Appointment reminder sent successfully',
+  })
   async sendAppointmentReminder(
     @Body() body: { phoneNumber: string; appointmentData: any },
     @User('companyId') companyId: string,
@@ -65,7 +88,10 @@ export class WhatsAppController {
 
   @Post('send/follow-up')
   @ApiOperation({ summary: 'Send follow-up message' })
-  @ApiResponse({ status: 200, description: 'Follow-up message sent successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Follow-up message sent successfully',
+  })
   async sendFollowUpMessage(
     @Body() body: { phoneNumber: string; daysSinceLastContact: number },
     @User('companyId') companyId: string,
@@ -78,9 +104,13 @@ export class WhatsAppController {
 
   @Post('send/template')
   @ApiOperation({ summary: 'Send template message' })
-  @ApiResponse({ status: 200, description: 'Template message sent successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Template message sent successfully',
+  })
   async sendTemplateMessage(
-    @Body() body: { phoneNumber: string; templateName: string; templateData?: any },
+    @Body()
+    body: { phoneNumber: string; templateName: string; templateData?: any },
     @User('companyId') companyId: string,
   ): Promise<any> {
     return this.whatsappService.sendTemplateMessage(
@@ -99,7 +129,11 @@ export class WhatsAppController {
 
   @Get('chat-history/:phoneNumber')
   @ApiOperation({ summary: 'Get chat history for phone number' })
-  @ApiResponse({ status: 200, description: 'Chat history retrieved successfully', type: [WhatsAppChat] })
+  @ApiResponse({
+    status: 200,
+    description: 'Chat history retrieved successfully',
+    type: [WhatsAppChat],
+  })
   @ApiQuery({ name: 'limit', required: false, type: Number })
   async getChatHistory(
     @Param('phoneNumber') phoneNumber: string,
@@ -112,8 +146,13 @@ export class WhatsAppController {
 
   @Get('statistics')
   @ApiOperation({ summary: 'Get WhatsApp messaging statistics' })
-  @ApiResponse({ status: 200, description: 'Statistics retrieved successfully' })
-  async getMessageStatistics(@User('companyId') companyId: string): Promise<any> {
+  @ApiResponse({
+    status: 200,
+    description: 'Statistics retrieved successfully',
+  })
+  async getMessageStatistics(
+    @User('companyId') companyId: string,
+  ): Promise<any> {
     return this.whatsappService.getMessageStatistics(companyId);
   }
 
@@ -128,7 +167,8 @@ export class WhatsAppController {
   @ApiOperation({ summary: 'Create and send WhatsApp campaign' })
   @ApiResponse({ status: 200, description: 'Campaign created successfully' })
   async createCampaign(
-    @Body() body: { name: string; messages: WhatsAppMessage[]; scheduleTime?: Date },
+    @Body()
+    body: { name: string; messages: WhatsAppMessage[]; scheduleTime?: Date },
     @User('companyId') companyId: string,
   ): Promise<any> {
     return this.whatsappService.createCampaign(
@@ -151,7 +191,10 @@ export class WhatsAppController {
   // Auto-response endpoints
   @Post('auto-responses/setup')
   @ApiOperation({ summary: 'Setup auto-responses for common queries' })
-  @ApiResponse({ status: 200, description: 'Auto-responses configured successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Auto-responses configured successfully',
+  })
   async setupAutoResponses(@User('companyId') companyId: string): Promise<any> {
     // In a real implementation, you would set up auto-response rules
     // For example: respond to "price" with pricing information
@@ -163,15 +206,18 @@ export class WhatsAppController {
       rules: [
         {
           keyword: 'price',
-          response: 'Our properties range from 200,000 to 5,000,000 SAR. What is your budget?',
+          response:
+            'Our properties range from 200,000 to 5,000,000 SAR. What is your budget?',
         },
         {
           keyword: 'location',
-          response: 'We have properties in Riyadh, Jeddah, and Dammam. Which city interests you?',
+          response:
+            'We have properties in Riyadh, Jeddah, and Dammam. Which city interests you?',
         },
         {
           keyword: 'appointment',
-          response: 'I\'d be happy to schedule a viewing for you. What date and time works best?',
+          response:
+            "I'd be happy to schedule a viewing for you. What date and time works best?",
         },
       ],
     };
@@ -180,8 +226,13 @@ export class WhatsAppController {
   // Analytics endpoints
   @Get('analytics/conversations')
   @ApiOperation({ summary: 'Get WhatsApp conversation analytics' })
-  @ApiResponse({ status: 200, description: 'Conversation analytics retrieved successfully' })
-  async getConversationAnalytics(@User('companyId') companyId: string): Promise<any> {
+  @ApiResponse({
+    status: 200,
+    description: 'Conversation analytics retrieved successfully',
+  })
+  async getConversationAnalytics(
+    @User('companyId') companyId: string,
+  ): Promise<any> {
     // In a real implementation, you would analyze conversation patterns
     // response times, conversion rates, etc.
 
@@ -197,8 +248,13 @@ export class WhatsAppController {
 
   @Get('analytics/effectiveness')
   @ApiOperation({ summary: 'Get WhatsApp marketing effectiveness' })
-  @ApiResponse({ status: 200, description: 'Effectiveness analytics retrieved successfully' })
-  async getMarketingEffectiveness(@User('companyId') companyId: string): Promise<any> {
+  @ApiResponse({
+    status: 200,
+    description: 'Effectiveness analytics retrieved successfully',
+  })
+  async getMarketingEffectiveness(
+    @User('companyId') companyId: string,
+  ): Promise<any> {
     return {
       messagesSent: 5432,
       messagesDelivered: 5234,

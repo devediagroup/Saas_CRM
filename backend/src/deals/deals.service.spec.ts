@@ -2,26 +2,32 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DealsService } from './deals.service';
-import { Deal, DealStage, DealPriority, DealType } from './entities/deal.entity';
+import { Deal } from './entities/deal.entity';
+import { PermissionsService } from '../auth/permissions.service';
+import { ForbiddenException } from '@nestjs/common';
 
 describe('DealsService', () => {
   let service: DealsService;
   let repository: Repository<Deal>;
+  let permissionsService: PermissionsService;
 
-  const mockDeal: Deal = {
-    id: 'test-id',
-    title: 'Test Deal',
-    description: 'Test Description',
-    amount: 100000,
-    currency: 'SAR',
-    stage: DealStage.PROSPECT,
-    priority: DealPriority.MEDIUM,
-    deal_type: DealType.SALE,
-    probability: 50,
-    expected_close_date: new Date(),
-    company_id: 'company-id',
-    created_at: new Date(),
-    updated_at: new Date(),
+  const mockDeal = {
+    id: 1,
+    title: 'صفقة شقة في الرياض',
+    client: 'أحمد محمد',
+    property: 'شقة الرياض',
+    amount: 500000,
+    commission: 25000,
+    stage: 'negotiation',
+    status: 'active',
+    probability: 75,
+    agent: 'سارة علي',
+    createdAt: new Date(),
+    expectedCloseDate: new Date('2024-12-31'),
+    lastActivity: new Date(),
+    notes: 'صفقة قيد التفاوض',
+    unit_id: '123e4567-e89b-12d3-a456-426614174000',
+    company_id: '123e4567-e89b-12d3-a456-426614174001',
   };
 
   const mockRepository = {
@@ -30,14 +36,21 @@ describe('DealsService', () => {
     find: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
-    remove: jest.fn(),
+    delete: jest.fn(),
     createQueryBuilder: jest.fn(() => ({
       where: jest.fn().mockReturnThis(),
       andWhere: jest.fn().mockReturnThis(),
-      leftJoinAndSelect: jest.fn().mockReturnThis(),
       orderBy: jest.fn().mockReturnThis(),
       getMany: jest.fn().mockResolvedValue([mockDeal]),
+      getOne: jest.fn().mockResolvedValue(mockDeal),
     })),
+  };
+
+  const mockPermissionsService = {
+    checkPermission: jest.fn(),
+    getCompanyId: jest
+      .fn()
+      .mockResolvedValue('123e4567-e89b-12d3-a456-426614174001'),
   };
 
   beforeEach(async () => {
@@ -48,15 +61,16 @@ describe('DealsService', () => {
           provide: getRepositoryToken(Deal),
           useValue: mockRepository,
         },
+        {
+          provide: PermissionsService,
+          useValue: mockPermissionsService,
+        },
       ],
     }).compile();
 
     service = module.get<DealsService>(DealsService);
     repository = module.get<Repository<Deal>>(getRepositoryToken(Deal));
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
+    permissionsService = module.get<PermissionsService>(PermissionsService);
   });
 
   it('should be defined', () => {
@@ -64,300 +78,345 @@ describe('DealsService', () => {
   });
 
   describe('create', () => {
-    it('should create a deal', async () => {
-      const createDto = {
-        title: 'New Deal',
-        description: 'New Description',
-        amount: 150000,
-        company_id: 'company-id',
+    it('should create a new deal when user has permission', async () => {
+      const createDealDto = {
+        title: 'صفقة شقة في الرياض',
+        client: 'أحمد محمد',
+        property: 'شقة الرياض',
+        amount: 500000,
+        commission: 25000,
+        stage: 'negotiation',
+        status: 'active',
+        probability: 75,
+        agent: 'سارة علي',
+        expectedCloseDate: new Date('2024-12-31'),
+        notes: 'صفقة قيد التفاوض',
+        unit_id: '123e4567-e89b-12d3-a456-426614174000',
       };
 
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
       mockRepository.create.mockReturnValue(mockDeal);
       mockRepository.save.mockResolvedValue(mockDeal);
 
-      const result = await service.create(createDto);
+      const result = await service.create(createDealDto, userId);
 
-      expect(mockRepository.create).toHaveBeenCalledWith(createDto);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.create',
+      );
+      expect(mockRepository.create).toHaveBeenCalledWith({
+        ...createDealDto,
+        company_id: companyId,
+      });
       expect(mockRepository.save).toHaveBeenCalledWith(mockDeal);
       expect(result).toEqual(mockDeal);
+    });
+
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const createDealDto = {
+        title: 'صفقة شقة في الرياض',
+        amount: 500000,
+      };
+
+      const userId = 'user-123';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
+
+      await expect(service.create(createDealDto, userId)).rejects.toThrow(
+        ForbiddenException,
+      );
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.create',
+      );
     });
   });
 
   describe('findAll', () => {
-    it('should return all deals for a company', async () => {
-      mockRepository.find.mockResolvedValue([mockDeal]);
+    it('should return all deals when user has permission', async () => {
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
 
-      const result = await service.findAll('company-id');
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({
-        where: { company_id: 'company-id' },
-        relations: ['company', 'lead', 'property', 'assigned_to'],
-        order: { created_at: 'DESC' },
-      });
+      const result = await service.findAll(userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
+      );
       expect(result).toEqual([mockDeal]);
+    });
+
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const userId = 'user-123';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
+
+      await expect(service.findAll(userId)).rejects.toThrow(ForbiddenException);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
+      );
     });
   });
 
   describe('findOne', () => {
-    it('should return a deal by id', async () => {
-      mockRepository.findOne.mockResolvedValue(mockDeal);
+    it('should return a deal when user has permission', async () => {
+      const dealId = '1';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
 
-      const result = await service.findOne('test-id');
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'lead', 'property', 'assigned_to', 'activities'],
-      });
+      const result = await service.findOne(dealId, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
+      );
       expect(result).toEqual(mockDeal);
     });
 
-    it('should throw NotFoundException when deal not found', async () => {
-      mockRepository.findOne.mockResolvedValue(null);
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const dealId = '1';
+      const userId = 'user-123';
 
-      await expect(service.findOne('nonexistent-id')).rejects.toThrow('Deal with ID nonexistent-id not found');
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
+
+      await expect(service.findOne(dealId, userId)).rejects.toThrow(
+        ForbiddenException,
+      );
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
+      );
     });
   });
 
   describe('update', () => {
-    it('should update a deal', async () => {
-      const updateDto = { title: 'Updated Title' };
-      const updatedDeal = { ...mockDeal, ...updateDto };
+    it('should update a deal when user has permission', async () => {
+      const dealId = '1';
+      const updateDealDto = {
+        stage: 'closed_won',
+        probability: 100,
+        notes: 'تم إغلاق الصفقة بنجاح',
+      };
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
 
-      mockRepository.findOne.mockResolvedValue(mockDeal);
-      mockRepository.save.mockResolvedValue(updatedDeal);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+      mockRepository.update.mockResolvedValue({ affected: 1 });
 
-      const result = await service.update('test-id', updateDto);
+      const result = await service.update(dealId, updateDealDto, userId);
 
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'lead', 'property', 'assigned_to', 'activities'],
-      });
-      expect(mockRepository.save).toHaveBeenCalledWith(updatedDeal);
-      expect(result).toEqual(updatedDeal);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.update',
+      );
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { id: dealId, company_id: companyId },
+        updateDealDto,
+      );
+      expect(result).toEqual({ affected: 1 });
+    });
+
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const dealId = '1';
+      const updateDealDto = { stage: 'closed_won' };
+      const userId = 'user-123';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
+
+      await expect(
+        service.update(dealId, updateDealDto, userId),
+      ).rejects.toThrow(ForbiddenException);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.update',
+      );
     });
   });
 
   describe('remove', () => {
-    it('should remove a deal', async () => {
-      mockRepository.findOne.mockResolvedValue(mockDeal);
-      mockRepository.remove.mockResolvedValue(mockDeal);
+    it('should remove a deal when user has permission', async () => {
+      const dealId = '1';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
 
-      await service.remove('test-id');
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+      mockRepository.delete.mockResolvedValue({ affected: 1 });
 
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'lead', 'property', 'assigned_to', 'activities'],
+      const result = await service.remove(dealId, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.delete',
+      );
+      expect(mockRepository.delete).toHaveBeenCalledWith({
+        id: dealId,
+        company_id: companyId,
       });
-      expect(mockRepository.remove).toHaveBeenCalledWith(mockDeal);
+      expect(result).toEqual({ affected: 1 });
     });
-  });
 
-  describe('getDealsByStage', () => {
-    it('should return deals by stage', async () => {
-      mockRepository.find.mockResolvedValue([mockDeal]);
+    it('should throw ForbiddenException when user lacks permission', async () => {
+      const dealId = '1';
+      const userId = 'user-123';
 
-      const result = await service.getDealsByStage('company-id', DealStage.PROSPECT);
+      mockPermissionsService.checkPermission.mockResolvedValue(false);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({
-        where: {
-          company_id: 'company-id',
-          stage: DealStage.PROSPECT,
-        },
-        relations: ['lead', 'property', 'assigned_to'],
-      });
-      expect(result).toEqual([mockDeal]);
-    });
-  });
-
-  describe('getDealsByPriority', () => {
-    it('should return deals by priority', async () => {
-      mockRepository.find.mockResolvedValue([mockDeal]);
-
-      const result = await service.getDealsByPriority('company-id', DealPriority.MEDIUM);
-
-      expect(mockRepository.find).toHaveBeenCalledWith({
-        where: {
-          company_id: 'company-id',
-          priority: DealPriority.MEDIUM,
-        },
-        relations: ['lead', 'property', 'assigned_to'],
-      });
-      expect(result).toEqual([mockDeal]);
-    });
-  });
-
-  describe('updateDealStage', () => {
-    it('should update deal stage', async () => {
-      const updatedDeal = { ...mockDeal, stage: DealStage.CLOSED_WON, actual_close_date: new Date() };
-
-      mockRepository.findOne.mockResolvedValue(mockDeal);
-      mockRepository.save.mockResolvedValue(updatedDeal);
-
-      const result = await service.updateDealStage('test-id', DealStage.CLOSED_WON);
-
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'lead', 'property', 'assigned_to', 'activities'],
-      });
-      expect(mockRepository.save).toHaveBeenCalledWith(updatedDeal);
-      expect(result).toEqual(updatedDeal);
-    });
-  });
-
-  describe('assignDeal', () => {
-    it('should assign deal to user', async () => {
-      const updatedDeal = { ...mockDeal, assigned_to_id: 'user-id' };
-
-      mockRepository.findOne.mockResolvedValue(mockDeal);
-      mockRepository.save.mockResolvedValue(updatedDeal);
-
-      const result = await service.assignDeal('test-id', 'user-id');
-
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: 'test-id' },
-        relations: ['company', 'lead', 'property', 'assigned_to', 'activities'],
-      });
-      expect(mockRepository.save).toHaveBeenCalledWith(updatedDeal);
-      expect(result).toEqual(updatedDeal);
+      await expect(service.remove(dealId, userId)).rejects.toThrow(
+        ForbiddenException,
+      );
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.delete',
+      );
     });
   });
 
   describe('getPipelineView', () => {
-    it('should return pipeline view', async () => {
-      const deals = [
-        { ...mockDeal, stage: DealStage.PROSPECT },
-        { ...mockDeal, stage: DealStage.QUALIFIED },
-      ];
+    it('should return pipeline view when user has permission', async () => {
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
 
-      mockRepository.find.mockResolvedValue(deals);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      const result = await service.getPipelineView('company-id');
+      const result = await service.getPipelineView(userId);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({
-        where: { company_id: 'company-id' },
-        relations: ['company', 'lead', 'property', 'assigned_to'],
-        order: { created_at: 'DESC' },
-      });
-      expect(result).toEqual({
-        [DealStage.PROSPECT]: [deals[0]],
-        [DealStage.QUALIFIED]: [deals[1]],
-        [DealStage.PROPOSAL]: [],
-        [DealStage.NEGOTIATION]: [],
-        [DealStage.CONTRACT]: [],
-        [DealStage.CLOSED_WON]: [],
-        [DealStage.CLOSED_LOST]: [],
-      });
-    });
-  });
-
-  describe('getOverdueDeals', () => {
-    it('should return overdue deals', async () => {
-      const overdueDeal = { ...mockDeal, expected_close_date: new Date(Date.now() - 86400000) };
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        leftJoinAndSelect: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue([overdueDeal]),
-      };
-
-      mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
-
-      const result = await service.getOverdueDeals('company-id');
-
-      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith('deal');
-      expect(result).toEqual([overdueDeal]);
-    });
-  });
-
-  describe('searchDeals', () => {
-    it('should search deals', async () => {
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        leftJoinAndSelect: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue([mockDeal]),
-      };
-
-      mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
-
-      const result = await service.searchDeals('company-id', 'test search');
-
-      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith('deal');
-      expect(mockQueryBuilder.where).toHaveBeenCalledWith('deal.company_id = :companyId', { companyId: 'company-id' });
-      expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
-        '(deal.title LIKE :search OR deal.description LIKE :search)',
-        { search: '%test search%' }
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
       );
       expect(result).toEqual([mockDeal]);
     });
   });
 
-  describe('getDealStats', () => {
-    it('should return deal statistics', async () => {
-      const deals = [
-        { ...mockDeal, stage: DealStage.CLOSED_WON, amount: 100000 },
-        { ...mockDeal, stage: DealStage.PROSPECT, amount: 50000 },
-      ];
+  describe('getOverdueDeals', () => {
+    it('should return overdue deals when user has permission', async () => {
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
 
-      mockRepository.find.mockResolvedValue(deals);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      const result = await service.getDealStats('company-id');
+      const result = await service.getOverdueDeals(userId);
 
-      expect(mockRepository.find).toHaveBeenCalledWith({
-        where: { company_id: 'company-id' },
-        relations: ['company', 'lead', 'property', 'assigned_to'],
-        order: { created_at: 'DESC' },
-      });
-      expect(result).toEqual({
-        total: 2,
-        byStage: {
-          [DealStage.PROSPECT]: 1,
-          [DealStage.QUALIFIED]: 0,
-          [DealStage.PROPOSAL]: 0,
-          [DealStage.NEGOTIATION]: 0,
-          [DealStage.CONTRACT]: 0,
-          [DealStage.CLOSED_WON]: 1,
-          [DealStage.CLOSED_LOST]: 0,
-        },
-        byPriority: {
-          [DealPriority.LOW]: 0,
-          [DealPriority.MEDIUM]: 2,
-          [DealPriority.HIGH]: 0,
-          [DealPriority.URGENT]: 0,
-        },
-        byType: {
-          [DealType.SALE]: 2,
-          [DealType.RENT]: 0,
-          [DealType.MANAGEMENT]: 0,
-          [DealType.CONSULTATION]: 0,
-        },
-        conversionRate: '50.0',
-        totalValue: 150000,
-        weightedValue: 75000,
-        averageDealSize: 75000,
-        overdue: 0,
-      });
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
+      );
+      expect(result).toEqual([mockDeal]);
     });
   });
 
   describe('getUpcomingDeals', () => {
-    it('should return upcoming deals', async () => {
-      const upcomingDeal = { ...mockDeal, expected_close_date: new Date(Date.now() + 86400000) };
-      const mockQueryBuilder = {
-        where: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        leftJoinAndSelect: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue([upcomingDeal]),
-      };
+    it('should return upcoming deals when user has permission', async () => {
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
 
-      mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
 
-      const result = await service.getUpcomingDeals('company-id', 7);
+      const result = await service.getUpcomingDeals(userId);
 
-      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith('deal');
-      expect(result).toEqual([upcomingDeal]);
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
+      );
+      expect(result).toEqual([mockDeal]);
+    });
+  });
+
+  describe('updateStage', () => {
+    it('should update deal stage when user has permission', async () => {
+      const dealId = '1';
+      const stage = 'closed_won';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+      mockRepository.update.mockResolvedValue({ affected: 1 });
+
+      const result = await service.updateStage(dealId, stage, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.update',
+      );
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { id: dealId, company_id: companyId },
+        { stage },
+      );
+      expect(result).toEqual({ affected: 1 });
+    });
+  });
+
+  describe('getDealsByUnit', () => {
+    it('should return deals by unit when user has permission', async () => {
+      const unitId = '123e4567-e89b-12d3-a456-426614174000';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+
+      const result = await service.getDealsByUnit(unitId, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
+      );
+      expect(result).toEqual([mockDeal]);
+    });
+  });
+
+  describe('getDealsByProject', () => {
+    it('should return deals by project when user has permission', async () => {
+      const projectId = '123e4567-e89b-12d3-a456-426614174002';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+
+      const result = await service.getDealsByProject(projectId, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
+      );
+      expect(result).toEqual([mockDeal]);
+    });
+  });
+
+  describe('getDealsByDeveloper', () => {
+    it('should return deals by developer when user has permission', async () => {
+      const developerId = '123e4567-e89b-12d3-a456-426614174003';
+      const userId = 'user-123';
+      const companyId = '123e4567-e89b-12d3-a456-426614174001';
+
+      mockPermissionsService.checkPermission.mockResolvedValue(true);
+      mockPermissionsService.getCompanyId.mockResolvedValue(companyId);
+
+      const result = await service.getDealsByDeveloper(developerId, userId);
+
+      expect(mockPermissionsService.checkPermission).toHaveBeenCalledWith(
+        userId,
+        'deals.read',
+      );
+      expect(result).toEqual([mockDeal]);
     });
   });
 });

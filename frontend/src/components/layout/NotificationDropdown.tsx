@@ -48,7 +48,7 @@ const NotificationDropdown = () => {
     if (actionType === 'lead_created') return <User className="h-4 w-4 text-blue-500" />;
     if (actionType === 'deal_created') return <Handshake className="h-4 w-4 text-green-500" />;
     if (actionType === 'whatsapp_message') return <MessageSquare className="h-4 w-4 text-green-600" />;
-    
+
     switch (type) {
       case 'success':
         return <Check className="h-4 w-4 text-green-500" />;
@@ -81,8 +81,8 @@ const NotificationDropdown = () => {
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
-            <Badge 
-              variant="destructive" 
+            <Badge
+              variant="destructive"
               className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0 flex items-center justify-center animate-pulse"
             >
               {unreadCount > 99 ? '99+' : unreadCount}
@@ -98,9 +98,9 @@ const NotificationDropdown = () => {
           </DropdownMenuLabel>
           <div className="flex gap-2">
             {unreadCount > 0 && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => markAllAsRead()}
                 className="text-xs"
                 disabled={isMarkingAllAsRead}
@@ -111,9 +111,9 @@ const NotificationDropdown = () => {
                 تحديد الكل كمقروء
               </Button>
             )}
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => clearAll()}
               className="text-xs text-red-500 hover:text-red-600"
               disabled={isClearing}
@@ -134,11 +134,10 @@ const NotificationDropdown = () => {
             </div>
           ) : (
             notifications.map((notification: any) => (
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 key={notification.id}
-                className={`p-4 cursor-pointer hover:bg-accent/50 transition-colors ${
-                  !notification.is_read ? 'bg-accent/20 border-r-2 border-r-blue-500' : ''
-                }`}
+                className={`p-4 cursor-pointer hover:bg-accent/50 transition-colors ${!notification.is_read ? 'bg-accent/20 border-r-2 border-r-blue-500' : ''
+                  }`}
                 onClick={() => handleNotificationClick(notification)}
               >
                 <div className="flex gap-3 w-full">
@@ -198,8 +197,8 @@ const NotificationDropdown = () => {
         </ScrollArea>
         {notifications.length > 0 && (
           <div className="border-t p-2">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               className="w-full text-sm hover:bg-accent/50"
               onClick={() => navigate('/notifications')}
             >

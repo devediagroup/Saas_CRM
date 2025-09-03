@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { api } from "@/lib/api";
 import echoopsLogo from "@/assets/logo.svg";
 
 const Register = () => {
@@ -14,10 +15,13 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
     username: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    company_name: ""
   });
 
   const { toast } = useToast();
@@ -25,27 +29,27 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       // Validate passwords match
       if (formData.password !== formData.confirmPassword) {
         throw new Error(t('register.passwordMismatch'));
       }
-      
+
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       toast({
         title: t('register.successTitle'),
         description: t('register.successDescription'),
       });
-      
+
       // Redirect to login
       window.location.href = "/login";
     } catch (error) {
       toast({
         title: t('register.errorTitle'),
-        description: error instanceof Error ? error.message : t('errors.generic'),
+        description: error.response?.data?.message || error.message || t('errors.generic'),
         variant: "destructive",
       });
     } finally {
@@ -59,9 +63,9 @@ const Register = () => {
         {/* Header with Logo */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img 
-              src={echoopsLogo} 
-              alt="EchoOps Logo" 
+            <img
+              src={echoopsLogo}
+              alt="EchoOps Logo"
               className="h-16 w-auto"
             />
           </div>
@@ -80,13 +84,13 @@ const Register = () => {
               {t('register.formTitle')}
             </CardTitle>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Username Field */}
               <div className="space-y-2">
-                <Label 
-                  htmlFor="username" 
+                <Label
+                  htmlFor="username"
                   className="text-sm font-medium arabic-text flex items-center gap-2"
                 >
                   <User className="h-4 w-4" />
@@ -99,15 +103,15 @@ const Register = () => {
                   className="arabic-text text-right"
                   dir="rtl"
                   value={formData.username}
-                  onChange={(e) => setFormData({...formData, username: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                   required
                 />
               </div>
 
               {/* Email Field */}
               <div className="space-y-2">
-                <Label 
-                  htmlFor="email" 
+                <Label
+                  htmlFor="email"
                   className="text-sm font-medium arabic-text flex items-center gap-2"
                 >
                   <Mail className="h-4 w-4" />
@@ -120,15 +124,15 @@ const Register = () => {
                   className="arabic-text text-right"
                   dir="rtl"
                   value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
                 />
               </div>
 
               {/* Password Field */}
               <div className="space-y-2">
-                <Label 
-                  htmlFor="password" 
+                <Label
+                  htmlFor="password"
                   className="text-sm font-medium arabic-text flex items-center gap-2"
                 >
                   <Lock className="h-4 w-4" />
@@ -142,7 +146,7 @@ const Register = () => {
                     className="arabic-text text-right pl-10"
                     dir="rtl"
                     value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
                   />
                   <button
@@ -161,8 +165,8 @@ const Register = () => {
 
               {/* Confirm Password Field */}
               <div className="space-y-2">
-                <Label 
-                  htmlFor="confirmPassword" 
+                <Label
+                  htmlFor="confirmPassword"
                   className="text-sm font-medium arabic-text flex items-center gap-2"
                 >
                   <Lock className="h-4 w-4" />
@@ -176,7 +180,7 @@ const Register = () => {
                     className="arabic-text text-right pl-10"
                     dir="rtl"
                     value={formData.confirmPassword}
-                    onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                     required
                   />
                   <button

@@ -1,7 +1,18 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 import { Deal } from '../../deals/entities/deal.entity';
 import { Activity } from '../../activities/entities/activity.entity';
+import { Project } from '../../projects/entities/project.entity';
+import { Developer } from '../../developers/entities/developer.entity';
 
 export enum PropertyType {
   APARTMENT = 'apartment',
@@ -9,7 +20,7 @@ export enum PropertyType {
   OFFICE = 'office',
   SHOP = 'shop',
   LAND = 'land',
-  WAREHOUSE = 'warehouse'
+  WAREHOUSE = 'warehouse',
 }
 
 export enum PropertyStatus {
@@ -18,12 +29,12 @@ export enum PropertyStatus {
   SOLD = 'sold',
   RENTED = 'rented',
   UNDER_CONSTRUCTION = 'under_construction',
-  OFF_MARKET = 'off_market'
+  OFF_MARKET = 'off_market',
 }
 
 export enum ListingType {
   SALE = 'sale',
-  RENT = 'rent'
+  RENT = 'rent',
 }
 
 @Entity('properties')
@@ -39,21 +50,21 @@ export class Property {
 
   @Column({
     type: 'enum',
-    enum: PropertyType
+    enum: PropertyType,
   })
   property_type: PropertyType;
 
   @Column({
     type: 'enum',
     enum: PropertyStatus,
-    default: PropertyStatus.AVAILABLE
+    default: PropertyStatus.AVAILABLE,
   })
   status: PropertyStatus;
 
   @Column({
     type: 'enum',
     enum: ListingType,
-    default: ListingType.SALE
+    default: ListingType.SALE,
   })
   listing_type: ListingType;
 
@@ -155,9 +166,23 @@ export class Property {
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
-  @OneToMany(() => Deal, deal => deal.property)
+  @OneToMany(() => Deal, (deal) => deal.property)
   deals: Deal[];
 
-  @OneToMany(() => Activity, activity => activity.property)
+  @OneToMany(() => Activity, (activity) => activity.property)
   activities: Activity[];
+
+  @Column('uuid', { nullable: true })
+  project_id: string;
+
+  @ManyToOne(() => Project, { nullable: true })
+  @JoinColumn({ name: 'project_id' })
+  project: Project;
+
+  @Column('uuid', { nullable: true })
+  developer_id: string;
+
+  @ManyToOne(() => Developer, { nullable: true })
+  @JoinColumn({ name: 'developer_id' })
+  developer: Developer;
 }

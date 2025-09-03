@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { LanguageSwitcher } from '../ui/language-switcher';
 import { Bell, Search, User } from 'lucide-react';
 import { Button } from '../ui/button';
@@ -12,12 +13,14 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Input } from '../ui/input';
+import NotificationDropdown from './NotificationDropdown';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const isRTL = i18n.language === 'ar';
-  
-  console.log(`Header - Language: ${i18n.language}, RTL: ${isRTL}`);
 
   return (
     <header className="bg-white shadow-sm border-b">
@@ -32,9 +35,8 @@ export const Header: React.FC = () => {
           <div className={`flex items-center ${isRTL ? 'space-x-reverse' : 'space-x-4'}`}>
             {/* Search */}
             <div className="relative hidden md:block">
-              <Search className={`absolute top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 ${
-                isRTL ? 'right-3' : 'left-3'
-              }`} />
+              <Search className={`absolute top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 ${isRTL ? 'right-3' : 'left-3'
+                }`} />
               <Input
                 type="text"
                 placeholder={t('header.search')}
@@ -45,41 +47,8 @@ export const Header: React.FC = () => {
             {/* Language Switcher */}
             <LanguageSwitcher />
 
-            {/* Notifications */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="relative">
-                  <Bell className="h-5 w-5" />
-                  <span className={`absolute -top-1 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center ${
-                    isRTL ? '-left-1' : '-right-1'
-                  }`}>
-                    3
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-80">
-                <DropdownMenuLabel>{t('header.notifications')}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{t('header.newLead')}</p>
-                    <p className="text-xs text-muted-foreground">{t('header.newLeadDesc')}</p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{t('header.appointment')}</p>
-                    <p className="text-xs text-muted-foreground">{t('header.appointmentDesc')}</p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">{t('header.dealClosed')}</p>
-                    <p className="text-xs text-muted-foreground">{t('header.dealClosedDesc')}</p>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Notifications - Using real notification data */}
+            <NotificationDropdown />
 
             {/* User Menu */}
             <DropdownMenu>
@@ -91,11 +60,22 @@ export const Header: React.FC = () => {
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                 <DropdownMenuLabel>{t('header.userMenu.myAccount')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>{t('header.userMenu.profile')}</DropdownMenuItem>
-                <DropdownMenuItem>{t('header.userMenu.settings')}</DropdownMenuItem>
-                <DropdownMenuItem>{t('header.userMenu.help')}</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/profile')}>
+                  {t('header.userMenu.profile')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/settings')}>
+                  {t('header.userMenu.settings')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => window.open('/help', '_blank')}>
+                  {t('header.userMenu.help')}
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>{t('header.userMenu.logout')}</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  logout();
+                  navigate('/login');
+                }}>
+                  {t('header.userMenu.logout')}
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

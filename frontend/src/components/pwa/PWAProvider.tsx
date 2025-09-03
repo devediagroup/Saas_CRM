@@ -32,6 +32,32 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
 
+  // Install PWA function - defined first to avoid reference errors
+  const installPWA = useCallback(async () => {
+    if (!deferredPrompt) return;
+
+    try {
+      const result = await deferredPrompt.prompt();
+      const { outcome } = await result.userChoice;
+
+      if (outcome === 'accepted') {
+        setIsInstallable(false);
+        setDeferredPrompt(null);
+      }
+    } catch (error) {
+      console.error('PWA installation error:', error);
+      toast.error(t('errors.generic'));
+    }
+  }, [deferredPrompt, t]);
+
+  // Update PWA function - defined before being referenced
+  const updatePWA = useCallback(() => {
+    if (registration && registration.waiting) {
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      window.location.reload();
+    }
+  }, [registration]);
+
   // Handle PWA installation
   const handleBeforeInstallPrompt = useCallback((e: Event) => {
     e.preventDefault();
@@ -50,7 +76,7 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
         });
       }
     }, 30000);
-  }, [isInstallable, t]);
+  }, [isInstallable, t, installPWA]);
 
   const handleAppInstalled = useCallback(() => {
     setIsInstallable(false);
@@ -151,31 +177,7 @@ export const PWAProvider: React.FC<PWAProviderProps> = ({ children }) => {
       clearInterval(interval);
       registration.removeEventListener('updatefound', handleUpdateFound);
     };
-  }, [registration, t]);
-
-  const installPWA = async () => {
-    if (!deferredPrompt) return;
-
-    try {
-      const result = await deferredPrompt.prompt();
-      const { outcome } = await result.userChoice;
-
-      if (outcome === 'accepted') {
-        setIsInstallable(false);
-        setDeferredPrompt(null);
-      }
-    } catch (error) {
-      console.error('PWA installation error:', error);
-      toast.error(t('errors.generic'));
-    }
-  };
-
-  const updatePWA = () => {
-    if (registration && registration.waiting) {
-      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-      window.location.reload();
-    }
-  };
+  }, [registration, t, updatePWA]);
 
   const value: PWAContextType = {
     isInstallable,

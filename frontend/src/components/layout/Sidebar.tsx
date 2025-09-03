@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -7,17 +8,24 @@ import {
   Handshake,
   Calendar,
   Settings,
-  LogOut
+  LogOut,
+  Code,
+  FolderOpen,
+  Bell,
+  Brain,
+  Shield,
+  FileText
 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const Sidebar: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const isRTL = i18n.language === 'ar';
-
-  console.log(`Sidebar - Language: ${i18n.language}, RTL: ${isRTL}`);
 
   // Fetch current user to determine role
   const { data: me } = useQuery({
@@ -44,14 +52,43 @@ export const Sidebar: React.FC = () => {
     { key: 'whatsapp', href: '/whatsapp', icon: Users, label: t('nav.whatsapp') },
     { key: 'rolesPermissions', href: '/roles-permissions', icon: Settings, label: t('nav.roles') },
     { key: 'reports', href: '/advanced-reports', icon: LayoutDashboard, label: t('nav.reports') },
+
+    // Developer and Project Management pages
+    { key: 'developers', href: '/developers', icon: Code, label: t('nav.developers') || 'المطورين' },
+    { key: 'projects', href: '/projects', icon: FolderOpen, label: t('nav.projects') || 'المشاريع' },
+
+    // Important missing pages
+    { key: 'notifications', href: '/notifications', icon: Bell, label: t('nav.notifications') || 'الإشعارات' },
+    { key: 'aiAnalysis', href: '/ai-analysis', icon: Brain, label: t('nav.ai') || 'الذكاء الاصطناعي' },
+    { key: 'security', href: '/security', icon: Shield, label: t('nav.security') },
+    { key: 'auditLogs', href: '/audit-logs', icon: FileText, label: t('nav.auditLogs') },
   ] as const;
 
-  // Role to allowed menu keys mapping
+  // Role to allowed menu keys mapping - تم تصحيح أسماء الأدوار لتطابق النظام الفعلي
   const roleMap: Record<string, string[]> = {
-    admin: ['dashboard','leads','properties','deals','activities','analytics','companies','marketing','leadSources','payments','whatsapp','rolesPermissions','reports','settings'],
-    manager: ['dashboard','leads','properties','deals','activities','analytics','companies','marketing','leadSources','whatsapp','settings'],
-    agent: ['dashboard','leads','properties','deals','activities','whatsapp','settings'],
-    user: ['dashboard','activities','settings']
+    // Super Admin - جميع الصفحات
+    super_admin: ['dashboard', 'leads', 'properties', 'deals', 'activities', 'analytics', 'companies', 'marketing', 'leadSources', 'payments', 'whatsapp', 'rolesPermissions', 'reports', 'developers', 'projects', 'notifications', 'aiAnalysis', 'security', 'auditLogs', 'settings'],
+
+    // Company Admin - كل شيء ما عدا صفحات Super Admin الخاصة
+    company_admin: ['dashboard', 'leads', 'properties', 'deals', 'activities', 'analytics', 'companies', 'marketing', 'leadSources', 'payments', 'whatsapp', 'rolesPermissions', 'reports', 'developers', 'projects', 'notifications', 'aiAnalysis', 'auditLogs', 'settings'],
+
+    // Sales Manager - إدارة المبيعات والفريق
+    sales_manager: ['dashboard', 'leads', 'properties', 'deals', 'activities', 'analytics', 'reports', 'developers', 'projects', 'notifications', 'settings'],
+
+    // Sales Agent - العمل الأساسي فقط
+    sales_agent: ['dashboard', 'leads', 'properties', 'deals', 'activities', 'developers', 'projects', 'notifications', 'settings'],
+
+    // Marketing - التسويق والتحليلات
+    marketing: ['dashboard', 'leads', 'properties', 'marketing', 'leadSources', 'analytics', 'reports', 'aiAnalysis', 'developers', 'projects', 'notifications', 'settings'],
+
+    // Support - قراءة فقط للدعم
+    support: ['dashboard', 'leads', 'properties', 'deals', 'activities', 'developers', 'projects', 'settings'],
+
+    // Fallback للأدوار القديمة (للتوافق المؤقت)
+    admin: ['dashboard', 'leads', 'properties', 'deals', 'activities', 'analytics', 'companies', 'marketing', 'leadSources', 'payments', 'whatsapp', 'rolesPermissions', 'reports', 'developers', 'projects', 'notifications', 'aiAnalysis', 'security', 'auditLogs', 'settings'],
+    manager: ['dashboard', 'leads', 'properties', 'deals', 'activities', 'analytics', 'reports', 'developers', 'projects', 'settings'],
+    agent: ['dashboard', 'leads', 'properties', 'deals', 'activities', 'developers', 'projects', 'settings'],
+    user: ['dashboard', 'activities', 'settings']
   };
 
   const allowedKeys = roleMap[role] || roleMap.user;
@@ -89,6 +126,10 @@ export const Sidebar: React.FC = () => {
             variant="ghost"
             className={`w-full text-gray-700 hover:bg-gray-100 flex items-center ${isRTL ? 'flex-row-reverse' : ''}`}
             style={isRTL ? { justifyContent: 'flex-start' } : {}}
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
           >
             <span className="inline-flex w-6 justify-center items-center">
               <LogOut className="h-5 w-5" />

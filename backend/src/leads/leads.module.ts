@@ -11,8 +11,11 @@ import { LeadsService } from './leads.service';
 import { Lead } from './entities/lead.entity';
 import { LeadSource } from './entities/lead-source.entity';
 
+// Auth
+import { AuthModule } from '../auth/auth.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Lead, LeadSource])],
+  imports: [TypeOrmModule.forFeature([Lead, LeadSource]), AuthModule],
   controllers: [LeadsController],
   providers: [LeadsService],
   exports: [LeadsService],

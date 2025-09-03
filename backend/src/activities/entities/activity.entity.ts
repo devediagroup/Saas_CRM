@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 import { User } from '../../users/entities/user.entity';
 import { Lead } from '../../leads/entities/lead.entity';
@@ -16,21 +24,21 @@ export enum ActivityType {
   FOLLOW_UP = 'follow_up',
   PRESENTATION = 'presentation',
   CONTRACT = 'contract',
-  OTHER = 'other'
+  OTHER = 'other',
 }
 
 export enum ActivityStatus {
   SCHEDULED = 'scheduled',
   COMPLETED = 'completed',
   CANCELLED = 'cancelled',
-  POSTPONED = 'postponed'
+  POSTPONED = 'postponed',
 }
 
 export enum ActivityPriority {
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high',
-  URGENT = 'urgent'
+  URGENT = 'urgent',
 }
 
 @Entity('activities')
@@ -46,21 +54,21 @@ export class Activity {
 
   @Column({
     type: 'enum',
-    enum: ActivityType
+    enum: ActivityType,
   })
   type: ActivityType;
 
   @Column({
     type: 'enum',
     enum: ActivityStatus,
-    default: ActivityStatus.SCHEDULED
+    default: ActivityStatus.SCHEDULED,
   })
   status: ActivityStatus;
 
   @Column({
     type: 'enum',
     enum: ActivityPriority,
-    default: ActivityPriority.MEDIUM
+    default: ActivityPriority.MEDIUM,
   })
   priority: ActivityPriority;
 
@@ -147,8 +155,9 @@ export class Activity {
 
   // Virtual fields
   get is_overdue(): boolean {
-    return this.status === ActivityStatus.SCHEDULED &&
-           new Date() > this.scheduled_at;
+    return (
+      this.status === ActivityStatus.SCHEDULED && new Date() > this.scheduled_at
+    );
   }
 
   get is_today(): boolean {
@@ -162,7 +171,8 @@ export class Activity {
   }
 
   get is_upcoming(): boolean {
-    return this.status === ActivityStatus.SCHEDULED &&
-           new Date() < this.scheduled_at;
+    return (
+      this.status === ActivityStatus.SCHEDULED && new Date() < this.scheduled_at
+    );
   }
 }

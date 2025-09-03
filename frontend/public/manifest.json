@@ -1,0 +1,154 @@
+{
+  "name": "EchoOps CRM - نظام إدارة علاقات العملاء",
+  "short_name": "EchoOps CRM",
+  "description": "نظام إدارة علاقات العملاء المتقدم - إدارة العملاء المحتملين، العقارات، الصفقات والمزيد",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "apple-touch-icon"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "لوحة التحكم",
+      "short_name": "الرئيسية",
+      "description": "الانتقال إلى لوحة التحكم الرئيسية",
+      "url": "/dashboard",
+      "icons": [
+        {
+          "src": "/icons/dashboard.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "العملاء المحتملين",
+      "short_name": "العملاء",
+      "description": "إدارة العملاء المحتملين",
+      "url": "/leads",
+      "icons": [
+        {
+          "src": "/icons/leads.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "الصفقات",
+      "short_name": "الصفقات",
+      "description": "إدارة الصفقات والمبيعات",
+      "url": "/deals",
+      "icons": [
+        {
+          "src": "/icons/deals.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "العقارات",
+      "short_name": "العقارات",
+      "description": "إدارة قاعدة بيانات العقارات",
+      "url": "/properties",
+      "icons": [
+        {
+          "src": "/icons/properties.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "iarc_rating_id": "",
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "file_handlers": [
+    {
+      "action": "/import",
+      "accept": {
+        "text/csv": [".csv"],
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
+        "application/vnd.ms-excel": [".xls"]
+      }
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "files",
+          "accept": ["image/jpeg", "image/png", "image/webp", "text/csv"]
+        }
+      ]
+    }
+  },
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "file_handling": "prefer_related_applications",
+  "protocol_handlers": [
+    {
+      "protocol": "web+echoops",
+      "url": "/handle-protocol?type=%s"
+    }
+  ],
+  "note_taking": {
+    "new_note_url": "/notes/new"
+  }
+}

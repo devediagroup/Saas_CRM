@@ -346,7 +346,7 @@ const TeamsManagement = () => {
                     id="team-description"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                          placeholder={t('teams.teamDescriptionPlaceholder')}
+                    placeholder={t('teams.teamDescriptionPlaceholder')}
                     className="arabic-text"
                     rows={3}
                   />
@@ -359,10 +359,10 @@ const TeamsManagement = () => {
                     onValueChange={(value) => setFormData({ ...formData, leader_id: value })}
                   >
                     <SelectTrigger>
-                                              <SelectValue placeholder={t('teams.selectTeamLeader')} />
+                      <SelectValue placeholder={t('teams.selectTeamLeader')} />
                     </SelectTrigger>
                     <SelectContent>
-                                              <SelectItem value="">{t('teams.noLeader')}</SelectItem>
+                      <SelectItem value="none">{t('teams.noLeader')}</SelectItem>
                       {users.map((user: any) => (
                         <SelectItem key={user.id} value={user.id.toString()}>
                           {user.firstName && user.lastName

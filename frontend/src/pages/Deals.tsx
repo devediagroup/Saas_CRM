@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  MoreHorizontal, 
-  Eye, 
-  Edit, 
+import React from "react";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+import {
+  Plus,
+  Search,
+  Filter,
+  MoreHorizontal,
+  Eye,
+  Edit,
   Trash2,
   TrendingUp,
   Calendar,
@@ -58,6 +59,8 @@ import { Textarea } from "@/components/ui/textarea";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Can, CanAny } from "@/components/PermissionGuard";
 
 interface Deal {
   id: number;
@@ -78,6 +81,7 @@ interface Deal {
 
 const Deals = () => {
   const { t } = useTranslation();
+  const { can, canCRUD } = usePermissions();
   const [searchTerm, setSearchTerm] = useState("");
   const [stageFilter, setStageFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -93,7 +97,8 @@ const Deals = () => {
     expected_close_date: "",
     notes: "",
     stage: "Initial Contact",
-    probability: 25
+    probability: 25,
+    unit: ""
   });
 
   // Fetch deals from API
@@ -106,6 +111,14 @@ const Deals = () => {
       sort: 'created_at:desc'
     })
   });
+
+  // Fetch units for filtering
+  const { data: unitsData } = useQuery({
+    queryKey: ['units'],
+    queryFn: () => api.getProperties()
+  });
+
+  const units = Array.isArray(unitsData?.data) ? unitsData.data : [];
 
   const deals = Array.isArray(dealsData?.data) ? dealsData.data : [];
 
@@ -178,7 +191,8 @@ const Deals = () => {
       expected_close_date: "",
       notes: "",
       stage: "Initial Contact",
-      probability: 25
+      probability: 25,
+      unit: ""
     });
   };
 
@@ -202,7 +216,8 @@ const Deals = () => {
       expected_close_date: deal.expected_close_date ? deal.expected_close_date.split('T')[0] : '',
       notes: deal.notes || '',
       stage: deal.stage || 'Initial Contact',
-      probability: deal.probability || 25
+      probability: deal.probability || 25,
+      unit: deal.unit_id || deal.unit || ""
     });
   };
 
@@ -216,19 +231,19 @@ const Deals = () => {
 
   const getStageColor = (stage: string) => {
     switch (stage) {
-      case t('deals.stages.prospect'): 
+      case t('deals.stages.prospect'):
         return 'bg-blue-100 text-blue-800 border-blue-200';
-      case t('deals.stages.inspection'): 
+      case t('deals.stages.inspection'):
         return 'bg-purple-100 text-purple-800 border-purple-200';
-      case t('deals.stages.proposal'): 
+      case t('deals.stages.proposal'):
         return 'bg-orange-100 text-orange-800 border-orange-200';
-      case t('deals.stages.negotiation'): 
+      case t('deals.stages.negotiation'):
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case t('deals.stages.completed'): 
+      case t('deals.stages.completed'):
         return 'bg-green-100 text-green-800 border-green-200';
-      case t('deals.stages.cancelled'): 
+      case t('deals.stages.cancelled'):
         return 'bg-red-100 text-red-800 border-red-200';
-      default: 
+      default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
@@ -256,14 +271,27 @@ const Deals = () => {
     return 'text-red-600';
   };
 
+  const getUnitInfo = (deal: any) => {
+    if (!deal.unit && !deal.unit_id) return { name: '', project: '', developer: '' };
+
+    const unit = deal.unit || units.find(u => u.id === deal.unit_id);
+    if (!unit) return { name: '', project: '', developer: '' };
+
+    return {
+      name: unit.title || unit.name || '',
+      project: unit.project?.name || '',
+      developer: unit.project?.developer?.name || ''
+    };
+  };
+
   const filteredDeals = deals.filter(deal => {
-    const matchesSearch = !searchTerm || 
-                         (deal.title && deal.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                         (deal.notes && deal.notes.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = !searchTerm ||
+      (deal.title && deal.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (deal.notes && deal.notes.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesStage = stageFilter === 'all' || deal.stage === stageFilter;
     const matchesStatus = statusFilter === 'all' || deal.status === statusFilter;
     const matchesAgent = agentFilter === 'all' || deal.agent === agentFilter;
-    
+
     return matchesSearch && matchesStage && matchesStatus && matchesAgent;
   });
 
@@ -284,10 +312,12 @@ const Deals = () => {
               {t('deals.search')}
             </p>
           </div>
-          <Button className="gradient-primary" onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
-            {t('deals.add')}
-          </Button>
+          <Can permission="deals.create">
+            <Button className="gradient-primary" onClick={() => setIsCreateDialogOpen(true)}>
+              <Plus className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
+              {t('deals.add')}
+            </Button>
+          </Can>
         </div>
 
         {/* Stats Cards */}
@@ -305,7 +335,7 @@ const Deals = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="crm-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -319,7 +349,7 @@ const Deals = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="crm-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -333,7 +363,7 @@ const Deals = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="crm-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -351,43 +381,39 @@ const Deals = () => {
           </Card>
         </div>
 
-        {/* Filters and Search */}
+        {/* Filters */}
         <Card className="crm-card">
           <CardHeader>
-            <CardTitle>{t('leads.filters.title')}</CardTitle>
+            <CardTitle className="arabic-text">{t('deals.filters.title')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder={t('deals.search')}
-                    className="pr-10 arabic-text"
-                    dir="rtl"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
+            <div className="flex flex-wrap gap-4">
+              <div className="flex-1 min-w-[200px]">
+                <Input
+                  placeholder={t('deals.filters.searchPlaceholder')}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="arabic-text"
+                />
               </div>
-              
-                              <Select value={stageFilter} onValueChange={setStageFilter}>
-                  <SelectTrigger className="w-full sm:w-[180px]">
-                    <SelectValue placeholder={t('deals.filters.stage')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t('deals.filters.allStages')}</SelectItem>
-                    <SelectItem value={t('deals.stages.prospect')}>{t('deals.stages.prospect')}</SelectItem>
-                    <SelectItem value={t('deals.stages.inspection')}>{t('deals.stages.inspection')}</SelectItem>
-                    <SelectItem value={t('deals.stages.proposal')}>{t('deals.stages.proposal')}</SelectItem>
-                    <SelectItem value={t('deals.stages.negotiation')}>{t('deals.stages.negotiation')}</SelectItem>
-                    <SelectItem value={t('deals.stages.completed')}>{t('deals.stages.completed')}</SelectItem>
-                    <SelectItem value={t('deals.stages.cancelled')}>{t('deals.stages.cancelled')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              
+
+              <Select value={stageFilter} onValueChange={setStageFilter}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder={t('deals.filters.stage')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('deals.filters.allStages')}</SelectItem>
+                  <SelectItem value={t('deals.stages.prospect')}>{t('deals.stages.prospect')}</SelectItem>
+                  <SelectItem value={t('deals.stages.inspection')}>{t('deals.stages.inspection')}</SelectItem>
+                  <SelectItem value={t('deals.stages.proposal')}>{t('deals.stages.proposal')}</SelectItem>
+                  <SelectItem value={t('deals.stages.negotiation')}>{t('deals.stages.negotiation')}</SelectItem>
+                  <SelectItem value={t('deals.stages.completed')}>{t('deals.stages.completed')}</SelectItem>
+                  <SelectItem value={t('deals.stages.cancelled')}>{t('deals.stages.cancelled')}</SelectItem>
+                </SelectContent>
+              </Select>
+
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full sm:w-[150px]">
+                <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder={t('deals.filters.status')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -396,7 +422,7 @@ const Deals = () => {
                   <SelectItem value={t('deals.statuses.closed')}>{t('deals.statuses.closed')}</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select value={agentFilter} onValueChange={setAgentFilter}>
                 <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder={t('deals.filters.agent')} />
@@ -426,6 +452,7 @@ const Deals = () => {
                   <TableRow>
                     <TableHead className="text-right">{t('deals.table.deal')}</TableHead>
                     <TableHead className="text-right">{t('deals.table.client')}</TableHead>
+                    <TableHead className="text-right">{t('deals.table.unit')}</TableHead>
                     <TableHead className="text-right">{t('deals.table.amount')}</TableHead>
                     <TableHead className="text-right">{t('deals.table.commission')}</TableHead>
                     <TableHead className="text-right">{t('deals.table.stage')}</TableHead>
@@ -436,87 +463,109 @@ const Deals = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredDeals.map((deal) => (
-                    <TableRow key={deal.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {getStatusIcon(deal.status)}
-                          <div>
-                            <p className="font-medium">{deal.title}</p>
-                            <p className="text-sm text-muted-foreground line-clamp-1">
-                              {getPropertyLabel(deal.property)}
-                            </p>
+                  {filteredDeals.map((deal) => {
+                    const unitInfo = getUnitInfo(deal);
+                    return (
+                      <TableRow key={deal.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {getStatusIcon(deal.status)}
+                            <div>
+                              <p className="font-medium">{deal.title}</p>
+                              <p className="text-sm text-muted-foreground line-clamp-1">
+                                {getPropertyLabel(deal.property)}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-muted-foreground" />
-                          {getClientLabel(deal.client)}
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {formatPrice(getAmountVal(deal))}
-                      </TableCell>
-                      <TableCell className="font-medium text-green-600">
-                        {formatPrice(getCommissionVal(deal))}
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStageColor(getStageLabel(deal.stage))}>
-                          {getStageLabel(deal.stage)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Progress 
-                            value={deal.probability} 
-                            className="w-16 h-2"
-                          />
-                          <span className={`text-sm font-medium ${getProbabilityColor(deal.probability)}`}>
-                            {deal.probability}%
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{getAgentLabel(deal.agent)}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          {getExpectedCloseDate(deal) ? new Date(getExpectedCloseDate(deal)).toLocaleDateString('ar-SA') : ''}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <Eye className="ml-2 h-4 w-4" />
-                              {t('deals.actions.viewDetails')}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEdit(deal)}>
-                              <Edit className="ml-2 h-4 w-4" />
-                              {t('deals.actions.editDeal')}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Building2 className="ml-2 h-4 w-4" />
-                              {t('deals.actions.viewProperty')}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <User className="ml-2 h-4 w-4" />
-                              {t('deals.actions.viewClient')}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(deal.id)}>
-                              <Trash2 className="ml-2 h-4 w-4" />
-                              {t('deals.actions.deleteDeal')}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4 text-muted-foreground" />
+                            {getClientLabel(deal.client)}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            {unitInfo.name && (
+                              <div className="flex items-center gap-2">
+                                <Building2 className="h-4 w-4 text-muted-foreground" />
+                                <span className="font-medium">{unitInfo.name}</span>
+                              </div>
+                            )}
+                            {unitInfo.project && (
+                              <div className="text-sm text-muted-foreground">
+                                {unitInfo.project}
+                              </div>
+                            )}
+                            {unitInfo.developer && (
+                              <div className="text-sm text-muted-foreground">
+                                {unitInfo.developer}
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {formatPrice(getAmountVal(deal))}
+                        </TableCell>
+                        <TableCell className="font-medium text-green-600">
+                          {formatPrice(getCommissionVal(deal))}
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getStageColor(getStageLabel(deal.stage))}>
+                            {getStageLabel(deal.stage)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Progress
+                              value={deal.probability}
+                              className="w-16 h-2"
+                            />
+                            <span className={`text-sm font-medium ${getProbabilityColor(deal.probability)}`}>
+                              {deal.probability}%
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{getAgentLabel(deal.agent)}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4 text-muted-foreground" />
+                            {getExpectedCloseDate(deal) ? new Date(getExpectedCloseDate(deal)).toLocaleDateString('ar-SA') : ''}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>
+                                <Eye className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
+                                {t('deals.actions.view')}
+                              </DropdownMenuItem>
+                              <Can permission="deals.update">
+                                <DropdownMenuItem onClick={() => handleEdit(deal)}>
+                                  <Edit className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
+                                  {t('deals.actions.edit')}
+                                </DropdownMenuItem>
+                              </Can>
+                              <Can permission="deals.delete">
+                                <DropdownMenuItem
+                                  onClick={() => handleDelete(deal.id)}
+                                  className="text-red-600 focus:text-red-600"
+                                >
+                                  <Trash2 className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
+                                  {t('deals.actions.delete')}
+                                </DropdownMenuItem>
+                              </Can>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
@@ -602,24 +651,24 @@ const Deals = () => {
                   <Input
                     id="title"
                     value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     className="arabic-text"
                     required
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="status" className="arabic-text">{t('deals.form.status')}</Label>
-                  <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value})}>
+                  <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
                     <SelectTrigger className="arabic-text">
-                                              <SelectValue placeholder={t('deals.filters.placeholder')} />
+                      <SelectValue placeholder={t('deals.filters.placeholder')} />
                     </SelectTrigger>
-                                          <SelectContent>
-                        <SelectItem value="Negotiating">{t('deals.statusOptions.negotiating')}</SelectItem>
-                        <SelectItem value="Proposal Sent">{t('deals.statusOptions.proposalSent')}</SelectItem>
-                        <SelectItem value="Under Review">{t('deals.statusOptions.underReview')}</SelectItem>
-                        <SelectItem value="Won">{t('deals.statusOptions.won')}</SelectItem>
-                        <SelectItem value="Lost">{t('deals.statusOptions.lost')}</SelectItem>
-                      </SelectContent>
+                    <SelectContent>
+                      <SelectItem value="Negotiating">{t('deals.statusOptions.negotiating')}</SelectItem>
+                      <SelectItem value="Proposal Sent">{t('deals.statusOptions.proposalSent')}</SelectItem>
+                      <SelectItem value="Under Review">{t('deals.statusOptions.underReview')}</SelectItem>
+                      <SelectItem value="Won">{t('deals.statusOptions.won')}</SelectItem>
+                      <SelectItem value="Lost">{t('deals.statusOptions.lost')}</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
               </div>
@@ -631,7 +680,7 @@ const Deals = () => {
                     id="deal_value"
                     type="number"
                     value={formData.deal_value}
-                    onChange={(e) => setFormData({...formData, deal_value: parseInt(e.target.value)})}
+                    onChange={(e) => setFormData({ ...formData, deal_value: parseInt(e.target.value) })}
                     className="arabic-text"
                     required
                   />
@@ -642,7 +691,7 @@ const Deals = () => {
                     id="commission_percentage"
                     type="number"
                     value={formData.commission_percentage}
-                    onChange={(e) => setFormData({...formData, commission_percentage: parseInt(e.target.value)})}
+                    onChange={(e) => setFormData({ ...formData, commission_percentage: parseInt(e.target.value) })}
                     className="arabic-text"
                     required
                   />
@@ -652,18 +701,18 @@ const Deals = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="stage" className="arabic-text">{t('deals.form.dealStage')}</Label>
-                  <Select value={formData.stage} onValueChange={(value) => setFormData({...formData, stage: value})}>
+                  <Select value={formData.stage} onValueChange={(value) => setFormData({ ...formData, stage: value })}>
                     <SelectTrigger className="arabic-text">
-                                              <SelectValue placeholder={t('deals.filters.placeholderStage')} />
+                      <SelectValue placeholder={t('deals.filters.placeholderStage')} />
                     </SelectTrigger>
-                                          <SelectContent>
-                        <SelectItem value="Initial Contact">{t('deals.stageOptions.initialContact')}</SelectItem>
-                        <SelectItem value="Qualified">{t('deals.stageOptions.qualified')}</SelectItem>
-                        <SelectItem value="Proposal">{t('deals.stageOptions.proposal')}</SelectItem>
-                        <SelectItem value="Negotiation">{t('deals.stageOptions.negotiation')}</SelectItem>
-                        <SelectItem value="Closed Won">{t('deals.stageOptions.closedWon')}</SelectItem>
-                        <SelectItem value="Closed Lost">{t('deals.stageOptions.closedLost')}</SelectItem>
-                      </SelectContent>
+                    <SelectContent>
+                      <SelectItem value="Initial Contact">{t('deals.stageOptions.initialContact')}</SelectItem>
+                      <SelectItem value="Qualified">{t('deals.stageOptions.qualified')}</SelectItem>
+                      <SelectItem value="Proposal">{t('deals.stageOptions.proposal')}</SelectItem>
+                      <SelectItem value="Negotiation">{t('deals.stageOptions.negotiation')}</SelectItem>
+                      <SelectItem value="Closed Won">{t('deals.stageOptions.closedWon')}</SelectItem>
+                      <SelectItem value="Closed Lost">{t('deals.stageOptions.closedLost')}</SelectItem>
+                    </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
@@ -672,8 +721,40 @@ const Deals = () => {
                     id="expected_close_date"
                     type="date"
                     value={formData.expected_close_date}
-                    onChange={(e) => setFormData({...formData, expected_close_date: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, expected_close_date: e.target.value })}
                     className="arabic-text"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="unit" className="arabic-text">{t('deals.form.unit')}</Label>
+                  <Select value={formData.unit || 'none'} onValueChange={(value) => setFormData({ ...formData, unit: value === 'none' ? '' : value })}>
+                    <SelectTrigger className="arabic-text">
+                      <SelectValue placeholder={t('deals.form.selectUnit')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">{t('deals.form.noUnit')}</SelectItem>
+                      {units.map((unit) => (
+                        <SelectItem key={unit.id} value={unit.id.toString()}>
+                          {unit.title || unit.name} - {unit.project?.name || 'No Project'}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="probability" className="arabic-text">{t('deals.form.probability')}</Label>
+                  <Input
+                    id="probability"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={formData.probability}
+                    onChange={(e) => setFormData({ ...formData, probability: parseInt(e.target.value) })}
+                    className="arabic-text"
+                    required
                   />
                 </div>
               </div>
@@ -683,7 +764,7 @@ const Deals = () => {
                 <Textarea
                   id="notes"
                   value={formData.notes}
-                  onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   className="arabic-text"
                   rows={3}
                 />

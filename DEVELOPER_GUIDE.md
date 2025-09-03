@@ -1,413 +1,654 @@
-# 👨‍💻 دليل المطور - EchoOps CRM
+# 👨‍💻 **دليل المطور - نظام EchoOps Real Estate CRM**
 
-## 📋 جدول المحتويات
-
-- [🏗️ نظرة عامة على المشروع](#-نظرة-عامة-على-المشروع)
-- [🛠️ إعداد بيئة التطوير](#-إعداد-بيئة-التطوير)
-- [🏛️ البنية التقنية](#-البنية-التقنية)
-- [📊 قاعدة البيانات](#-قاعدة-البيانات)
-- [🔧 الـ APIs](#-ال-apis)
-- [🎨 الفرونت اند](#-الفرونت-اند)
-- [🧪 الاختبارات](#-الاختبارات)
-- [🚀 النشر](#-النشر)
-- [🔒 الأمان](#-الأمان)
-- [📈 الأداء](#-الأداء)
-- [🐛 استكشاف الأخطاء](#-استكشاف-الأخطاء)
-
----
-
-## 🏗️ نظرة عامة على المشروع
-
-### EchoOps CRM
-نظام إدارة علاقات العملاء المتكامل لشركات العقارات، مبني باستخدام:
-- **Backend**: NestJS + TypeScript + MySQL
-- **Frontend**: React + TypeScript + Vite
-- **DevOps**: Docker + PM2 + Nginx
-
-### المميزات الرئيسية
-- 🏢 Multi-tenant architecture
-- 👥 RBAC مع 6 أنواع مستخدمين
-- 🎯 AI-powered lead scoring
-- 💬 WhatsApp Business API integration
-- 💳 Stripe payments integration
-- 📊 Advanced analytics و reporting
+## 📋 **جدول المحتويات**
+1. [نظرة عامة على النظام](#نظرة-عامة-على-النظام)
+2. [الهيكل التقني](#الهيكل-التقني)
+3. [إعداد بيئة التطوير](#إعداد-بيئة-التطوير)
+4. [هيكل المشروع](#هيكل-المشروع)
+5. [قاعدة البيانات](#قاعدة-البيانات)
+6. [الواجهة الخلفية (Backend)](#الواجهة-الخلفية-backend)
+7. [الواجهة الأمامية (Frontend)](#الواجهة-الأمامية-frontend)
+8. [نظام الصلاحيات](#نظام-الصلاحيات)
+9. [API Documentation](#api-documentation)
+10. [اختبار النظام](#اختبار-النظام)
+11. [النشر والإنتاج](#النشر-والإنتاج)
+12. [أفضل الممارسات](#أفضل-الممارسات)
 
 ---
 
-## 🛠️ إعداد بيئة التطوير
+## 🏗️ **نظرة عامة على النظام**
 
-### المتطلبات الأساسية
+### **وصف النظام**
+EchoOps Real Estate CRM هو نظام إدارة علاقات العملاء متخصص في مجال العقارات، مبني باستخدام:
+- **Backend**: NestJS + TypeORM + MySQL
+- **Frontend**: React + TypeScript + Tailwind CSS
+- **Authentication**: JWT + Role-Based Access Control
+- **Security**: Row-Level Security (RLS)
 
+### **الميزات التقنية**
+- ✅ **معمارية متعددة الطبقات** (Multi-layered Architecture)
+- ✅ **نظام صلاحيات متقدم** مع 5 مستويات من الأدوار
+- ✅ **أمان على مستوى الصفوف** لحماية البيانات
+- ✅ **API RESTful** مع توثيق شامل
+- ✅ **نظام هجرات قاعدة البيانات** (Database Migrations)
+- ✅ **نظام البذور** (Database Seeders)
+
+---
+
+## 🛠️ **الهيكل التقني**
+
+### **التقنيات المستخدمة**
+
+#### **Backend Stack**
+- **Framework**: NestJS 10.x
+- **Language**: TypeScript 5.x
+- **Database**: MySQL 8.x
+- **ORM**: TypeORM 0.3.x
+- **Authentication**: JWT + Passport
+- **Validation**: Class-validator + Class-transformer
+- **Testing**: Jest + Supertest
+
+#### **Frontend Stack**
+- **Framework**: React 18.x
+- **Language**: TypeScript 5.x
+- **Styling**: Tailwind CSS 3.x
+- **State Management**: React Query (TanStack Query)
+- **UI Components**: Shadcn/ui
+- **Internationalization**: react-i18next
+- **Testing**: Jest + React Testing Library
+
+#### **DevOps & Tools**
+- **Package Manager**: npm
+- **Version Control**: Git
+- **Containerization**: Docker
+- **Process Manager**: PM2
+- **Web Server**: Nginx
+- **SSL**: Let's Encrypt
+
+---
+
+## 🚀 **إعداد بيئة التطوير**
+
+### **المتطلبات الأساسية**
+- **Node.js**: 18.x أو أحدث
+- **npm**: 9.x أو أحدث
+- **MySQL**: 8.x أو أحدث
+- **Git**: 2.x أو أحدث
+
+### **خطوات الإعداد**
+
+#### **1. استنساخ المشروع**
 ```bash
-# Node.js 18+ و npm
-node --version  # يجب أن يكون 18 أو أحدث
-npm --version
-
-# Docker (اختياري)
-docker --version
-docker-compose --version
-
-# Git
-git --version
-```
-
-### التثبيت السريع
-
-```bash
-# 1. نسخ المشروع
-git clone <repository-url>
+git clone https://github.com/your-org/echoops-crm.git
 cd echoops-crm
-
-# 2. تشغيل النظام بالكامل
-./START_PROJECT.sh
 ```
 
-### التثبيت اليدوي
-
+#### **2. تثبيت التبعيات**
 ```bash
-# 1. إعداد المتغيرات البيئية
+# Backend dependencies
+cd backend
+npm install
+
+# Frontend dependencies
+cd ../frontend
+npm install
+```
+
+#### **3. إعداد قاعدة البيانات**
+```bash
+# إنشاء قاعدة البيانات
+mysql -u root -p
+CREATE DATABASE echoops_crm;
+CREATE USER 'echoops_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON echoops_crm.* TO 'echoops_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+#### **4. إعداد متغيرات البيئة**
+```bash
+# Backend (.env)
 cd backend
 cp .env.example .env
 
-# 2. تثبيت التبعيات
-npm install
+# Frontend (.env)
 cd ../frontend
-npm install
+cp .env.example .env
+```
 
-# 3. تشغيل قاعدة البيانات
-docker-compose up -d mysql redis
+#### **5. تشغيل الهجرات والبذور**
+```bash
+cd backend
+npm run migration:run
+npm run seed
+```
 
-# 4. تشغيل Backend
-cd ../backend
+#### **6. تشغيل النظام**
+```bash
+# Backend (Terminal 1)
+cd backend
 npm run start:dev
 
-# 5. تشغيل Frontend (terminal جديد)
-cd ../frontend
+# Frontend (Terminal 2)
+cd frontend
 npm run dev
 ```
 
-### البيانات التجريبية
+---
 
-| النوع | البريد الإلكتروني | كلمة المرور | الصلاحيات |
-|-------|-------------------|--------------|-----------|
-| Super Admin | `admin@echoops.com` | `Admin123!` | كاملة |
-| Company Admin | `company-admin@echoops.com` | `Admin123!` | إدارة الشركة |
-| Sales Agent | `agent@echoops.com` | `Admin123!` | المبيعات |
+## 📁 **هيكل المشروع**
+
+### **هيكل المجلدات**
+
+```
+echoops-crm/
+├── backend/                 # الواجهة الخلفية
+│   ├── src/
+│   │   ├── auth/           # نظام المصادقة
+│   │   ├── users/          # إدارة المستخدمين
+│   │   ├── companies/      # إدارة الشركات
+│   │   ├── developers/     # إدارة المطورين
+│   │   ├── projects/       # إدارة المشاريع
+│   │   ├── properties/     # إدارة الوحدات
+│   │   ├── leads/          # إدارة العملاء المحتملين
+│   │   ├── deals/          # إدارة الصفقات
+│   │   ├── activities/     # إدارة الأنشطة
+│   │   ├── analytics/      # التحليلات والتقارير
+│   │   ├── notifications/  # نظام الإشعارات
+│   │   ├── payments/       # إدارة المدفوعات
+│   │   ├── database/       # قاعدة البيانات
+│   │   └── config/         # إعدادات النظام
+│   ├── dist/               # الملفات المترجمة
+│   ├── test/               # اختبارات الوحدة
+│   └── package.json
+├── frontend/                # الواجهة الأمامية
+│   ├── src/
+│   │   ├── components/     # مكونات React
+│   │   ├── pages/          # صفحات التطبيق
+│   │   ├── hooks/          # React Hooks
+│   │   ├── contexts/       # React Contexts
+│   │   ├── lib/            # مكتبات مساعدة
+│   │   ├── locales/        # ملفات الترجمة
+│   │   └── assets/         # الصور والموارد
+│   ├── public/             # الملفات العامة
+│   └── package.json
+├── docker-compose.yml       # تكوين Docker
+├── nginx.conf               # إعدادات Nginx
+└── README.md
+```
 
 ---
 
-## 🏛️ البنية التقنية
+## 🗄️ **قاعدة البيانات**
 
-### Backend Architecture
+### **المخطط العام**
 
-```
-backend/src/
-├── main.ts                 # نقطة الدخول
-├── app.module.ts          # الوحدة الرئيسية
-├── config/                # إعدادات التطبيق
-│   ├── app.config.ts
-│   ├── database.config.ts
-│   └── jwt.config.ts
-├── auth/                  # نظام المصادقة
-│   ├── auth.module.ts
-│   ├── auth.service.ts
-│   ├── auth.controller.ts
-│   ├── guards/
-│   └── strategies/
-├── companies/             # إدارة الشركات
-├── users/                 # إدارة المستخدمين
-├── leads/                 # إدارة العملاء المحتملين
-├── properties/            # إدارة العقارات
-├── deals/                 # إدارة الصفقات
-├── activities/            # إدارة الأنشطة
-├── whatsapp/              # تكامل WhatsApp
-├── notifications/         # نظام الإشعارات
-├── payments/              # نظام الدفع
-├── ai/                    # الذكاء الاصطناعي
-├── email/                 # نظام البريد الإلكتروني
-└── analytics/             # التحليلات
-```
+#### **الجداول الأساسية**
+- **users**: المستخدمون
+- **companies**: الشركات
+- **user_roles**: الأدوار
+- **permissions**: الصلاحيات
+- **role_permissions**: ربط الأدوار بالصلاحيات
+- **user_company_roles**: ربط المستخدمين بالشركات والأدوار
 
-### Frontend Architecture
+#### **جداول الأعمال**
+- **developers**: المطورون
+- **projects**: المشاريع
+- **properties**: الوحدات العقارية
+- **leads**: العملاء المحتملون
+- **deals**: الصفقات
+- **activities**: الأنشطة
 
-```
-frontend/src/
-├── main.tsx               # نقطة الدخول
-├── App.tsx               # التطبيق الرئيسي
-├── index.css            # التصميم العام
-├── lib/
-│   ├── api.ts          # API client
-│   └── utils.ts        # المساعدات
-├── components/
-│   ├── layout/         # تخطيط الصفحات
-│   ├── pwa/           # PWA components
-│   └── ui/            # مكونات واجهة المستخدم
-├── pages/              # صفحات التطبيق
-└── hooks/              # React hooks مخصصة
-```
-
-### نمط المشروع
-
-- **Repository Pattern**: فصل المنطق عن البيانات
-- **Dependency Injection**: إدارة التبعيات
-- **DTO Pattern**: نقل البيانات بأمان
-- **Guard Pattern**: حماية الطرق
-- **Interceptor Pattern**: معالجة الطلبات والاستجابات
-
----
-
-## 📊 قاعدة البيانات
-
-### الجداول الرئيسية
-
+### **العلاقات الرئيسية**
 ```sql
--- الشركات (Multi-tenant)
-companies: id, name, subdomain, email, phone, ...
+-- المستخدمون والشركات
+users -> user_company_roles -> companies
+users -> user_company_roles -> user_roles
 
--- المستخدمين
-users: id, first_name, last_name, email, role, status, company_id, ...
+-- المشاريع والوحدات
+developers -> projects -> properties
 
--- العملاء المحتملين
-leads: id, first_name, last_name, email, phone, status, priority, company_id, ...
-
--- العقارات
-properties: id, title, property_type, price, city, company_id, ...
-
--- الصفقات
-deals: id, title, stage, amount, probability, lead_id, property_id, company_id, ...
-
--- الأنشطة
-activities: id, type, title, description, due_date, lead_id, property_id, company_id, ...
+-- العملاء والصفقات
+leads -> deals
+properties -> leads (unit_id)
+properties -> deals (unit_id)
 ```
 
-### العلاقات
+### **الهجرات (Migrations)**
+```bash
+# إنشاء هجرة جديدة
+npm run migration:create -- -n MigrationName
 
-```typescript
-// Company -> Users (One to Many)
-@OneToMany(() => User, user => user.company)
-users: User[];
+# تشغيل الهجرات
+npm run migration:run
 
-// Lead -> Activities (One to Many)
-@OneToMany(() => Activity, activity => activity.lead)
-activities: Activity[];
-
-// Deal -> Lead (Many to One)
-@ManyToOne(() => Lead, lead => lead.deals)
-lead: Lead;
-
-// Deal -> Property (Many to One)
-@ManyToOne(() => Property, property => property.deals)
-property: Property;
-```
-
-### الفهارس
-
-```sql
--- فهارس الأداء
-CREATE INDEX idx_leads_company_status ON leads(company_id, status);
-CREATE INDEX idx_properties_company_type ON properties(company_id, property_type);
-CREATE INDEX idx_deals_company_stage ON deals(company_id, stage);
-CREATE INDEX idx_activities_company_due_date ON activities(company_id, due_date);
+# التراجع عن الهجرة الأخيرة
+npm run migration:revert
 ```
 
 ---
 
-## 🔧 الـ APIs
+## ⚙️ **الواجهة الخلفية (Backend)**
 
-### Authentication APIs
+### **هيكل NestJS**
 
+#### **الوحدات (Modules)**
 ```typescript
-// تسجيل الدخول
-POST /api/auth/login
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-
-// تسجيل حساب جديد
-POST /api/auth/register
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "first_name": "الاسم الأول",
-  "last_name": "الاسم الأخير",
-  "company_name": "اسم الشركة"
-}
-
-// التحقق من المستخدم الحالي
-GET /api/auth/me
-Authorization: Bearer <token>
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([Entity]),
+    AuthModule,
+  ],
+  controllers: [EntityController],
+  providers: [EntityService],
+  exports: [EntityService],
+})
+export class EntityModule {}
 ```
 
-### CRUD APIs
-
+#### **الخدمات (Services)**
 ```typescript
-// قائمة العناصر
-GET /api/leads?page=1&limit=10&sort=created_at:desc
+@Injectable()
+export class EntityService {
+  constructor(
+    @InjectRepository(Entity)
+    private entityRepository: Repository<Entity>,
+    private permissionsService: PermissionsService,
+  ) {}
 
-// إنشاء عنصر جديد
-POST /api/leads
-{
-  "first_name": "أحمد",
-  "last_name": "محمد",
-  "email": "ahmed@example.com",
-  "phone": "+966501234567",
-  "status": "new",
-  "priority": "high"
+  async findAll(userId: string): Promise<Entity[]> {
+    // فحص الصلاحيات
+    await this.permissionsService.checkPermission(userId, 'entity.read');
+    
+    // استعلام قاعدة البيانات مع RLS
+    return this.entityRepository.find({
+      where: { company_id: await this.getCompanyId(userId) }
+    });
+  }
 }
-
-// تحديث عنصر
-PUT /api/leads/:id
-{
-  "status": "contacted",
-  "notes": "تم التواصل مع العميل"
-}
-
-// حذف عنصر
-DELETE /api/leads/:id
 ```
 
-### Advanced APIs
-
+#### **المتحكمات (Controllers)**
 ```typescript
-// البحث والفلترة
-GET /api/properties?property_type=apartment&min_price=300000&max_price=800000&city=الرياض
+@Controller('entities')
+@UseGuards(JwtAuthGuard, PermissionsGuard)
+export class EntityController {
+  @Get()
+  @Permissions('entity.read')
+  async findAll(@User('id') userId: string) {
+    return this.entityService.findAll(userId);
+  }
 
-// الإحصائيات
-GET /api/analytics/dashboard
-GET /api/analytics/sales?period=month
-GET /api/analytics/leads?source=website
-
-// WhatsApp APIs
-POST /api/whatsapp/messages
-{
-  "to": "+966501234567",
-  "message": "مرحباً بك في شركتنا",
-  "type": "text"
+  @Post()
+  @Permissions('entity.create')
+  async create(
+    @Body() createEntityDto: CreateEntityDto,
+    @User('id') userId: string,
+  ) {
+    return this.entityService.create(createEntityDto, userId);
+  }
 }
+```
 
-// AI APIs
-GET /api/ai/scoring?lead_id=123
-GET /api/ai/forecast?period=6months
-GET /api/ai/recommendations?type=leads
+### **نظام الصلاحيات**
+
+#### **Guard الأساسي**
+```typescript
+@Injectable()
+export class PermissionsGuard implements CanActivate {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const user = request.user;
+    const requiredPermission = Reflect.getMetadata('permission', context.getHandler());
+    
+    if (!requiredPermission) return true;
+    
+    return this.permissionsService.hasPermission(user.id, requiredPermission);
+  }
+}
+```
+
+#### **Decorator الصلاحيات**
+```typescript
+export const Permissions = (...permissions: string[]) =>
+  SetMetadata('permission', permissions);
 ```
 
 ---
 
-## 🎨 الفرونت اند
+## 🎨 **الواجهة الأمامية (Frontend)**
 
-### إعداد API Client
+### **هيكل React**
 
+#### **المكونات الأساسية**
 ```typescript
-// lib/api.ts
-const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Request interceptor للتوكن
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// PermissionGuard.tsx
+export const Can: React.FC<CanProps> = ({ 
+  permission, 
+  children, 
+  fallback 
+}) => {
+  const { can } = usePermissions();
+  
+  if (can(permission)) {
+    return <>{children}</>;
   }
-  return config;
-});
-
-// Response interceptor لمعالجة الأخطاء
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
-```
-
-### استخدام React Query
-
-```typescript
-// استخدام useQuery لجلب البيانات
-const { data: leads, isLoading, error } = useQuery({
-  queryKey: ['leads'],
-  queryFn: () => api.getLeads({ limit: 10, sort: 'created_at:desc' }),
-});
-
-// استخدام useMutation للعمليات
-const createLeadMutation = useMutation({
-  mutationFn: (data) => api.createLead(data),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['leads'] });
-    toast({ title: "تم إضافة العميل بنجاح" });
-  },
-});
-```
-
-### إدارة الحالة
-
-```typescript
-// Context للمصادقة
-const AuthContext = createContext();
-
-// Hook مخصص للمصادقة
-const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
+  
+  return fallback || null;
 };
 ```
 
-### مكونات واجهة المستخدم
-
+#### **Hook الصلاحيات**
 ```typescript
-// مكون جدول البيانات
-const DataTable = ({ data, columns }) => {
+export const usePermissions = () => {
+  const { user, permissions } = useAuth();
+  
+  const can = (permission: string): boolean => {
+    return permissions.includes(permission);
+  };
+  
+  const canAny = (permissions: string[]): boolean => {
+    return permissions.some(can);
+  };
+  
+  return { can, canAny, permissions, user };
+};
+```
+
+#### **Context المصادقة**
+```typescript
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [permissions, setPermissions] = useState<string[]>([]);
+  
+  const login = async (credentials: LoginCredentials) => {
+    // منطق تسجيل الدخول
+  };
+  
+  const logout = () => {
+    // منطق تسجيل الخروج
+  };
+  
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {columns.map((column) => (
-            <TableHead key={column.key}>{column.label}</TableHead>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {data.map((row) => (
-            <TableRow key={row.id}>
-              {columns.map((column) => (
-                <TableCell key={column.key}>
-                  {row[column.key]}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <AuthContext.Provider value={{ user, permissions, login, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 ```
 
+### **إدارة الحالة**
+```typescript
+// استخدام React Query للبيانات
+const { data: leads, isLoading } = useQuery({
+  queryKey: ['leads', filters],
+  queryFn: () => api.getLeads(filters),
+});
+
+// استخدام React Query للطفرات
+const createMutation = useMutation({
+  mutationFn: (data: CreateLeadDto) => api.createLead(data),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['leads'] });
+    toast.success('تم إنشاء العميل المحتمل بنجاح');
+  },
+});
+```
+
 ---
 
-## 🧪 الاختبارات
+## 🔐 **نظام الصلاحيات**
 
-### Backend Tests
+### **الأدوار والصلاحيات**
 
+#### **الأدوار المتاحة**
+1. **SUPER_ADMIN**: جميع الصلاحيات
+2. **COMPANY_ADMIN**: صلاحيات الشركة
+3. **MANAGER**: صلاحيات الإدارة
+4. **AGENT**: صلاحيات المبيعات
+5. **VIEWER**: صلاحيات القراءة فقط
+
+#### **الصلاحيات المتاحة**
 ```typescript
-// Unit Test للخدمة
+const PERMISSIONS = {
+  // المستخدمون
+  'users.create': 'إنشاء مستخدمين',
+  'users.read': 'قراءة بيانات المستخدمين',
+  'users.update': 'تحديث بيانات المستخدمين',
+  'users.delete': 'حذف المستخدمين',
+  
+  // المطورون
+  'developers.create': 'إنشاء مطورين',
+  'developers.read': 'قراءة بيانات المطورين',
+  'developers.update': 'تحديث بيانات المطورين',
+  'developers.delete': 'حذف المطورين',
+  
+  // المشاريع
+  'projects.create': 'إنشاء مشاريع',
+  'projects.read': 'قراءة بيانات المشاريع',
+  'projects.update': 'تحديث بيانات المشاريع',
+  'projects.delete': 'حذف المشاريع',
+  
+  // الوحدات
+  'properties.create': 'إنشاء وحدات',
+  'properties.read': 'قراءة بيانات الوحدات',
+  'properties.update': 'تحديث بيانات الوحدات',
+  'properties.delete': 'حذف الوحدات',
+  
+  // العملاء المحتملون
+  'leads.create': 'إنشاء عملاء محتملين',
+  'leads.read': 'قراءة بيانات العملاء المحتملين',
+  'leads.update': 'تحديث بيانات العملاء المحتملين',
+  'leads.delete': 'حذف العملاء المحتملين',
+  
+  // الصفقات
+  'deals.create': 'إنشاء صفقات',
+  'deals.read': 'قراءة بيانات الصفقات',
+  'deals.update': 'تحديث بيانات الصفقات',
+  'deals.delete': 'حذف الصفقات',
+  
+  // الأنشطة
+  'activities.create': 'إنشاء أنشطة',
+  'activities.read': 'قراءة بيانات الأنشطة',
+  'activities.update': 'تحديث بيانات الأنشطة',
+  'activities.delete': 'حذف الأنشطة',
+  
+  // التحليلات
+  'analytics.read': 'قراءة التحليلات والتقارير',
+  
+  // الإشعارات
+  'notifications.create': 'إنشاء إشعارات',
+  'notifications.read': 'قراءة الإشعارات',
+  'notifications.update': 'تحديث الإشعارات',
+  'notifications.delete': 'حذف الإشعارات',
+  
+  // المدفوعات
+  'payments.create': 'إنشاء مدفوعات',
+  'payments.read': 'قراءة بيانات المدفوعات',
+  'payments.update': 'تحديث بيانات المدفوعات',
+};
+```
+
+### **تطبيق الصلاحيات**
+
+#### **في Backend**
+```typescript
+// فحص الصلاحيات في الخدمات
+async createEntity(data: CreateEntityDto, userId: string) {
+  await this.permissionsService.checkPermission(userId, 'entity.create');
+  // ... باقي المنطق
+}
+
+// حماية المسارات
+@Post()
+@Permissions('entity.create')
+async create(@Body() data: CreateEntityDto, @User('id') userId: string) {
+  return this.entityService.create(data, userId);
+}
+```
+
+#### **في Frontend**
+```typescript
+// حماية المكونات
+<Can permission="entity.create">
+  <Button onClick={handleCreate}>إنشاء جديد</Button>
+</Can>
+
+// حماية الصفحات
+<Route 
+  path="/entities" 
+  element={
+    <ProtectedRoute permission="entity.read">
+      <EntitiesPage />
+    </ProtectedRoute>
+  } 
+/>
+```
+
+---
+
+## 📚 **API Documentation**
+
+### **نقاط النهاية الأساسية**
+
+#### **المصادقة**
+```http
+POST /auth/login
+POST /auth/register
+POST /auth/refresh
+POST /auth/logout
+```
+
+#### **المستخدمون**
+```http
+GET    /users
+POST   /users
+GET    /users/:id
+PUT    /users/:id
+DELETE /users/:id
+```
+
+#### **المطورون**
+```http
+GET    /developers
+POST   /developers
+GET    /developers/:id
+PUT    /developers/:id
+DELETE /developers/:id
+```
+
+#### **المشاريع**
+```http
+GET    /projects
+POST   /projects
+GET    /projects/:id
+PUT    /projects/:id
+DELETE /projects/:id
+```
+
+#### **الوحدات**
+```http
+GET    /properties
+POST   /properties
+GET    /properties/:id
+PUT    /properties/:id
+DELETE /properties/:id
+```
+
+#### **العملاء المحتملون**
+```http
+GET    /leads
+POST   /leads
+GET    /leads/:id
+PUT    /leads/:id
+DELETE /leads/:id
+GET    /leads/by-unit/:unitId
+GET    /leads/by-project/:projectId
+GET    /leads/by-developer/:developerId
+```
+
+#### **الصفقات**
+```http
+GET    /deals
+POST   /deals
+GET    /deals/:id
+PUT    /deals/:id
+DELETE /deals/:id
+GET    /deals/by-unit/:unitId
+GET    /deals/by-project/:projectId
+GET    /deals/by-developer/:developerId
+```
+
+### **نماذج البيانات (DTOs)**
+
+#### **إنشاء عميل محتمل**
+```typescript
+export class CreateLeadDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsPhoneNumber('SA')
+  phone: string;
+
+  @IsString()
+  @IsOptional()
+  source?: string;
+
+  @IsString()
+  @IsOptional()
+  status?: string;
+
+  @IsNumber()
+  @IsOptional()
+  budget?: number;
+
+  @IsString()
+  @IsOptional()
+  unit_id?: string;
+
+  @IsString()
+  @IsOptional()
+  notes?: string;
+}
+```
+
+---
+
+## 🧪 **اختبار النظام**
+
+### **اختبارات Backend**
+
+#### **اختبارات الوحدة**
+```bash
+# تشغيل جميع الاختبارات
+npm run test
+
+# تشغيل الاختبارات مع التغطية
+npm run test:cov
+
+# تشغيل الاختبارات في وضع المراقبة
+npm run test:watch
+```
+
+#### **اختبارات التكامل**
+```bash
+# تشغيل اختبارات التكامل
+npm run test:e2e
+```
+
+#### **أمثلة الاختبارات**
+```typescript
 describe('LeadsService', () => {
   let service: LeadsService;
   let repository: Repository<Lead>;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       providers: [
         LeadsService,
         {
@@ -426,505 +667,352 @@ describe('LeadsService', () => {
   });
 
   it('should create a lead', async () => {
-    const leadData = {
-      first_name: 'Test',
-      last_name: 'User',
+    const createLeadDto = {
+      name: 'Test Lead',
       email: 'test@example.com',
+      phone: '+966501234567',
     };
 
-    const result = await service.create(leadData);
-    expect(result).toBeDefined();
-    expect(result.email).toBe(leadData.email);
+    const result = await service.create(createLeadDto, 'user-id');
+    expect(result.name).toBe(createLeadDto.name);
   });
 });
 ```
 
-### Frontend Tests
+### **اختبارات Frontend**
 
-```typescript
-// اختبار المكونات
-describe('Login Component', () => {
-  it('should render login form', () => {
-    render(<Login />);
-    expect(screen.getByText('تسجيل الدخول')).toBeInTheDocument();
-  });
-
-  it('should handle form submission', async () => {
-    render(<Login />);
-
-    fireEvent.change(screen.getByLabelText('البريد الإلكتروني'), {
-      target: { value: 'test@example.com' },
-    });
-
-    fireEvent.change(screen.getByLabelText('كلمة المرور'), {
-      target: { value: 'password123' },
-    });
-
-    fireEvent.click(screen.getByText('دخول'));
-
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/dashboard');
-    });
-  });
-});
-```
-
-### E2E Tests (قريباً)
-
-```typescript
-// اختبار شامل للتطبيق
-describe('Lead Management Flow', () => {
-  it('should create and manage leads', () => {
-    // زيارة الصفحة
-    cy.visit('/leads');
-
-    // تسجيل الدخول
-    cy.get('[data-cy="email"]').type('admin@echoops.com');
-    cy.get('[data-cy="password"]').type('Admin123!');
-    cy.get('[data-cy="login-button"]').click();
-
-    // إضافة عميل جديد
-    cy.get('[data-cy="add-lead-button"]').click();
-    cy.get('[data-cy="first-name"]').type('أحمد');
-    cy.get('[data-cy="last-name"]').type('محمد');
-    cy.get('[data-cy="email"]').type('ahmed@example.com');
-    cy.get('[data-cy="save-button"]').click();
-
-    // التحقق من الإضافة
-    cy.contains('أحمد محمد').should('be.visible');
-  });
-});
-```
-
-### تشغيل الاختبارات
-
+#### **اختبارات الوحدة**
 ```bash
-# Backend tests
-cd backend
-npm run test                    # جميع الاختبارات
-npm run test:watch             # مع إعادة التشغيل
-npm run test:cov               # مع تقرير التغطية
-npm run test:e2e               # الاختبارات الشاملة
+# تشغيل الاختبارات
+npm run test
 
-# Frontend tests
-cd frontend
-npm run test                   # جميع الاختبارات
-npm run test:ui                # اختبارات واجهة المستخدم
+# تشغيل الاختبارات مع التغطية
+npm run test:coverage
+```
+
+#### **أمثلة الاختبارات**
+```typescript
+import { render, screen } from '@testing-library/react';
+import { LeadsPage } from './LeadsPage';
+
+describe('LeadsPage', () => {
+  it('renders leads table', () => {
+    render(<LeadsPage />);
+    expect(screen.getByText('العملاء المحتملون')).toBeInTheDocument();
+  });
+
+  it('shows create button for users with permission', () => {
+    render(<LeadsPage />);
+    expect(screen.getByText('إضافة عميل محتمل')).toBeInTheDocument();
+  });
+});
 ```
 
 ---
 
-## 🚀 النشر
+## 🚀 **النشر والإنتاج**
 
-### إعداد الإنتاج
+### **إعدادات الإنتاج**
 
+#### **متغيرات البيئة**
 ```bash
-# 1. بناء التطبيق
-cd backend && npm run build
-cd ../frontend && npm run build
+# Backend
+NODE_ENV=production
+PORT=3000
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_NAME=echoops_crm
+DATABASE_USER=echoops_user
+DATABASE_PASSWORD=secure_password
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=24h
 
-# 2. إعداد PM2
-cd backend
-pm2 start dist/main.js --name "echoops-crm"
-pm2 startup && pm2 save
-
-# 3. إعداد Nginx
-sudo cp nginx.conf /etc/nginx/sites-available/echoops-crm
-sudo ln -s /etc/nginx/sites-available/echoops-crm /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
+# Frontend
+VITE_API_URL=https://api.echoops.com
+VITE_APP_NAME=EchoOps CRM
 ```
 
-### Docker Production
-
+#### **بناء التطبيق**
 ```bash
-# بناء الصور
-docker-compose -f docker-compose.prod.yml build
+# Backend
+npm run build
+npm run start:prod
 
-# تشغيل الإنتاج
-docker-compose -f docker-compose.prod.yml up -d
-
-# مراقبة السجلات
-docker-compose logs -f
+# Frontend
+npm run build
 ```
 
-### CI/CD Pipeline (قريباً)
+### **Docker Deployment**
 
+#### **Dockerfile Backend**
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+RUN npm run build
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start:prod"]
+```
+
+#### **Dockerfile Frontend**
+```dockerfile
+FROM nginx:alpine
+
+COPY dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+#### **Docker Compose**
 ```yaml
-# .github/workflows/deploy.yml
-name: Deploy to Production
+version: '3.8'
 
-on:
-  push:
-    branches: [ main ]
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - mysql
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Deploy to server
-        run: |
-          echo "Deploying to production..."
-          # خطوات النشر
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: echoops_crm
+      MYSQL_USER: echoops_user
+      MYSQL_PASSWORD: user_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
 ```
 
----
+### **PM2 Process Manager**
+```bash
+# تثبيت PM2
+npm install -g pm2
 
-## 🔒 الأمان
+# تشغيل التطبيق
+pm2 start ecosystem.config.js
 
-### Authentication & Authorization
-
-```typescript
-// JWT Strategy
-@Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private usersService: UsersService) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET,
-    });
-  }
-
-  async validate(payload: any) {
-    const user = await this.usersService.findById(payload.sub);
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-    return user;
-  }
-}
-```
-
-### Guards
-
-```typescript
-// JWT Guard
-@Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
-  canActivate(context: ExecutionContext) {
-    return super.canActivate(context);
-  }
-}
-
-// Roles Guard
-@Injectable()
-export class RolesGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
-    const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
-
-    if (!requiredRoles) {
-      return true;
-    }
-
-    return requiredRoles.some(role => user.role === role);
-  }
-}
-```
-
-### Security Best Practices
-
-```typescript
-// Helmet configuration
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", 'data:', 'https:'],
-    },
-  },
-}));
-
-// Rate limiting
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-  }),
-);
-
-// CORS
-app.enableCors({
-  origin: process.env.CORS_ORIGIN,
-  credentials: true,
-});
-```
-
----
-
-## 📈 الأداء
-
-### Database Optimization
-
-```sql
--- فهارس الأداء
-CREATE INDEX idx_leads_company_status ON leads(company_id, status);
-CREATE INDEX idx_properties_company_price ON properties(company_id, price);
-CREATE INDEX idx_deals_company_stage ON deals(company_id, stage);
-
--- استعلامات محسنة
-SELECT * FROM leads
-WHERE company_id = ? AND status = ?
-ORDER BY created_at DESC
-LIMIT 10 OFFSET 0;
-```
-
-### Caching Strategy
-
-```typescript
-// Redis caching للإحصائيات
-@Injectable()
-export class CacheService {
-  constructor(private redis: Redis) {}
-
-  async get(key: string) {
-    const cached = await this.redis.get(key);
-    return cached ? JSON.parse(cached) : null;
-  }
-
-  async set(key: string, value: any, ttl: number = 300) {
-    await this.redis.set(key, JSON.stringify(value), 'EX', ttl);
-  }
-}
-```
-
-### Performance Monitoring
-
-```typescript
-// PM2 monitoring
+# مراقبة التطبيق
 pm2 monit
 
-// Application metrics
-app.use('/metrics', (req, res) => {
-  res.json({
-    uptime: process.uptime(),
-    memory: process.memoryUsage(),
-    cpu: process.cpuUsage(),
-  });
-});
+# إعادة تشغيل التطبيق
+pm2 restart all
 ```
 
 ---
 
-## 🐛 استكشاف الأخطاء
+## 💡 **أفضل الممارسات**
 
-### أخطاء شائعة وحلولها
+### **Backend Best Practices**
 
-#### 1. خطأ قاعدة البيانات
-
-```bash
-# فحص اتصال قاعدة البيانات
-mysql -h localhost -u echoops_user -p echoops_crm_db
-
-# فحص السجلات
-tail -f backend/logs/app.log
-```
-
-#### 2. خطأ في الباك اند
-
-```bash
-# تشغيل في وضع debugging
-cd backend
-npm run start:debug
-
-# فحص المنافذ المستخدمة
-netstat -tlnp | grep :3000
-```
-
-#### 3. خطأ في الفرونت اند
-
-```bash
-# فحص console المتصفح
-F12 -> Console
-
-# فحص network requests
-F12 -> Network -> XHR
-
-# تشغيل مع verbose logging
-cd frontend
-npm run dev -- --verbose
-```
-
-#### 4. خطأ في Docker
-
-```bash
-# فحص containers
-docker ps -a
-
-# فحص السجلات
-docker-compose logs mysql
-docker-compose logs backend
-
-# إعادة بناء
-docker-compose down
-docker-compose up --build
-```
-
-### Logs و Debugging
-
+#### **1. إدارة الأخطاء**
 ```typescript
-// Logging في الباك اند
+@Catch(HttpException)
+export class HttpExceptionFilter implements ExceptionFilter {
+  catch(exception: HttpException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse();
+    const request = ctx.getRequest();
+    const status = exception.getStatus();
+
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message: exception.message,
+    });
+  }
+}
+```
+
+#### **2. Validation**
+```typescript
+export class CreateEntityDto {
+  @IsString()
+  @IsNotEmpty()
+  @Length(3, 100)
+  name: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+}
+```
+
+#### **3. Logging**
+```typescript
 import { Logger } from '@nestjs/common';
 
 @Injectable()
-export class AppService {
-  private readonly logger = new Logger(AppService.name);
+export class EntityService {
+  private readonly logger = new Logger(EntityService.name);
 
-  someMethod() {
-    this.logger.log('Info message');
-    this.logger.error('Error message');
-    this.logger.warn('Warning message');
-    this.logger.debug('Debug message');
+  async create(data: CreateEntityDto) {
+    this.logger.log(`Creating entity: ${data.name}`);
+    // ... منطق الإنشاء
   }
 }
 ```
 
+### **Frontend Best Practices**
+
+#### **1. Error Boundaries**
 ```typescript
-// Logging في الفرونت اند
-import { logger } from '@/lib/logger';
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
 
-const MyComponent = () => {
-  const handleClick = () => {
-    logger.info('Button clicked');
-    try {
-      // some operation
-    } catch (error) {
-      logger.error('Error occurred:', error);
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>حدث خطأ ما.</h1>;
     }
-  };
 
-  return <button onClick={handleClick}>Click me</button>;
-};
+    return this.props.children;
+  }
+}
 ```
 
-### Health Checks
+#### **2. Lazy Loading**
+```typescript
+const LeadsPage = lazy(() => import('./pages/Leads'));
+const DealsPage = lazy(() => import('./pages/Deals'));
 
+function App() {
+  return (
+    <Suspense fallback={<div>جاري التحميل...</div>}>
+      <Routes>
+        <Route path="/leads" element={<LeadsPage />} />
+        <Route path="/deals" element={<DealsPage />} />
+      </Routes>
+    </Suspense>
+  );
+}
+```
+
+#### **3. Performance Optimization**
+```typescript
+// استخدام useMemo للقيم المحسوبة
+const filteredData = useMemo(() => {
+  return data.filter(item => item.status === statusFilter);
+}, [data, statusFilter]);
+
+// استخدام useCallback للدوال
+const handleSubmit = useCallback((data: FormData) => {
+  submitMutation.mutate(data);
+}, [submitMutation]);
+```
+
+---
+
+## 🔧 **استكشاف الأخطاء**
+
+### **مشاكل شائعة وحلولها**
+
+#### **1. مشاكل قاعدة البيانات**
 ```bash
-# فحص صحة النظام
-curl http://localhost:3000/health
+# فحص اتصال قاعدة البيانات
+mysql -u echoops_user -p -h localhost echoops_crm
 
-# فحص قاعدة البيانات
-curl http://localhost:3000/health/database
+# إعادة تشغيل خدمة MySQL
+sudo systemctl restart mysql
 
-# فحص Redis
-curl http://localhost:3000/health/redis
+# فحص السجلات
+sudo tail -f /var/log/mysql/error.log
 ```
 
-### Backup و Recovery
-
+#### **2. مشاكل Backend**
 ```bash
-# نسخ احتياطي من قاعدة البيانات
-mysqldump -u echoops_user -p echoops_crm_db > backup.sql
+# فحص السجلات
+pm2 logs backend
 
-# استعادة من النسخ الاحتياطي
-mysql -u echoops_user -p echoops_crm_db < backup.sql
+# إعادة تشغيل الخدمة
+pm2 restart backend
 
-# نسخ احتياطي من الملفات
-tar -czf uploads_backup.tar.gz backend/uploads/
+# فحص حالة الخدمة
+pm2 status
+```
+
+#### **3. مشاكل Frontend**
+```bash
+# مسح ذاكرة التخزين المؤقت
+npm run build -- --force
+
+# فحص التبعيات
+npm audit
+
+# إعادة تثبيت التبعيات
+rm -rf node_modules package-lock.json
+npm install
 ```
 
 ---
 
-## 📚 الموارد الإضافية
+## 📞 **الدعم والتواصل**
 
-### التوثيق الرسمي
+### **فريق التطوير**
+- **Lead Developer**: [اسم المطور]
+- **Backend Developer**: [اسم المطور]
+- **Frontend Developer**: [اسم المطور]
+- **DevOps Engineer**: [اسم المهندس]
 
-- [NestJS Documentation](https://docs.nestjs.com/)
-- [React Documentation](https://reactjs.org/docs/)
-- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
-- [MySQL Documentation](https://dev.mysql.com/doc/)
-
-### أدوات مفيدة
-
-- [Postman](https://www.postman.com/) - لاختبار APIs
-- [TablePlus](https://tableplus.com/) - لإدارة قاعدة البيانات
-- [Redis Insight](https://redis.com/redis-enterprise/redis-insight/) - لمراقبة Redis
-- [PM2 Dashboard](https://pm2.io/docs/plus/overview/) - لمراقبة التطبيق
-
-### المجتمعات
-
-- [NestJS Community](https://discord.gg/nestjs)
-- [React Community](https://reactjs.org/community)
-- [TypeScript Community](https://www.typescriptlang.org/community/)
+### **قنوات التواصل**
+- **Email**: dev@echoops.com
+- **Slack**: #echoops-dev
+- **GitHub Issues**: [رابط المستودع]
+- **Documentation**: [رابط التوثيق]
 
 ---
 
-## 🎯 أفضل الممارسات
+## 📝 **ملاحظات التطوير**
 
-### Backend Best Practices
+### **قواعد التطوير**
+1. **Git Flow**: استخدم Git Flow workflow
+2. **Code Review**: جميع التغييرات تحتاج مراجعة
+3. **Testing**: اكتب اختبارات لكل ميزة جديدة
+4. **Documentation**: حدث التوثيق مع كل تغيير
+5. **Security**: راجع الأمان في كل مراجعة
 
-1. **استخدم DTOs** للتحقق من صحة البيانات
-2. **طبقات منفصلة** للمنطق التجاري
-3. **معالجة الأخطاء** الشاملة
-4. **وحدات الاختبار** لجميع الخدمات
-5. **توثيق APIs** باستخدام Swagger
-
-### Frontend Best Practices
-
-1. **TypeScript** للكتابة الثابتة
-2. **React Query** لإدارة البيانات
-3. **Tailwind CSS** للتصميم المتسق
-4. **Component composition** لإعادة الاستخدام
-5. **Error boundaries** لمعالجة الأخطاء
-
-### DevOps Best Practices
-
-1. **Docker** للحاويات
-2. **CI/CD** للنشر التلقائي
-3. **Monitoring** للأداء
-4. **Backup** للبيانات
-5. **Security** للحماية
+### **معايير الكود**
+- **TypeScript**: استخدم TypeScript لجميع الملفات
+- **ESLint**: اتبع قواعد ESLint
+- **Prettier**: استخدم Prettier لتنسيق الكود
+- **Conventional Commits**: استخدم Conventional Commits
 
 ---
 
-## 🚀 الخطوات التالية
-
-### للمطور الجديد
-
-1. **اقرأ README.md** - فهم المشروع
-2. **اتبع دليل التثبيت** - إعداد البيئة
-3. **جرب البيانات التجريبية** - فهم النظام
-4. **اقرأ كود الباك اند** - فهم البنية
-5. **ساهم في المشروع** - إضافة مميزات
-
-### للمطور المخضرم
-
-1. **راجع البنية التقنية** - تحسين الأداء
-2. **أضف اختبارات** - تحسين الجودة
-3. **حسّن الأمان** - تطبيق أفضل الممارسات
-4. **أضف monitoring** - تتبع الأداء
-5. **ساهم في المشروع** - إضافة مميزات متقدمة
-
----
-
-## 📞 الدعم
-
-### قنوات الدعم
-
-- **📧 البريد الإلكتروني**: dev-support@echoops.com
-- **💬 Discord**: [EchoOps Developers](https://discord.gg/echoops)
-- **📱 WhatsApp**: +966501234567
-- **🐛 GitHub Issues**: للإبلاغ عن المشاكل
-
-### أوقات الدعم
-
-- **السبت - الخميس**: 9:00 ص - 6:00 م
-- **الجمعة**: 2:00 م - 6:00 م
-- **استجابة سريعة**: خلال 24 ساعة
-
----
-
-## 🎉 ختام
-
-**EchoOps CRM** هو مشروع متقدم ومتكامل يجمع بين أحدث التقنيات والممارسات الأفضل في تطوير البرمجيات.
-
-**🚀 استمتع بالتطوير وإضافة المميزات الجديدة!**
-
-**📚 للمزيد من التفاصيل، راجع:**
-- [README.md](README.md) - النظرة العامة
-- [API Documentation](http://localhost:3000/api/docs) - توثيق APIs
-- [User Guide](USER_GUIDE.md) - دليل المستخدم
+**آخر تحديث**: ديسمبر 2024  
+**الإصدار**: 1.0.0  
+**النظام**: EchoOps Real Estate CRM

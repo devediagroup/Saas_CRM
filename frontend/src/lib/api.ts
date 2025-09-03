@@ -68,6 +68,15 @@ export const api = {
   getProperties: (params = {}) =>
     apiClient.get('/properties', { params }),
 
+  getPropertiesByProject: (projectId: string, params = {}) =>
+    apiClient.get(`/properties/by-project/${projectId}`, { params }),
+
+  getPropertiesByDeveloper: (developerId: string, params = {}) =>
+    apiClient.get(`/properties/by-developer/${developerId}`, { params }),
+
+  getPropertiesByProjectAndDeveloper: (projectId: string, developerId: string, params = {}) =>
+    apiClient.get(`/properties/by-project-and-developer/${projectId}/${developerId}`, { params }),
+
   getProperty: (id: string) =>
     apiClient.get(`/properties/${id}`),
 
@@ -166,6 +175,38 @@ export const api = {
 
   createWhatsAppMessage: (data: Record<string, unknown>) =>
     apiClient.post('/whatsapp/messages', data),
+
+  // Developers
+  getDevelopers: (params = {}) =>
+    apiClient.get('/developers', { params }),
+
+  getDeveloper: (id: string) =>
+    apiClient.get(`/developers/${id}`),
+
+  createDeveloper: (data: Record<string, unknown>) =>
+    apiClient.post('/developers', data),
+
+  updateDeveloper: (id: string, data: Record<string, unknown>) =>
+    apiClient.put(`/developers/${id}`, data),
+
+  deleteDeveloper: (id: string) =>
+    apiClient.delete(`/developers/${id}`),
+
+  // Projects
+  getProjects: (params = {}) =>
+    apiClient.get('/projects', { params }),
+
+  getProject: (id: string) =>
+    apiClient.get(`/projects/${id}`),
+
+  createProject: (data: Record<string, unknown>) =>
+    apiClient.post('/projects', data),
+
+  updateProject: (id: string, data: Record<string, unknown>) =>
+    apiClient.put(`/projects/${id}`, data),
+
+  deleteProject: (id: string) =>
+    apiClient.delete(`/projects/${id}`),
 
   // File Upload
   upload: (formData: FormData) =>
@@ -378,6 +419,7 @@ export const api = {
 
   updatePassword: (data: Record<string, unknown>) =>
     apiClient.put('/auth/change-password', data),
+
 };
 
 export default apiClient;

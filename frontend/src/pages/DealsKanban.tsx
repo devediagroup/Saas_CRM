@@ -79,6 +79,8 @@ interface Deal {
     name: string;
   };
   createdAt: string;
+  unit_id?: number;
+  unit?: string;
 }
 
 const DealsKanban = () => {
@@ -97,25 +99,27 @@ const DealsKanban = () => {
     expected_close_date: "",
     lead_id: "",
     property_id: "",
-    assigned_to_id: ""
+    assigned_to_id: "",
+    unit: ""
   });
 
   const queryClient = useQueryClient();
 
   // Fetch deals from API
   const { data: dealsData, isLoading } = useQuery({
-    queryKey: ['deals-kanban', searchTerm],
-    queryFn: () => apiClient.get('/deals', {
-      params: {
-        ...(searchTerm && { 'filters[title][$containsi]': searchTerm }),
-        'sort[0]': 'createdAt:desc',
-        'populate[0]': 'lead',
-        'populate[1]': 'property',
-        'populate[2]': 'assigned_to',
-        'populate[3]': 'company'
-      }
-    })
+    queryKey: ['deals'],
+    queryFn: () => apiClient.get('/deals')
   });
+
+  // Fetch units for filtering
+  const { data: unitsData } = useQuery({
+    queryKey: ['units'],
+    queryFn: () => apiClient.get('/properties')
+  });
+
+  const units = Array.isArray(unitsData?.data) ? unitsData.data : [];
+
+  const deals = Array.isArray(dealsData?.data) ? dealsData.data : [];
 
   // Create deal mutation
   const createDealMutation = useMutation({
@@ -168,7 +172,8 @@ const DealsKanban = () => {
       expected_close_date: "",
       lead_id: "",
       property_id: "",
-      assigned_to_id: ""
+      assigned_to_id: "",
+      unit: ""
     });
   };
 
@@ -184,7 +189,8 @@ const DealsKanban = () => {
       expected_close_date: formData.expected_close_date,
       ...(formData.lead_id && { lead: formData.lead_id }),
       ...(formData.property_id && { property: formData.property_id }),
-      ...(formData.assigned_to_id && { assigned_to: formData.assigned_to_id })
+      ...(formData.assigned_to_id && { assigned_to: formData.assigned_to_id }),
+      ...(formData.unit && { unit: formData.unit.toString() })
     };
 
     if (editingDeal) {
@@ -197,15 +203,16 @@ const DealsKanban = () => {
   const handleEditDeal = (deal: Deal) => {
     setEditingDeal(deal);
     setFormData({
-      title: deal.title,
-      description: deal.description,
-      value: deal.value,
-      probability: deal.probability,
-      stage: deal.stage,
-      expected_close_date: deal.expected_close_date,
-      lead_id: deal.lead?.id.toString() || "",
-      property_id: deal.property?.id.toString() || "",
-      assigned_to_id: deal.assigned_to?.id.toString() || ""
+      title: deal.title || "",
+      description: deal.description || "",
+      value: deal.value || 0,
+      probability: deal.probability || 50,
+      stage: deal.stage || "new",
+      expected_close_date: deal.expected_close_date ? deal.expected_close_date.split('T')[0] : "",
+      lead_id: deal.lead?.id?.toString() || "",
+      property_id: deal.property?.id?.toString() || "",
+      assigned_to_id: deal.assigned_to?.id?.toString() || "",
+      unit: (deal.unit_id || deal.unit || "").toString()
     });
     setIsCreateDialogOpen(true);
   };
@@ -222,8 +229,6 @@ const DealsKanban = () => {
       data: { stage: newStage }
     });
   };
-
-  const deals = dealsData?.data?.data || [];
 
   // Group deals by stage for Kanban view
   const dealsByStage = {
@@ -333,7 +338,7 @@ const DealsKanban = () => {
                       />
                     </div>
                     <div>
-                                              <Label htmlFor="deal-value" className="arabic-text">{t('dealsKanban.form.dealValue')}</Label>
+                      <Label htmlFor="deal-value" className="arabic-text">{t('dealsKanban.form.dealValue')}</Label>
                       <Input
                         id="deal-value"
                         type="number"
@@ -369,7 +374,7 @@ const DealsKanban = () => {
                       </Select>
                     </div>
                     <div>
-                                              <Label htmlFor="deal-probability" className="arabic-text">{t('dealsKanban.form.dealProbability')}</Label>
+                      <Label htmlFor="deal-probability" className="arabic-text">{t('dealsKanban.form.dealProbability')}</Label>
                       <Input
                         id="deal-probability"
                         type="number"
@@ -382,7 +387,7 @@ const DealsKanban = () => {
                       />
                     </div>
                     <div>
-                                              <Label htmlFor="deal-close-date" className="arabic-text">{t('dealsKanban.form.dealCloseDate')}</Label>
+                      <Label htmlFor="deal-close-date" className="arabic-text">{t('dealsKanban.form.dealCloseDate')}</Label>
                       <Input
                         id="deal-close-date"
                         type="date"
@@ -403,6 +408,41 @@ const DealsKanban = () => {
                       className="arabic-text"
                       rows={3}
                     />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="unit" className="arabic-text">{t('dealsKanban.form.unit')}</Label>
+                      <Select value={formData.unit || ''} onValueChange={(value) => setFormData({ ...formData, unit: value })}>
+                        <SelectTrigger className="arabic-text">
+                          <SelectValue placeholder={t('dealsKanban.form.selectUnit')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">{t('dealsKanban.form.noUnit')}</SelectItem>
+                          {units.map((unit) => (
+                            <SelectItem key={unit.id} value={unit.id.toString()}>
+                              {unit.title || unit.name} - {unit.project?.name || 'No Project'}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="assigned_to_id" className="arabic-text">{t('dealsKanban.form.assignedTo')}</Label>
+                      <Select value={formData.assigned_to_id} onValueChange={(value) => setFormData({ ...formData, assigned_to_id: value })}>
+                        <SelectTrigger className="arabic-text">
+                          <SelectValue placeholder={t('dealsKanban.form.selectAgent')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">{t('dealsKanban.form.noAgent')}</SelectItem>
+                          <SelectItem value="1">سارة علي</SelectItem>
+                          <SelectItem value="2">محمد الزهراني</SelectItem>
+                          <SelectItem value="3">نورا الغامدي</SelectItem>
+                          <SelectItem value="4">خالد الحربي</SelectItem>
+                          <SelectItem value="5">رنا القحطاني</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
                   <div className="flex gap-2 pt-4">
@@ -432,6 +472,41 @@ const DealsKanban = () => {
           </div>
         </div>
 
+        {/* Filters */}
+        <Card className="crm-card">
+          <CardHeader>
+            <CardTitle className="arabic-text">{t('deals.filters.title')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-4">
+              <div className="flex-1 min-w-[200px]">
+                <Input
+                  placeholder={t('deals.filters.searchPlaceholder')}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="arabic-text"
+                />
+              </div>
+
+              <Select value={selectedStage} onValueChange={setSelectedStage}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder={t('deals.filters.stage')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('deals.filters.allStages')}</SelectItem>
+                  <SelectItem value="new">{t('dealsKanban.stages.new')}</SelectItem>
+                  <SelectItem value="contacted">{t('dealsKanban.stages.contacted')}</SelectItem>
+                  <SelectItem value="qualified">{t('dealsKanban.stages.qualified')}</SelectItem>
+                  <SelectItem value="proposal">{t('dealsKanban.stages.proposal')}</SelectItem>
+                  <SelectItem value="negotiation">{t('dealsKanban.stages.negotiation')}</SelectItem>
+                  <SelectItem value="closed_won">{t('dealsKanban.stages.closedWon')}</SelectItem>
+                  <SelectItem value="closed_lost">{t('dealsKanban.stages.closedLost')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Kanban Board */}
         <div className="flex gap-6 overflow-x-auto pb-6" style={{ minHeight: '70vh' }}>
           {kanbanStages.map((stage) => (
@@ -439,15 +514,14 @@ const DealsKanban = () => {
               <div className="bg-gray-50 rounded-lg p-4 h-full">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold arabic-text flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded-full ${
-                      stage.id === 'closed_won' ? 'bg-green-500' :
-                      stage.id === 'closed_lost' ? 'bg-red-500' :
-                      stage.id === 'negotiation' ? 'bg-orange-500' :
-                      stage.id === 'proposal' ? 'bg-purple-500' :
-                      stage.id === 'qualified' ? 'bg-green-400' :
-                      stage.id === 'contacted' ? 'bg-yellow-500' :
-                      'bg-blue-500'
-                    }`}></div>
+                    <div className={`w-3 h-3 rounded-full ${stage.id === 'closed_won' ? 'bg-green-500' :
+                        stage.id === 'closed_lost' ? 'bg-red-500' :
+                          stage.id === 'negotiation' ? 'bg-orange-500' :
+                            stage.id === 'proposal' ? 'bg-purple-500' :
+                              stage.id === 'qualified' ? 'bg-green-400' :
+                                stage.id === 'contacted' ? 'bg-yellow-500' :
+                                  'bg-blue-500'
+                      }`}></div>
                     {stage.title}
                   </h3>
                   <Badge className="bg-gray-200 text-gray-800">

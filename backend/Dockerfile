@@ -1,5 +1,5 @@
-# Use Node.js official image
-FROM node:18-alpine
+# Dockerfile for EchoOps CRM Backend
+FROM node:18-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci --only=production
 
 # Copy source code
 COPY . .
@@ -16,22 +16,39 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Create non-root user
+# Production stage
+FROM node:18-alpine AS production
+
+# Create app user
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nestjs -u 1001
 
-# Change ownership of the app directory
-RUN chown -R nestjs:nodejs /app
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install only production dependencies
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy built application from builder stage
+COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
+COPY --from=builder --chown=nestjs:nodejs /app/uploads ./uploads
+COPY --from=builder --chown=nestjs:nodejs /app/logs ./logs
+
+# Create necessary directories
+RUN mkdir -p uploads logs && chown -R nestjs:nodejs uploads logs
 
 # Switch to non-root user
 USER nestjs
 
 # Expose port
-EXPOSE 3000
+EXPOSE 3001
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node dist/health-check.js || exit 1
+  CMD node dist/health-check.js
 
 # Start the application
-CMD ["npm", "run", "start:prod"]
+CMD ["node", "dist/main.js"]

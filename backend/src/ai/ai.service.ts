@@ -6,7 +6,11 @@ import { PropertyStatus } from '../properties/entities/property.entity';
 import { Lead } from '../leads/entities/lead.entity';
 import { Deal } from '../deals/entities/deal.entity';
 import { Property } from '../properties/entities/property.entity';
-import { Activity, ActivityType, ActivityStatus } from '../activities/entities/activity.entity';
+import {
+  Activity,
+  ActivityType,
+  ActivityStatus,
+} from '../activities/entities/activity.entity';
 
 export interface LeadScoreResult {
   leadId: string;
@@ -78,14 +82,21 @@ export class AiService {
     const sourceScore = await this.calculateSourceScore(lead);
 
     // Factor 5: Property Interest Score (0-15 points)
-    const propertyInterestScore = await this.calculatePropertyInterestScore(lead);
+    const propertyInterestScore =
+      await this.calculatePropertyInterestScore(lead);
 
-    const totalScore = engagementScore + budgetScore + timelineScore + sourceScore + propertyInterestScore;
+    const totalScore =
+      engagementScore +
+      budgetScore +
+      timelineScore +
+      sourceScore +
+      propertyInterestScore;
 
     // Generate recommendation
     let recommendation = 'Low Priority';
     if (totalScore >= 80) recommendation = 'Hot Lead - Contact Immediately';
-    else if (totalScore >= 60) recommendation = 'Warm Lead - Schedule Follow-up';
+    else if (totalScore >= 60)
+      recommendation = 'Warm Lead - Schedule Follow-up';
     else if (totalScore >= 40) recommendation = 'Medium Priority - Nurture';
     else if (totalScore >= 20) recommendation = 'Low Priority - Monitor';
 
@@ -120,9 +131,10 @@ export class AiService {
     score += Math.min(recentActivities * 5, 10);
 
     // Completed activities (max 5 points)
-    const completedActivities = lead.activities?.filter(
-      activity => activity.status === ActivityStatus.COMPLETED
-    ).length || 0;
+    const completedActivities =
+      lead.activities?.filter(
+        (activity) => activity.status === ActivityStatus.COMPLETED,
+      ).length || 0;
     score += Math.min(completedActivities * 2, 5);
 
     return score;
@@ -131,7 +143,13 @@ export class AiService {
   private async calculateBudgetScore(lead: Lead): Promise<number> {
     // Simple budget scoring based on lead notes or custom fields
     // In a real implementation, you would analyze budget information
-    const budgetKeywords = ['high budget', 'expensive', 'luxury', 'premium', 'high end'];
+    const budgetKeywords = [
+      'high budget',
+      'expensive',
+      'luxury',
+      'premium',
+      'high end',
+    ];
     const note = lead.notes?.toLowerCase() || '';
 
     let score = 10; // Base score
@@ -167,9 +185,12 @@ export class AiService {
 
     const source = lead.source?.toLowerCase() || 'unknown';
 
-    if (highQualitySources.some(s => source.includes(s))) return Promise.resolve(15);
-    if (mediumQualitySources.some(s => source.includes(s))) return Promise.resolve(10);
-    if (lowQualitySources.some(s => source.includes(s))) return Promise.resolve(5);
+    if (highQualitySources.some((s) => source.includes(s)))
+      return Promise.resolve(15);
+    if (mediumQualitySources.some((s) => source.includes(s)))
+      return Promise.resolve(10);
+    if (lowQualitySources.some((s) => source.includes(s)))
+      return Promise.resolve(5);
 
     return Promise.resolve(5); // Default
   }
@@ -220,13 +241,13 @@ export class AiService {
 
     // Factor 2: Deal stage progression
     const stageWeight = this.getStageWeight(deal.stage);
-    probability = (probability * 0.7) + (stageWeight * 0.3);
+    probability = probability * 0.7 + stageWeight * 0.3;
 
     // Factor 3: Lead score (if available)
     if (deal.lead_id) {
       try {
         const leadScore = await this.calculateLeadScore(deal.lead_id);
-        probability = (probability * 0.8) + (leadScore.score * 0.2);
+        probability = probability * 0.8 + leadScore.score * 0.2;
       } catch (error) {
         // Lead score not available, continue with current probability
       }
@@ -242,7 +263,10 @@ export class AiService {
     const riskFactors = await this.identifyRiskFactors(deal);
 
     // Generate recommendations
-    const recommendations = await this.generateRecommendations(deal, probability);
+    const recommendations = await this.generateRecommendations(
+      deal,
+      probability,
+    );
 
     return {
       dealId,
@@ -255,13 +279,13 @@ export class AiService {
 
   private getStageWeight(stage: string): number {
     const stageWeights = {
-      'prospect': 20,
-      'qualified': 40,
-      'proposal': 60,
-      'negotiation': 75,
-      'contract': 90,
-      'closed_won': 100,
-      'closed_lost': 0,
+      prospect: 20,
+      qualified: 40,
+      proposal: 60,
+      negotiation: 75,
+      contract: 90,
+      closed_won: 100,
+      closed_lost: 0,
     };
 
     return stageWeights[stage] || 50;
@@ -273,11 +297,11 @@ export class AiService {
 
     // Different stages have different average completion times
     const stageCompletionDays = {
-      'prospect': 30,
-      'qualified': 20,
-      'proposal': 15,
-      'negotiation': 10,
-      'contract': 5,
+      prospect: 30,
+      qualified: 20,
+      proposal: 15,
+      negotiation: 10,
+      contract: 5,
     };
 
     const estimatedDays = stageCompletionDays[stage] || 15;
@@ -313,7 +337,10 @@ export class AiService {
     return riskFactors;
   }
 
-  private async generateRecommendations(deal: Deal, probability: number): Promise<string[]> {
+  private async generateRecommendations(
+    deal: Deal,
+    probability: number,
+  ): Promise<string[]> {
     const recommendations: string[] = [];
 
     if (probability < 30) {
@@ -342,7 +369,10 @@ export class AiService {
    * Property Recommendation System
    * Recommends properties based on lead preferences
    */
-  async recommendPropertiesForLead(leadId: string, limit: number = 5): Promise<PropertyRecommendation[]> {
+  async recommendPropertiesForLead(
+    leadId: string,
+    limit: number = 5,
+  ): Promise<PropertyRecommendation[]> {
     const lead = await this.leadsRepository.findOne({
       where: { id: leadId },
     });
@@ -362,7 +392,8 @@ export class AiService {
       const matchScore = await this.calculatePropertyMatchScore(lead, property);
       const reasons = await this.generatePropertyMatchReasons(lead, property);
 
-      if (matchScore > 30) { // Only include properties with reasonable match
+      if (matchScore > 30) {
+        // Only include properties with reasonable match
         recommendations.push({
           propertyId: property.id,
           propertyTitle: property.title,
@@ -378,20 +409,29 @@ export class AiService {
       .slice(0, limit);
   }
 
-  private async calculatePropertyMatchScore(lead: Lead, property: Property): Promise<number> {
+  private async calculatePropertyMatchScore(
+    lead: Lead,
+    property: Property,
+  ): Promise<number> {
     let score = 50; // Base score
 
     // Budget match (max 30 points)
     if (lead.budget && property.price) {
       const budgetDiff = Math.abs(lead.budget - property.price) / lead.budget;
-      if (budgetDiff <= 0.1) score += 30; // Within 10%
-      else if (budgetDiff <= 0.25) score += 20; // Within 25%
+      if (budgetDiff <= 0.1)
+        score += 30; // Within 10%
+      else if (budgetDiff <= 0.25)
+        score += 20; // Within 25%
       else if (budgetDiff <= 0.5) score += 10; // Within 50%
     }
 
     // Location match (max 10 points)
     if (lead.location_preference && property.city) {
-      if (lead.location_preference.toLowerCase().includes(property.city.toLowerCase())) {
+      if (
+        lead.location_preference
+          .toLowerCase()
+          .includes(property.city.toLowerCase())
+      ) {
         score += 10;
       }
     }
@@ -406,7 +446,10 @@ export class AiService {
     return Math.min(score, 100);
   }
 
-  private async generatePropertyMatchReasons(lead: Lead, property: Property): Promise<string[]> {
+  private async generatePropertyMatchReasons(
+    lead: Lead,
+    property: Property,
+  ): Promise<string[]> {
     const reasons: string[] = [];
 
     if (lead.budget && property.price) {
@@ -417,14 +460,20 @@ export class AiService {
     }
 
     if (lead.location_preference && property.city) {
-      if (lead.location_preference.toLowerCase().includes(property.city.toLowerCase())) {
+      if (
+        lead.location_preference
+          .toLowerCase()
+          .includes(property.city.toLowerCase())
+      ) {
         reasons.push(`Located in preferred area: ${property.city}`);
       }
     }
 
     if (lead.property_type_preference && property.property_type) {
       if (lead.property_type_preference === property.property_type) {
-        reasons.push(`Matches preferred property type: ${property.property_type}`);
+        reasons.push(
+          `Matches preferred property type: ${property.property_type}`,
+        );
       }
     }
 
@@ -449,25 +498,31 @@ export class AiService {
     });
 
     const totalLeads = leads.length;
-    const convertedLeads = leads.filter(lead =>
-      lead.deals && lead.deals.some(deal => deal.stage === 'closed_won')
+    const convertedLeads = leads.filter(
+      (lead) =>
+        lead.deals && lead.deals.some((deal) => deal.stage === 'closed_won'),
     ).length;
 
-    const conversionRate = totalLeads > 0 ? (convertedLeads / totalLeads) * 100 : 0;
+    const conversionRate =
+      totalLeads > 0 ? (convertedLeads / totalLeads) * 100 : 0;
 
     // Lead source analysis
     const sourceStats = {};
-    leads.forEach(lead => {
+    leads.forEach((lead) => {
       const source = lead.source || 'unknown';
-      if (!sourceStats[source]) sourceStats[source] = { total: 0, converted: 0 };
+      if (!sourceStats[source])
+        sourceStats[source] = { total: 0, converted: 0 };
       sourceStats[source].total++;
-      if (lead.deals && lead.deals.some(deal => deal.stage === 'closed_won')) {
+      if (
+        lead.deals &&
+        lead.deals.some((deal) => deal.stage === 'closed_won')
+      ) {
         sourceStats[source].converted++;
       }
     });
 
     // Calculate source conversion rates
-    Object.keys(sourceStats).forEach(source => {
+    Object.keys(sourceStats).forEach((source) => {
       const stats = sourceStats[source];
       stats.conversionRate = (stats.converted / stats.total) * 100;
     });
@@ -481,28 +536,38 @@ export class AiService {
     };
   }
 
-  private async generateLeadRecommendations(sourceStats: any): Promise<string[]> {
+  private async generateLeadRecommendations(
+    sourceStats: any,
+  ): Promise<string[]> {
     const recommendations: string[] = [];
 
     // Find best performing source
-    const bestSource = Object.entries(sourceStats)
-      .sort(([,a]: any, [,b]: any) => b.conversionRate - a.conversionRate)[0];
+    const bestSource = Object.entries(sourceStats).sort(
+      ([, a]: any, [, b]: any) => b.conversionRate - a.conversionRate,
+    )[0];
 
     if (bestSource && (bestSource[1] as any).conversionRate > 20) {
-      recommendations.push(`Focus more on ${(bestSource[0] as string)} as it has ${(bestSource[1] as any).conversionRate.toFixed(1)}% conversion rate`);
+      recommendations.push(
+        `Focus more on ${bestSource[0]} as it has ${(bestSource[1] as any).conversionRate.toFixed(1)}% conversion rate`,
+      );
     }
 
     // Identify underperforming sources
     Object.entries(sourceStats).forEach(([source, stats]: [string, any]) => {
       if (stats.total > 10 && stats.conversionRate < 5) {
-        recommendations.push(`Review ${source} strategy - only ${stats.conversionRate.toFixed(1)}% conversion rate`);
+        recommendations.push(
+          `Review ${source} strategy - only ${stats.conversionRate.toFixed(1)}% conversion rate`,
+        );
       }
     });
 
     return recommendations;
   }
 
-  async generateSalesForecast(companyId: string, months: number = 3): Promise<any> {
+  async generateSalesForecast(
+    companyId: string,
+    months: number = 3,
+  ): Promise<any> {
     const deals = await this.dealsRepository.find({
       where: { company_id: companyId },
     });
@@ -533,11 +598,12 @@ export class AiService {
       const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
 
-      const monthDeals = deals.filter(deal =>
-        deal.actual_close_date &&
-        deal.actual_close_date >= monthStart &&
-        deal.actual_close_date <= monthEnd &&
-        deal.stage === 'closed_won'
+      const monthDeals = deals.filter(
+        (deal) =>
+          deal.actual_close_date &&
+          deal.actual_close_date >= monthStart &&
+          deal.actual_close_date <= monthEnd &&
+          deal.stage === 'closed_won',
       );
 
       const revenue = monthDeals.reduce((sum, deal) => sum + deal.amount, 0);
@@ -547,7 +613,10 @@ export class AiService {
     return monthlyRevenue;
   }
 
-  private simpleLinearRegression(data: number[], forecastMonths: number): number[] {
+  private simpleLinearRegression(
+    data: number[],
+    forecastMonths: number,
+  ): number[] {
     const n = data.length;
     const x = Array.from({ length: n }, (_, i) => i);
     const y = data;

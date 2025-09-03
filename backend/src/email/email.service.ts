@@ -40,13 +40,17 @@ export class EmailService {
       this.transporter = nodemailer.createTransport(smtpConfig);
       this.logger.log('Email transporter initialized successfully');
     } else {
-      this.logger.warn('SMTP credentials not provided. Email service will be disabled.');
+      this.logger.warn(
+        'SMTP credentials not provided. Email service will be disabled.',
+      );
     }
   }
 
   async sendEmail(options: EmailOptions): Promise<boolean> {
     if (!this.transporter) {
-      this.logger.warn('Email transporter not initialized. Skipping email send.');
+      this.logger.warn(
+        'Email transporter not initialized. Skipping email send.',
+      );
       return false;
     }
 
@@ -71,7 +75,11 @@ export class EmailService {
     }
   }
 
-  async sendWelcomeEmail(to: string, userName: string, companyName: string): Promise<boolean> {
+  async sendWelcomeEmail(
+    to: string,
+    userName: string,
+    companyName: string,
+  ): Promise<boolean> {
     const subject = `Welcome to ${companyName} CRM`;
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -92,7 +100,12 @@ export class EmailService {
     return this.sendEmail({ to, subject, html });
   }
 
-  async sendLeadAssignedEmail(to: string, leadName: string, agentName: string, companyName: string): Promise<boolean> {
+  async sendLeadAssignedEmail(
+    to: string,
+    leadName: string,
+    agentName: string,
+    companyName: string,
+  ): Promise<boolean> {
     const subject = `New Lead Assigned: ${leadName}`;
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -112,7 +125,13 @@ export class EmailService {
     return this.sendEmail({ to, subject, html });
   }
 
-  async sendDealStageChangedEmail(to: string, dealName: string, newStage: string, agentName: string, companyName: string): Promise<boolean> {
+  async sendDealStageChangedEmail(
+    to: string,
+    dealName: string,
+    newStage: string,
+    agentName: string,
+    companyName: string,
+  ): Promise<boolean> {
     const subject = `Deal Stage Changed: ${dealName}`;
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -132,7 +151,13 @@ export class EmailService {
     return this.sendEmail({ to, subject, html });
   }
 
-  async sendActivityReminderEmail(to: string, activityTitle: string, scheduledTime: Date, agentName: string, companyName: string): Promise<boolean> {
+  async sendActivityReminderEmail(
+    to: string,
+    activityTitle: string,
+    scheduledTime: Date,
+    agentName: string,
+    companyName: string,
+  ): Promise<boolean> {
     const subject = `Activity Reminder: ${activityTitle}`;
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -152,7 +177,13 @@ export class EmailService {
     return this.sendEmail({ to, subject, html });
   }
 
-  async sendOverdueActivityEmail(to: string, activityTitle: string, scheduledTime: Date, agentName: string, companyName: string): Promise<boolean> {
+  async sendOverdueActivityEmail(
+    to: string,
+    activityTitle: string,
+    scheduledTime: Date,
+    agentName: string,
+    companyName: string,
+  ): Promise<boolean> {
     const subject = `⚠️ Overdue Activity: ${activityTitle}`;
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -173,7 +204,12 @@ export class EmailService {
     return this.sendEmail({ to, subject, html });
   }
 
-  async sendWeeklyReportEmail(to: string, agentName: string, companyName: string, stats: any): Promise<boolean> {
+  async sendWeeklyReportEmail(
+    to: string,
+    agentName: string,
+    companyName: string,
+    stats: any,
+  ): Promise<boolean> {
     const subject = `Weekly CRM Report - ${companyName}`;
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -200,7 +236,12 @@ export class EmailService {
     return this.sendEmail({ to, subject, html });
   }
 
-  async sendPropertyInquiryEmail(to: string, propertyTitle: string, inquiryDetails: any, companyName: string): Promise<boolean> {
+  async sendPropertyInquiryEmail(
+    to: string,
+    propertyTitle: string,
+    inquiryDetails: any,
+    companyName: string,
+  ): Promise<boolean> {
     const subject = `Property Inquiry: ${propertyTitle}`;
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

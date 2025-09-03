@@ -1,7 +1,15 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Company, SubscriptionPlan, CompanyStatus } from './entities/company.entity';
+import {
+  Company,
+  SubscriptionPlan,
+  CompanyStatus,
+} from './entities/company.entity';
 
 @Injectable()
 export class CompaniesService {
@@ -19,7 +27,9 @@ export class CompaniesService {
 
     // Generate subdomain if not provided
     if (!createCompanyDto.subdomain) {
-      createCompanyDto.subdomain = await this.generateSubdomain(createCompanyDto.name || '');
+      createCompanyDto.subdomain = await this.generateSubdomain(
+        createCompanyDto.name || '',
+      );
     }
 
     const company = this.companiesRepository.create(createCompanyDto);
@@ -59,7 +69,10 @@ export class CompaniesService {
     });
   }
 
-  async update(id: string, updateCompanyDto: Partial<Company>): Promise<Company> {
+  async update(
+    id: string,
+    updateCompanyDto: Partial<Company>,
+  ): Promise<Company> {
     const company = await this.findOne(id);
 
     // Check name uniqueness if name is being updated
@@ -119,7 +132,7 @@ export class CompaniesService {
       },
       users: {
         total: company.users?.length || 0,
-        active: company.users?.filter(u => u.status === 'active').length || 0,
+        active: company.users?.filter((u) => u.status === 'active').length || 0,
       },
       settings: company.settings,
       branding: company.branding,
@@ -159,16 +172,26 @@ export class CompaniesService {
 
     const stats = {
       total: companies.length,
-      active: companies.filter(c => c.status === CompanyStatus.ACTIVE).length,
-      suspended: companies.filter(c => c.status === CompanyStatus.SUSPENDED).length,
-      inactive: companies.filter(c => c.status === CompanyStatus.INACTIVE).length,
+      active: companies.filter((c) => c.status === CompanyStatus.ACTIVE).length,
+      suspended: companies.filter((c) => c.status === CompanyStatus.SUSPENDED)
+        .length,
+      inactive: companies.filter((c) => c.status === CompanyStatus.INACTIVE)
+        .length,
       byPlan: {
-        [SubscriptionPlan.FREE]: companies.filter(c => c.subscription_plan === SubscriptionPlan.FREE).length,
-        [SubscriptionPlan.BASIC]: companies.filter(c => c.subscription_plan === SubscriptionPlan.BASIC).length,
-        [SubscriptionPlan.PRO]: companies.filter(c => c.subscription_plan === SubscriptionPlan.PRO).length,
-        [SubscriptionPlan.ENTERPRISE]: companies.filter(c => c.subscription_plan === SubscriptionPlan.ENTERPRISE).length,
+        [SubscriptionPlan.FREE]: companies.filter(
+          (c) => c.subscription_plan === SubscriptionPlan.FREE,
+        ).length,
+        [SubscriptionPlan.BASIC]: companies.filter(
+          (c) => c.subscription_plan === SubscriptionPlan.BASIC,
+        ).length,
+        [SubscriptionPlan.PRO]: companies.filter(
+          (c) => c.subscription_plan === SubscriptionPlan.PRO,
+        ).length,
+        [SubscriptionPlan.ENTERPRISE]: companies.filter(
+          (c) => c.subscription_plan === SubscriptionPlan.ENTERPRISE,
+        ).length,
       },
-      trials: companies.filter(c => c.is_trial).length,
+      trials: companies.filter((c) => c.is_trial).length,
       totalUsers: companies.reduce((sum, c) => sum + (c.users?.length || 0), 0),
       expiringSoon: (await this.getExpiringSubscriptions()).length,
     };

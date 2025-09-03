@@ -3,7 +3,11 @@ import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
-import { WhatsAppChat, MessageDirection, MessageStatus } from './entities/whatsapp-chat.entity';
+import {
+  WhatsAppChat,
+  MessageDirection,
+  MessageStatus,
+} from './entities/whatsapp-chat.entity';
 
 export interface WhatsAppMessage {
   to: string;
@@ -33,7 +37,10 @@ export class WhatsAppService {
     private whatsappChatsRepository: Repository<WhatsAppChat>,
   ) {
     const apiKey = this.configService.get<string>('WHATSAPP_API_KEY');
-    const apiUrl = this.configService.get<string>('WHATSAPP_API_URL', 'https://graph.facebook.com/v17.0');
+    const apiUrl = this.configService.get<string>(
+      'WHATSAPP_API_URL',
+      'https://graph.facebook.com/v17.0',
+    );
 
     this.isEnabled = !!(apiKey && apiUrl);
 
@@ -41,7 +48,7 @@ export class WhatsAppService {
       this.httpClient = axios.create({
         baseURL: apiUrl,
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
       });
@@ -108,8 +115,13 @@ export class WhatsAppService {
           };
       }
 
-      const phoneNumberId = this.configService.get<string>('WHATSAPP_PHONE_NUMBER_ID');
-      const response = await this.httpClient.post(`/${phoneNumberId}/messages`, messagePayload);
+      const phoneNumberId = this.configService.get<string>(
+        'WHATSAPP_PHONE_NUMBER_ID',
+      );
+      const response = await this.httpClient.post(
+        `/${phoneNumberId}/messages`,
+        messagePayload,
+      );
 
       // Log the message
       await this.logMessage({
@@ -124,14 +136,20 @@ export class WhatsAppService {
 
       this.logger.log(`WhatsApp message sent to ${messageData.to}`);
       return { success: true, data: response.data };
-
     } catch (error) {
-      this.logger.error(`Failed to send WhatsApp message: ${error.message}`, error.stack);
+      this.logger.error(
+        `Failed to send WhatsApp message: ${error.message}`,
+        error.stack,
+      );
       return { success: false, error: error.message };
     }
   }
 
-  async sendLeadWelcomeMessage(phoneNumber: string, leadName: string, companyName: string): Promise<any> {
+  async sendLeadWelcomeMessage(
+    phoneNumber: string,
+    leadName: string,
+    companyName: string,
+  ): Promise<any> {
     const message = `مرحباً ${leadName}! 👋
 
 شكراً لتواصلك مع ${companyName}.
@@ -152,7 +170,10 @@ export class WhatsAppService {
     });
   }
 
-  async sendPropertyDetailsMessage(phoneNumber: string, propertyData: any): Promise<any> {
+  async sendPropertyDetailsMessage(
+    phoneNumber: string,
+    propertyData: any,
+  ): Promise<any> {
     const message = `🏠 ${propertyData.title}
 
 📍 ${propertyData.address}
@@ -183,7 +204,10 @@ ${propertyData.description}
     return result;
   }
 
-  async sendAppointmentReminder(phoneNumber: string, appointmentData: any): Promise<any> {
+  async sendAppointmentReminder(
+    phoneNumber: string,
+    appointmentData: any,
+  ): Promise<any> {
     const message = `⏰ تذكير بميعادك
 
 📅 ${appointmentData.date}
@@ -200,7 +224,10 @@ ${propertyData.description}
     });
   }
 
-  async sendFollowUpMessage(phoneNumber: string, daysSinceLastContact: number): Promise<any> {
+  async sendFollowUpMessage(
+    phoneNumber: string,
+    daysSinceLastContact: number,
+  ): Promise<any> {
     let message = '';
 
     if (daysSinceLastContact === 0) {
@@ -208,7 +235,8 @@ ${propertyData.description}
     } else if (daysSinceLastContact <= 3) {
       message = 'مرحباً! كيف حالك؟ هل لديك أي أسئلة حول العقارات؟';
     } else {
-      message = 'مرحباً! نتمنى أن تكون بخير. هل ما زلت تبحث عن عقار؟ يمكننا مساعدتك!';
+      message =
+        'مرحباً! نتمنى أن تكون بخير. هل ما زلت تبحث عن عقار؟ يمكننا مساعدتك!';
     }
 
     return this.sendMessage({
@@ -218,7 +246,11 @@ ${propertyData.description}
     });
   }
 
-  async sendTemplateMessage(phoneNumber: string, templateName: string, templateData?: any): Promise<any> {
+  async sendTemplateMessage(
+    phoneNumber: string,
+    templateName: string,
+    templateData?: any,
+  ): Promise<any> {
     return this.sendMessage({
       to: phoneNumber,
       type: 'template',
@@ -272,12 +304,12 @@ ${propertyData.description}
     return this.whatsappChatsRepository.save(message);
   }
 
-  async getChatHistory(phoneNumber: string, limit: number = 50): Promise<WhatsAppChat[]> {
+  async getChatHistory(
+    phoneNumber: string,
+    limit: number = 50,
+  ): Promise<WhatsAppChat[]> {
     return this.whatsappChatsRepository.find({
-      where: [
-        { from_phone: phoneNumber },
-        { to_phone: phoneNumber },
-      ],
+      where: [{ from_phone: phoneNumber }, { to_phone: phoneNumber }],
       order: { created_at: 'DESC' },
       take: limit,
     });
@@ -308,7 +340,8 @@ ${propertyData.description}
       outboundMessages,
       inboundMessages,
       recentMessages,
-      responseRate: totalMessages > 0 ? (inboundMessages / totalMessages) * 100 : 0,
+      responseRate:
+        totalMessages > 0 ? (inboundMessages / totalMessages) * 100 : 0,
     };
   }
 
@@ -333,9 +366,10 @@ ${propertyData.description}
       this.logger.log(`Incoming WhatsApp message from ${from}`);
 
       return { success: true, message: 'Message processed successfully' };
-
     } catch (error) {
-      this.logger.error(`Failed to process incoming WhatsApp message: ${error.message}`);
+      this.logger.error(
+        `Failed to process incoming WhatsApp message: ${error.message}`,
+      );
       return { success: false, error: error.message };
     }
   }
@@ -349,14 +383,18 @@ ${propertyData.description}
       results.push(result);
 
       // Add delay to avoid rate limiting
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
     return results;
   }
 
   // Campaign management
-  async createCampaign(name: string, messages: WhatsAppMessage[], scheduleTime?: Date): Promise<any> {
+  async createCampaign(
+    name: string,
+    messages: WhatsAppMessage[],
+    scheduleTime?: Date,
+  ): Promise<any> {
     // In a real implementation, you would store campaign data
     // and schedule messages for future sending
 

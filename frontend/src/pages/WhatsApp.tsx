@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { 
-  MessageCircle, 
-  Send, 
-  Search, 
+import {
+  MessageCircle,
+  Send,
+  Search,
   Filter,
   Clock,
   Check,
@@ -78,7 +78,9 @@ const WhatsApp = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
   const [newMessage, setNewMessage] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const queryClient = useQueryClient();
 
@@ -149,6 +151,32 @@ const WhatsApp = () => {
     });
   };
 
+  const handleFileAttachment = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedChatId) return;
+
+    // For now, just show a toast. In a real implementation, you'd upload the file
+    toast.info(t('whatsapp.messages.fileAttachment') || `Selected file: ${file.name}`);
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleEmojiClick = () => {
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+
+  const insertEmoji = (emoji: string) => {
+    setNewMessage(prev => prev + emoji);
+    setShowEmojiPicker(false);
+  };
+
   const getStatusBadge = (status: string) => {
     const variants = {
       new: "default",
@@ -168,7 +196,7 @@ const WhatsApp = () => {
   const getPriorityColor = (priority: string) => {
     const colors = {
       low: "text-green-600",
-      medium: "text-yellow-600", 
+      medium: "text-yellow-600",
       high: "text-red-600"
     };
     return colors[priority as keyof typeof colors] || "text-gray-600";
@@ -193,12 +221,12 @@ const WhatsApp = () => {
     const date = new Date(timestamp);
     const now = new Date();
     const diffInHours = Math.abs(now.getTime() - date.getTime()) / (1000 * 60 * 60);
-    
+
     if (diffInHours < 24) {
-      return date.toLocaleTimeString('ar-SA', { 
-        hour: '2-digit', 
+      return date.toLocaleTimeString('ar-SA', {
+        hour: '2-digit',
         minute: '2-digit',
-        hour12: true 
+        hour12: true
       });
     } else {
       return date.toLocaleDateString('ar-SA', {
@@ -218,10 +246,10 @@ const WhatsApp = () => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold arabic-text">{t('whatsapp.title')}</h2>
               <Badge variant="secondary" className="arabic-text">
-                                  {chats.length} {t('whatsapp.conversation')}
+                {chats.length} {t('whatsapp.conversation')}
               </Badge>
             </div>
-            
+
             {/* Search */}
             <div className="relative mb-4">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -233,7 +261,7 @@ const WhatsApp = () => {
                 dir="rtl"
               />
             </div>
-            
+
             {/* Filters */}
             <div className="flex gap-2">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -247,7 +275,7 @@ const WhatsApp = () => {
                   <SelectItem value="closed">{t('whatsapp.status.closed')}</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select value={priorityFilter} onValueChange={setPriorityFilter}>
                 <SelectTrigger className="flex-1" dir="rtl">
                   <SelectValue />
@@ -261,7 +289,7 @@ const WhatsApp = () => {
               </Select>
             </div>
           </div>
-          
+
           {/* Chats List */}
           <ScrollArea className="flex-1">
             {chatsLoading ? (
@@ -291,9 +319,8 @@ const WhatsApp = () => {
                 {chats.map((chat: WhatsAppChat) => (
                   <div
                     key={chat.id}
-                    className={`p-3 rounded-lg cursor-pointer hover:bg-muted/50 transition-colors ${
-                      selectedChatId === chat.id ? 'bg-muted' : ''
-                    }`}
+                    className={`p-3 rounded-lg cursor-pointer hover:bg-muted/50 transition-colors ${selectedChatId === chat.id ? 'bg-muted' : ''
+                      }`}
                     onClick={() => setSelectedChatId(chat.id)}
                   >
                     <div className="flex items-start gap-3">
@@ -309,7 +336,7 @@ const WhatsApp = () => {
                           </Badge>
                         )}
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
                           <h4 className="font-medium truncate arabic-text">
@@ -319,11 +346,11 @@ const WhatsApp = () => {
                             {formatTime(chat.attributes.last_message_time)}
                           </span>
                         </div>
-                        
+
                         <p className="text-sm text-muted-foreground truncate arabic-text mb-2">
                           {chat.attributes.last_message}
                         </p>
-                        
+
                         <div className="flex items-center justify-between">
                           <div className="flex gap-1">
                             {getStatusBadge(chat.attributes.status)}
@@ -362,7 +389,7 @@ const WhatsApp = () => {
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     {getStatusBadge(selectedChat.attributes.status)}
                     <DropdownMenu>
@@ -385,7 +412,7 @@ const WhatsApp = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Messages */}
               <ScrollArea className="flex-1 p-4">
                 {messagesLoading ? (
@@ -406,16 +433,14 @@ const WhatsApp = () => {
                     {messages.map((message: WhatsAppMessage) => (
                       <div
                         key={message.id}
-                        className={`flex ${
-                          message.attributes.direction === 'outbound' ? 'justify-end' : 'justify-start'
-                        }`}
+                        className={`flex ${message.attributes.direction === 'outbound' ? 'justify-end' : 'justify-start'
+                          }`}
                       >
                         <div
-                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                            message.attributes.direction === 'outbound'
+                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${message.attributes.direction === 'outbound'
                               ? 'bg-primary text-primary-foreground'
                               : 'bg-muted'
-                          }`}
+                            }`}
                         >
                           <p className="arabic-text">{message.attributes.content}</p>
                           <div className="flex items-center justify-between mt-1 text-xs opacity-70">
@@ -433,16 +458,53 @@ const WhatsApp = () => {
                   </div>
                 )}
               </ScrollArea>
-              
+
               {/* Message Input */}
               <div className="p-4 border-t border-border">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  onChange={handleFileSelect}
+                />
                 <form onSubmit={handleSendMessage} className="flex items-end gap-2">
-                  <Button type="button" variant="ghost" size="sm">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleFileAttachment}
+                    title={t('whatsapp.attachFile') || 'Attach file'}
+                  >
                     <Paperclip className="h-4 w-4" />
                   </Button>
-                  <Button type="button" variant="ghost" size="sm">
-                    <Smile className="h-4 w-4" />
-                  </Button>
+                  <div className="relative">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleEmojiClick}
+                      title={t('whatsapp.addEmoji') || 'Add emoji'}
+                    >
+                      <Smile className="h-4 w-4" />
+                    </Button>
+                    {showEmojiPicker && (
+                      <div className="absolute bottom-full right-0 mb-2 p-2 bg-white border rounded-lg shadow-lg z-10">
+                        <div className="grid grid-cols-6 gap-1">
+                          {['😀', '😂', '😍', '👍', '👎', '❤️', '😊', '😢', '😡', '🤔', '👏', '🔥'].map((emoji) => (
+                            <button
+                              key={emoji}
+                              type="button"
+                              className="p-1 hover:bg-gray-100 rounded text-lg"
+                              onClick={() => insertEmoji(emoji)}
+                            >
+                              {emoji}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <div className="flex-1">
                     <Input
                       value={newMessage}
@@ -457,8 +519,8 @@ const WhatsApp = () => {
                       }}
                     />
                   </div>
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     disabled={!newMessage.trim() || sendMessageMutation.isPending}
                     size="sm"
                   >

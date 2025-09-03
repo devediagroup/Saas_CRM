@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 
 // Services
 import { AuthService } from './auth.service';
+import { PermissionsService } from './services/permissions.service';
 
 // Strategies
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -29,11 +30,11 @@ import { CompaniesModule } from '../companies/companies.module';
       secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key-here',
       signOptions: { expiresIn: '24h' },
     }),
-    UsersModule,
+    forwardRef(() => UsersModule),
     CompaniesModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  providers: [AuthService, PermissionsService, JwtStrategy],
+  exports: [AuthService, PermissionsService],
 })
 export class AuthModule {}

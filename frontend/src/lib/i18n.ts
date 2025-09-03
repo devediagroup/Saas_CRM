@@ -39,7 +39,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'ar',
-    lng: 'ar', // Force initial language to Arabic
+    // Remove forced lng setting to allow language detection to work
     debug: process.env.NODE_ENV === 'development',
 
     interpolation: {
@@ -47,10 +47,9 @@ i18n
     },
 
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
       lookupLocalStorage: 'language', // Use our custom key
-      lookupHtmlTag: 'lang',
     },
 
     react: {

@@ -11,16 +11,21 @@ import {
   Phone,
   MessageSquare,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Code,
+  FolderOpen
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { api } from "@/lib/api";
 import apiClient from "@/lib/api";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Can, CanAny } from "@/components/PermissionGuard";
 
 const Dashboard = () => {
   const { t } = useTranslation();
+  const { can, canCRUD } = usePermissions();
 
   // Fetch dashboard analytics from API (disabled for now - endpoint may not exist)
   const { data: dashboardData, isLoading: dashboardLoading, error: dashboardError } = useQuery({
@@ -53,19 +58,36 @@ const Dashboard = () => {
     refetchOnWindowFocus: false
   });
 
+  // Fetch developers and projects statistics
+  const { data: developersData, isLoading: developersLoading, error: developersError } = useQuery({
+    queryKey: ['developersStats'],
+    queryFn: () => api.getDevelopers({ limit: 100 }),
+    retry: false,
+    refetchOnWindowFocus: false
+  });
+
+  const { data: projectsData, isLoading: projectsLoading, error: projectsError } = useQuery({
+    queryKey: ['projectsStats'],
+    queryFn: () => api.getProjects({ limit: 100 }),
+    retry: false,
+    refetchOnWindowFocus: false
+  });
+
   // Extract data from API responses with safe fallbacks
   const stats = {
     leads: { count: leadsData?.data?.length || 0, change: 0 },
     properties: { count: propertiesData?.data?.length || 0, change: 0 },
     deals: { count: 0, change: 0 },
-    revenue: { count: 0, change: 0 }
+    revenue: { count: 0, change: 0 },
+    developers: { count: developersData?.data?.length || 0, change: 0 },
+    projects: { count: projectsData?.data?.length || 0, change: 0 }
   };
 
   const recentLeads = leadsData?.data || [];
   const recentProperties = propertiesData?.data || [];
 
   // Show error message if backend is not available
-  if (leadsError || propertiesError) {
+  if (leadsError || propertiesError || developersError || projectsError) {
     return (
       <DashboardLayout>
         <div className="container mx-auto px-6 py-8">
@@ -122,7 +144,7 @@ const Dashboard = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
           <Card className="crm-card">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -188,6 +210,42 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Developers Stats */}
+          <Can permission="developers.read">
+            <Card className="crm-card">
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  {t('hardcoded.totalDevelopers') || 'إجمالي المطورين'}
+                </CardTitle>
+                <Code className="h-4 w-4 text-purple-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-primary">{stats.developers.count}</div>
+                <div className="flex items-center text-xs text-success mt-1">
+                  <ArrowUpRight className="h-3 w-3 ml-1" />
+                  +{stats.developers.change}% {t('hardcoded.fromLastMonth')}
+                </div>
+              </CardContent>
+            </Card>
+          </Can>
+
+          {/* Projects Stats */}
+          <Card className="crm-card">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                {t('hardcoded.totalProjects') || 'إجمالي المشاريع'}
+              </CardTitle>
+              <FolderOpen className="h-4 w-4 text-indigo-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-primary">{stats.projects.count}</div>
+              <div className="flex items-center text-xs text-success mt-1">
+                <ArrowUpRight className="h-3 w-3 ml-1" />
+                +{stats.projects.change}% {t('hardcoded.fromLastMonth')}
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Recent Data Grid */}
@@ -197,9 +255,11 @@ const Dashboard = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg font-semibold">{t('hardcoded.recentLeads')}</CardTitle>
-                <Button variant="outline" size="sm" asChild>
-                  <a href="/leads">{t('hardcoded.viewAll')}</a>
-                </Button>
+                <Can permission="leads.read">
+                  <Button variant="outline" size="sm" asChild>
+                    <a href="/leads">{t('hardcoded.viewAll')}</a>
+                  </Button>
+                </Can>
               </div>
             </CardHeader>
             <CardContent>
@@ -245,9 +305,11 @@ const Dashboard = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg font-semibold">{t('hardcoded.recentProperties')}</CardTitle>
-                <Button variant="outline" size="sm" asChild>
-                  <a href="/properties">{t('hardcoded.viewAll')}</a>
-                </Button>
+                <Can permission="properties.read">
+                  <Button variant="outline" size="sm" asChild>
+                    <a href="/properties">{t('hardcoded.viewAll')}</a>
+                  </Button>
+                </Can>
               </div>
             </CardHeader>
             <CardContent>
@@ -289,13 +351,100 @@ const Dashboard = () => {
           </Card>
         </div>
 
+        {/* Properties Distribution by Project and Developer */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Properties by Project */}
+          <Card className="crm-card">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold">
+                  {t('hardcoded.propertiesByProject') || 'الخصائص حسب المشروع'}
+                </CardTitle>
+                <Button variant="outline" size="sm" asChild>
+                  <a href="/properties">{t('hardcoded.viewAll')}</a>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {projectsLoading ? (
+                  <div className="text-center py-4 text-muted-foreground">{t('common.loading')}</div>
+                ) : projectsData?.data?.length === 0 ? (
+                  <div className="text-center py-4 text-muted-foreground">
+                    {t('hardcoded.noProjects') || 'لا توجد مشاريع'}
+                  </div>
+                ) : projectsData?.data?.slice(0, 5).map((project) => {
+                  const projectData = project.attributes || project;
+                  const name = projectData.name || t('hardcoded.undefined');
+                  const status = projectData.status || t('hardcoded.undefined');
+                  const developer = projectData.developer?.name || projectData.developer_name || t('hardcoded.undefined');
+                  
+                  return (
+                    <div key={project.id} className="p-3 bg-muted/30 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <p className="font-medium text-sm">{name}</p>
+                          <p className="text-xs text-muted-foreground">{developer}</p>
+                        </div>
+                        <span className={`status-badge ${getStatusColor(status)}`}>
+                          {status}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Properties by Developer */}
+          <Card className="crm-card">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold">
+                  {t('hardcoded.propertiesByDeveloper') || 'الخصائص حسب المطور'}
+                </CardTitle>
+                <Button variant="outline" size="sm" asChild>
+                  <a href="/developers">{t('hardcoded.viewAll')}</a>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {developersLoading ? (
+                  <div className="text-center py-4 text-muted-foreground">{t('common.loading')}</div>
+                ) : developersData?.data?.length === 0 ? (
+                  <div className="text-center py-4 text-muted-foreground">
+                    {t('hardcoded.noDevelopers') || 'لا توجد مطورين'}
+                  </div>
+                ) : developersData?.data?.slice(0, 5).map((developer) => {
+                  const developerData = developer.attributes || developer;
+                  const name = developerData.name || t('hardcoded.undefined');
+                  const description = developerData.description || t('hardcoded.undefined');
+                  
+                  return (
+                    <div key={developer.id} className="p-3 bg-muted/30 rounded-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <p className="font-medium text-sm">{name}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-2">{description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Quick Actions */}
         <Card className="crm-card">
           <CardHeader>
             <CardTitle className="text-lg font-semibold">{t('hardcoded.quickActions')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               <Button variant="outline" className="h-20 flex-col gap-2" asChild>
                 <a href="/leads">
                   <Users className="h-6 w-6" />
@@ -306,6 +455,18 @@ const Dashboard = () => {
                 <a href="/properties">
                   <Building2 className="h-6 w-6" />
                   {t('hardcoded.addProperty')}
+                </a>
+              </Button>
+              <Button variant="outline" className="h-20 flex-col gap-2" asChild>
+                <a href="/developers">
+                  <Code className="h-6 w-6" />
+                  {t('hardcoded.addDeveloper') || 'إضافة مطور'}
+                </a>
+              </Button>
+              <Button variant="outline" className="h-20 flex-col gap-2" asChild>
+                <a href="/projects">
+                  <FolderOpen className="h-6 w-6" />
+                  {t('hardcoded.addProject') || 'إضافة مشروع'}
                 </a>
               </Button>
               <Button variant="outline" className="h-20 flex-col gap-2" asChild>

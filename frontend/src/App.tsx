@@ -6,6 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SuspenseWrapper } from "@/components/ui/loading";
 import { queryClient, cacheUtils } from "@/lib/query-client";
+import { AuthProvider } from "./contexts/AuthContext";
 
 // Critical pages - loaded immediately
 import Index from "./pages/Index";
@@ -25,6 +26,8 @@ const WhatsApp = React.lazy(() => import("./pages/WhatsApp"));
 const Analytics = React.lazy(() => import("./pages/Analytics"));
 const Settings = React.lazy(() => import("./pages/Settings"));
 const Notifications = React.lazy(() => import("./pages/Notifications"));
+const Developers = React.lazy(() => import("./pages/Developers"));
+const Projects = React.lazy(() => import("./pages/Projects.tsx"));
 
 // Admin pages - loaded separately
 const Subscriptions = React.lazy(() => import("./pages/Subscriptions"));
@@ -56,7 +59,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
+        <AuthProvider>
+          <Routes>
           {/* Critical routes - loaded immediately */}
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
@@ -148,6 +152,22 @@ const App = () => (
             element={
               <SuspenseWrapper>
                 <Notifications />
+              </SuspenseWrapper>
+            }
+          />
+          <Route
+            path="/developers"
+            element={
+              <SuspenseWrapper>
+                <Developers />
+              </SuspenseWrapper>
+            }
+          />
+          <Route
+            path="/projects"
+            element={
+              <SuspenseWrapper>
+                <Projects />
               </SuspenseWrapper>
             }
           />
@@ -295,6 +315,7 @@ const App = () => (
           {/* Error route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+          </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

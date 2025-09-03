@@ -2,7 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EmailService } from '../email/email.service';
-import { Notification, NotificationType, NotificationPriority } from './entities/notification.entity';
+import {
+  Notification,
+  NotificationType,
+  NotificationPriority,
+} from './entities/notification.entity';
 import { User } from '../users/entities/user.entity';
 
 export interface CreateNotificationDto {
@@ -27,14 +31,17 @@ export class NotificationsService {
     private emailService: EmailService,
   ) {}
 
-  async create(createNotificationDto: CreateNotificationDto): Promise<Notification> {
+  async create(
+    createNotificationDto: CreateNotificationDto,
+  ): Promise<Notification> {
     const notification = this.notificationsRepository.create({
       ...createNotificationDto,
       is_read: false,
       created_at: new Date(),
     });
 
-    const savedNotification = await this.notificationsRepository.save(notification);
+    const savedNotification =
+      await this.notificationsRepository.save(notification);
 
     // Send email notification if email service is configured
     try {
@@ -85,23 +92,34 @@ export class NotificationsService {
     });
   }
 
-  async getByType(userId: string, type: NotificationType): Promise<Notification[]> {
+  async getByType(
+    userId: string,
+    type: NotificationType,
+  ): Promise<Notification[]> {
     return this.notificationsRepository.find({
       where: { user_id: userId, type },
       order: { created_at: 'DESC' },
     });
   }
 
-  async getByPriority(userId: string, priority: NotificationPriority): Promise<Notification[]> {
+  async getByPriority(
+    userId: string,
+    priority: NotificationPriority,
+  ): Promise<Notification[]> {
     return this.notificationsRepository.find({
       where: { user_id: userId, priority },
       order: { created_at: 'DESC' },
     });
   }
 
-  private async sendEmailNotification(notification: Notification): Promise<void> {
+  private async sendEmailNotification(
+    notification: Notification,
+  ): Promise<void> {
     // Only send email for high priority notifications
-    if (notification.priority === NotificationPriority.HIGH || notification.priority === NotificationPriority.URGENT) {
+    if (
+      notification.priority === NotificationPriority.HIGH ||
+      notification.priority === NotificationPriority.URGENT
+    ) {
       // Note: We would need to get user email from user service
       // For now, we'll skip email sending as we don't have user email in this context
       // In a real implementation, you would fetch user details and send email
@@ -110,7 +128,12 @@ export class NotificationsService {
   }
 
   // Specific notification creation methods
-  async createLeadAssignedNotification(leadId: string, leadName: string, agentId: string, companyId: string): Promise<Notification> {
+  async createLeadAssignedNotification(
+    leadId: string,
+    leadName: string,
+    agentId: string,
+    companyId: string,
+  ): Promise<Notification> {
     return this.create({
       title: 'New Lead Assigned',
       message: `You have been assigned a new lead: ${leadName}`,
@@ -123,7 +146,13 @@ export class NotificationsService {
     });
   }
 
-  async createDealStageChangedNotification(dealId: string, dealName: string, newStage: string, agentId: string, companyId: string): Promise<Notification> {
+  async createDealStageChangedNotification(
+    dealId: string,
+    dealName: string,
+    newStage: string,
+    agentId: string,
+    companyId: string,
+  ): Promise<Notification> {
     return this.create({
       title: 'Deal Stage Changed',
       message: `Deal "${dealName}" has moved to stage: ${newStage}`,
@@ -136,7 +165,12 @@ export class NotificationsService {
     });
   }
 
-  async createActivityReminderNotification(activityId: string, activityTitle: string, userId: string, companyId: string): Promise<Notification> {
+  async createActivityReminderNotification(
+    activityId: string,
+    activityTitle: string,
+    userId: string,
+    companyId: string,
+  ): Promise<Notification> {
     return this.create({
       title: 'Activity Reminder',
       message: `Upcoming activity: ${activityTitle}`,
@@ -149,7 +183,12 @@ export class NotificationsService {
     });
   }
 
-  async createOverdueActivityNotification(activityId: string, activityTitle: string, userId: string, companyId: string): Promise<Notification> {
+  async createOverdueActivityNotification(
+    activityId: string,
+    activityTitle: string,
+    userId: string,
+    companyId: string,
+  ): Promise<Notification> {
     return this.create({
       title: 'Overdue Activity',
       message: `Activity "${activityTitle}" is now overdue`,
@@ -162,7 +201,12 @@ export class NotificationsService {
     });
   }
 
-  async createPropertyInquiryNotification(propertyId: string, propertyTitle: string, agentId: string, companyId: string): Promise<Notification> {
+  async createPropertyInquiryNotification(
+    propertyId: string,
+    propertyTitle: string,
+    agentId: string,
+    companyId: string,
+  ): Promise<Notification> {
     return this.create({
       title: 'New Property Inquiry',
       message: `New inquiry received for property: ${propertyTitle}`,
@@ -175,7 +219,13 @@ export class NotificationsService {
     });
   }
 
-  async createSystemNotification(title: string, message: string, userId: string, companyId: string, priority: NotificationPriority = NotificationPriority.LOW): Promise<Notification> {
+  async createSystemNotification(
+    title: string,
+    message: string,
+    userId: string,
+    companyId: string,
+    priority: NotificationPriority = NotificationPriority.LOW,
+  ): Promise<Notification> {
     return this.create({
       title,
       message,
@@ -187,7 +237,9 @@ export class NotificationsService {
   }
 
   // Bulk operations
-  async createBulkNotifications(notifications: CreateNotificationDto[]): Promise<Notification[]> {
+  async createBulkNotifications(
+    notifications: CreateNotificationDto[],
+  ): Promise<Notification[]> {
     const createdNotifications: Notification[] = [];
 
     for (const notificationDto of notifications) {

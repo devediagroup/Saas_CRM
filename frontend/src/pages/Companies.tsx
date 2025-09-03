@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
-import { 
-  Building2, 
-  Plus, 
-  Search, 
-  Edit, 
-  Trash2, 
-  Users, 
-  Phone, 
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+import {
+  Building2,
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  Users,
+  Phone,
   Mail,
   MapPin,
   Filter,
@@ -90,13 +90,13 @@ const Companies = () => {
 
   // Filter companies based on search and filters
   const filteredCompanies = companies.filter((company: Company) => {
-    const matchesSearch = !searchTerm || 
-                         (company.name && company.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                         (company.email && company.email.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesStatus = statusFilter === 'all' || 
-                         (statusFilter === 'active' ? company.is_active === true : company.is_active === false);
+    const matchesSearch = !searchTerm ||
+      (company.name && company.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (company.email && company.email.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesStatus = statusFilter === 'all' ||
+      (statusFilter === 'active' ? company.is_active === true : company.is_active === false);
     const matchesSubscription = subscriptionFilter === 'all' || company.subscription_type === subscriptionFilter;
-    
+
     return matchesSearch && matchesStatus && matchesSubscription;
   });
 
@@ -210,7 +210,7 @@ const Companies = () => {
               {t('companies.subtitle')}
             </p>
           </div>
-          
+
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
               <Button className="gap-2 arabic-text">
@@ -227,7 +227,7 @@ const Companies = () => {
                   {editingCompany ? t('companies.editCompanyDesc') : t('companies.addCompanyDesc')}
                 </DialogDescription>
               </DialogHeader>
-              
+
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name" className="arabic-text">{t('companies.companyName')}</Label>
@@ -286,7 +286,7 @@ const Companies = () => {
                     dir="rtl"
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label className="arabic-text">{t('companies.status')}</Label>
@@ -327,7 +327,7 @@ const Companies = () => {
                     placeholder={t('companies.employeesPlaceholder')}
                   />
                 </div>
-                
+
                 <DialogFooter className="gap-2">
                   <Button type="button" variant="outline" onClick={() => {
                     setIsCreateDialogOpen(false);
@@ -431,7 +431,7 @@ const Companies = () => {
                       {company.subscription_type && getSubscriptionBadge(company.subscription_type)}
                     </div>
                   </div>
-                  
+
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm">
@@ -456,7 +456,7 @@ const Companies = () => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-3">
                   {company.email && (
                     <div className="flex items-center gap-2 text-sm">
@@ -464,21 +464,21 @@ const Companies = () => {
                       <span dir="ltr">{company.email}</span>
                     </div>
                   )}
-                  
+
                   {company.phone && (
                     <div className="flex items-center gap-2 text-sm">
                       <Phone className="h-4 w-4 text-muted-foreground" />
                       <span dir="ltr">{company.phone}</span>
                     </div>
                   )}
-                  
+
                   {company.address && (
                     <div className="flex items-center gap-2 text-sm">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
                       <span className="arabic-text">{company.address}</span>
                     </div>
                   )}
-                  
+
                   <div className="flex items-center gap-2 text-sm">
                     <Users className="h-4 w-4 text-muted-foreground" />
                     <span className="arabic-text">{company.employees_count || 0} {t('companies.employees')}</span>

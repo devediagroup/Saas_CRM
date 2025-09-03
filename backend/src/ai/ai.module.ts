@@ -8,9 +8,7 @@ import { Property } from '../properties/entities/property.entity';
 import { Activity } from '../activities/entities/activity.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Lead, Deal, Property, Activity]),
-  ],
+  imports: [TypeOrmModule.forFeature([Lead, Deal, Property, Activity])],
   controllers: [AiController],
   providers: [AiService],
   exports: [AiService],

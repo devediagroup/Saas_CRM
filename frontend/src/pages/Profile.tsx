@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -12,12 +12,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Progress } from '../components/ui/progress';
 import { toast } from 'sonner';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Calendar, 
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
   Building,
   Shield,
   Key,
@@ -38,9 +38,10 @@ import {
   TrendingUp,
   FileText,
   Download,
-  Upload
+  Upload,
+  MessageSquare
 } from 'lucide-react';
-import { apiClient } from '../lib/api';
+import { apiClient, api } from '../lib/api';
 
 interface UserProfile {
   id: number;
@@ -69,7 +70,7 @@ export default function Profile() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const [profileData, setProfileData] = useState({
     firstName: '',
     lastName: '',
@@ -87,35 +88,75 @@ export default function Profile() {
 
   const queryClient = useQueryClient();
 
-  // Fetch current user profile
-  const { data: currentUser, isLoading: isLoadingProfile } = useQuery({
-    queryKey: ['current-user'],
-    queryFn: () => apiClient.get('/users/me?populate=*').then(res => res.data),
-    onSuccess: (data) => {
-      setProfileData({
-        firstName: data.firstName || '',
-        lastName: data.lastName || '',
-        email: data.email || '',
-        phone: data.phone || '',
-        bio: data.bio || '',
-        avatar: data.avatar || ''
-      });
+  // Fetch recent activities from API
+  const { data: recentActivities } = useQuery({
+    queryKey: ['recent-activities'],
+    queryFn: async () => {
+      try {
+        const response = await api.getActivities({
+          limit: 4,
+          sort: 'created_at:desc'
+        });
+        return Array.isArray(response?.data) ? response.data : [];
+      } catch (error) {
+        console.error('Error fetching recent activities:', error);
+        return [];
+      }
     }
   });
 
-  // Fetch user activity stats
+  // Fetch current user profile
+  const { data: currentUser, isLoading: isLoadingProfile } = useQuery<UserProfile>({
+    queryKey: ['current-user'],
+    queryFn: () => apiClient.get('/users/me?populate=*').then(res => res.data),
+  });
+
+  // Update profile data when user data is loaded
+  useEffect(() => {
+    if (currentUser) {
+      setProfileData({
+        firstName: currentUser.firstName || '',
+        lastName: currentUser.lastName || '',
+        email: currentUser.email || '',
+        phone: currentUser.phone || '',
+        bio: currentUser.bio || '',
+        avatar: currentUser.avatar || ''
+      });
+    }
+  }, [currentUser]);
+
+  // Fetch user activity stats from real API endpoints
   const { data: userStats } = useQuery({
     queryKey: ['user-stats'],
     queryFn: async () => {
-      // Mock data - in real app, fetch from multiple endpoints
-      return {
-        leadsCreated: 45,
-        dealsCompleted: 23,
-        activitiesLogged: 156,
-        propertiesAdded: 12,
-        loginStreak: 15,
-        totalLogins: 234
-      };
+      try {
+        // Fetch real statistics from multiple API endpoints
+        const [leadsResponse, dealsResponse, activitiesResponse, propertiesResponse] = await Promise.all([
+          api.getLeads(),
+          api.getDeals(),
+          api.getActivities(),
+          api.getProperties()
+        ]);
+
+        return {
+          leadsCreated: Array.isArray(leadsResponse?.data) ? leadsResponse.data.length : 0,
+          dealsCompleted: Array.isArray(dealsResponse?.data) ? dealsResponse.data.filter(deal => deal.status === 'completed' || deal.stage === 'closed_won').length : 0,
+          activitiesLogged: Array.isArray(activitiesResponse?.data) ? activitiesResponse.data.length : 0,
+          propertiesAdded: Array.isArray(propertiesResponse?.data) ? propertiesResponse.data.length : 0,
+          loginStreak: 0, // This would need to be tracked in backend
+          totalLogins: 0 // This would need to be tracked in backend
+        };
+      } catch (error) {
+        console.error('Error fetching user stats:', error);
+        return {
+          leadsCreated: 0,
+          dealsCompleted: 0,
+          activitiesLogged: 0,
+          propertiesAdded: 0,
+          loginStreak: 0,
+          totalLogins: 0
+        };
+      }
     }
   });
 
@@ -241,7 +282,7 @@ export default function Profile() {
                   <Camera className="h-3 w-3" />
                 </Button>
               </div>
-              
+
               <div className="flex-1">
                 <div className="flex items-center space-x-3">
                   <h2 className="text-2xl font-bold text-gray-900">
@@ -255,7 +296,7 @@ export default function Profile() {
                 {currentUser?.bio && (
                   <p className="text-gray-700 mt-2">{currentUser?.bio}</p>
                 )}
-                
+
                 <div className="flex items-center space-x-4 mt-3 text-sm text-gray-500">
                   {currentUser?.company && (
                     <div className="flex items-center">
@@ -275,7 +316,7 @@ export default function Profile() {
                   )}
                 </div>
               </div>
-              
+
               <div className="text-right">
                 <Button
                   onClick={() => setIsEditing(!isEditing)}
@@ -385,7 +426,7 @@ export default function Profile() {
                     <Input
                       id="firstName"
                       value={profileData.firstName}
-                      onChange={(e) => setProfileData({...profileData, firstName: e.target.value})}
+                      onChange={(e) => setProfileData({ ...profileData, firstName: e.target.value })}
                       disabled={!isEditing}
                       className={!isEditing ? 'bg-gray-50' : ''}
                     />
@@ -395,7 +436,7 @@ export default function Profile() {
                     <Input
                       id="lastName"
                       value={profileData.lastName}
-                      onChange={(e) => setProfileData({...profileData, lastName: e.target.value})}
+                      onChange={(e) => setProfileData({ ...profileData, lastName: e.target.value })}
                       disabled={!isEditing}
                       className={!isEditing ? 'bg-gray-50' : ''}
                     />
@@ -411,7 +452,7 @@ export default function Profile() {
                         id="email"
                         type="email"
                         value={profileData.email}
-                        onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                        onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
                         disabled={!isEditing}
                         className={`pr-9 ${!isEditing ? 'bg-gray-50' : ''}`}
                       />
@@ -425,7 +466,7 @@ export default function Profile() {
                         id="phone"
                         type="tel"
                         value={profileData.phone}
-                        onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                        onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
                         disabled={!isEditing}
                         className={`pr-9 ${!isEditing ? 'bg-gray-50' : ''}`}
                       />
@@ -438,7 +479,7 @@ export default function Profile() {
                   <Textarea
                     id="bio"
                     value={profileData.bio}
-                    onChange={(e) => setProfileData({...profileData, bio: e.target.value})}
+                    onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
                     disabled={!isEditing}
                     className={!isEditing ? 'bg-gray-50' : ''}
                     rows={4}
@@ -453,12 +494,12 @@ export default function Profile() {
           <TabsContent value="security">
             <div className="space-y-6">
               <Card>
-                              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Key className="ml-2 h-5 w-5" />
-                  {t('profile.changePassword')}
-                </CardTitle>
-              </CardHeader>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Key className="ml-2 h-5 w-5" />
+                    {t('profile.changePassword')}
+                  </CardTitle>
+                </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
                     <Label htmlFor="currentPassword">{t('profile.currentPassword')}</Label>
@@ -467,7 +508,7 @@ export default function Profile() {
                         id="currentPassword"
                         type={showCurrentPassword ? "text" : "password"}
                         value={passwordData.currentPassword}
-                        onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                        onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                         className="pr-9"
                       />
                       <Button
@@ -493,7 +534,7 @@ export default function Profile() {
                         id="newPassword"
                         type={showNewPassword ? "text" : "password"}
                         value={passwordData.newPassword}
-                        onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                         className="pr-9"
                       />
                       <Button
@@ -528,7 +569,7 @@ export default function Profile() {
                         id="confirmPassword"
                         type={showConfirmPassword ? "text" : "password"}
                         value={passwordData.confirmPassword}
-                        onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                        onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
                         className="pr-9"
                       />
                       <Button
@@ -655,50 +696,55 @@ export default function Profile() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {/* Mock recent activity */}
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center">
-                      <Target className="h-5 w-5 text-green-500 mr-3" />
-                      <div>
-                        <div className="font-medium text-sm">{t('profile.activities.leadCreated')}</div>
-                        <div className="text-xs text-gray-500">أحمد محمد - شقة في القاهرة الجديدة</div>
-                      </div>
-                    </div>
-                    <div className="text-xs text-gray-500">{t('profile.activities.hoursAgo')}</div>
-                  </div>
+                  {recentActivities && recentActivities.length > 0 ? (
+                    recentActivities.map((activity, index) => {
+                      const getActivityIcon = (type: string) => {
+                        switch (type) {
+                          case 'call': return <Phone className="h-5 w-5 text-blue-500 mr-3" />;
+                          case 'email': return <Mail className="h-5 w-5 text-green-500 mr-3" />;
+                          case 'meeting': return <Calendar className="h-5 w-5 text-purple-500 mr-3" />;
+                          case 'whatsapp': return <MessageSquare className="h-5 w-5 text-green-500 mr-3" />;
+                          case 'note': return <FileText className="h-5 w-5 text-gray-500 mr-3" />;
+                          default: return <Activity className="h-5 w-5 text-blue-500 mr-3" />;
+                        }
+                      };
 
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center">
-                      <FileText className="h-5 w-5 text-blue-500 mr-3" />
-                      <div>
-                        <div className="font-medium text-sm">{t('profile.activities.dealCompleted')}</div>
-                        <div className="text-xs text-gray-500">شقة في الشيخ زايد - $250,000</div>
-                      </div>
-                    </div>
-                    <div className="text-xs text-gray-500">{t('profile.activities.yesterday')}</div>
-                  </div>
+                      const formatActivityTime = (dateString: string) => {
+                        const date = new Date(dateString);
+                        const now = new Date();
+                        const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
 
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center">
-                      <Building className="h-5 w-5 text-purple-500 mr-3" />
-                      <div>
-                        <div className="font-medium text-sm">{t('profile.activities.propertyAdded')}</div>
-                        <div className="text-xs text-gray-500">فيلا في التجمع الخامس</div>
-                      </div>
-                    </div>
-                    <div className="text-xs text-gray-500">{t('profile.activities.daysAgo')}</div>
-                  </div>
+                        if (diffInHours < 1) return t('profile.activities.justNow');
+                        if (diffInHours < 24) return `${diffInHours} ${t('profile.activities.hoursAgo')}`;
+                        if (diffInHours < 168) return `${Math.floor(diffInHours / 24)} ${t('profile.activities.daysAgo')}`;
+                        return date.toLocaleDateString('ar-SA');
+                      };
 
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center">
-                      <User className="h-5 w-5 text-gray-500 mr-3" />
-                      <div>
-                        <div className="font-medium text-sm">{t('profile.activities.profileUpdated')}</div>
-                        <div className="text-xs text-gray-500">تغيير معلومات الاتصال</div>
-                      </div>
+                      return (
+                        <div key={activity.id || index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center">
+                            {getActivityIcon(activity.type)}
+                            <div>
+                              <div className="font-medium text-sm">
+                                {activity.subject || activity.title || t('activities.types.' + activity.type)}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {activity.description || activity.outcome || t('hardcoded.undefined')}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {formatActivityTime(activity.created_at || activity.activity_date)}
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Activity className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
+                      <p>{t('activities.messages.noActivities') || 'لا توجد أنشطة حديثة'}</p>
                     </div>
-                    <div className="text-xs text-gray-500">{t('profile.activities.weekAgo')}</div>
-                  </div>
+                  )}
                 </div>
 
                 <div className="mt-6 text-center">

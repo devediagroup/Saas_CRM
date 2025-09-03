@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const { sub: userId, companyId } = payload;
 
     // Get user with company relation
-    const user = await this.usersService.findOne(userId);
+    const user = await this.usersService.findOne(userId, userId);
 
     if (!user) {
       throw new UnauthorizedException('User not found');

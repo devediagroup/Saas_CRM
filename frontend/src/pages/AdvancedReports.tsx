@@ -49,6 +49,8 @@ import { toast } from "sonner";
 const AdvancedReports = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [selectedReportType, setSelectedReportType] = useState("sales");
+  const [selectedDeveloper, setSelectedDeveloper] = useState<string>("all");
+  const [selectedProject, setSelectedProject] = useState<string>("all");
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
   const { t } = useTranslation();
@@ -226,6 +228,28 @@ const AdvancedReports = () => {
               <SelectItem value="deals">{t('reports.filters.types.deals')}</SelectItem>
               <SelectItem value="marketing">{t('reports.filters.types.marketing')}</SelectItem>
               <SelectItem value="performance">{t('reports.filters.types.performance')}</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={selectedDeveloper} onValueChange={setSelectedDeveloper}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder={t('reports.filters.developerPlaceholder')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('reports.filters.allDevelopers')}</SelectItem>
+              <SelectItem value="dev1">Developer 1</SelectItem>
+              <SelectItem value="dev2">Developer 2</SelectItem>
+              <SelectItem value="dev3">Developer 3</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={selectedProject} onValueChange={setSelectedProject}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder={t('reports.filters.projectPlaceholder')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('reports.filters.allProjects')}</SelectItem>
+              <SelectItem value="proj1">Project A</SelectItem>
+              <SelectItem value="proj2">Project B</SelectItem>
+              <SelectItem value="proj3">Project C</SelectItem>
             </SelectContent>
           </Select>
         </div>

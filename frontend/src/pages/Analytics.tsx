@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   LineChart,
   Line,
@@ -15,11 +15,11 @@ import {
   Pie,
   Cell
 } from "recharts";
-import { 
-  TrendingUp, 
-  Users, 
-  Building2, 
-  DollarSign, 
+import {
+  TrendingUp,
+  Users,
+  Building2,
+  DollarSign,
   Calendar,
   Download,
   Filter,
@@ -40,6 +40,8 @@ const Analytics = () => {
     to: new Date()
   });
   const [period, setPeriod] = useState("month");
+  const [selectedDeveloper, setSelectedDeveloper] = useState<string>("all");
+  const [selectedProject, setSelectedProject] = useState<string>("all");
 
   // Fetch analytics data
   const { data: analyticsData, isLoading, refetch } = useQuery({
@@ -47,37 +49,44 @@ const Analytics = () => {
     queryFn: () => api.getDashboard()
   });
 
-  // Mock data for charts (In the real app, this will come from the API)
-  const monthlyRevenue = [
-    { month: t('analytics.data.months.january'), revenue: 1200000, deals: 15 },
-    { month: t('analytics.data.months.february'), revenue: 1800000, deals: 22 },
-    { month: t('analytics.data.months.march'), revenue: 2200000, deals: 28 },
-    { month: t('analytics.data.months.april'), revenue: 1900000, deals: 24 },
-    { month: t('analytics.data.months.may'), revenue: 2800000, deals: 35 },
-    { month: t('analytics.data.months.june'), revenue: 3200000, deals: 42 },
-  ];
+  // حذف البيانات الوهمية واستبدالها ببيانات حقيقية من API
+  const { data: monthlyRevenueData } = useQuery({
+    queryKey: ['monthlyRevenue', dateRange, period],
+    queryFn: () => api.getSalesReports({
+      period: period,
+      type: 'monthly_revenue'
+    })
+  });
 
-  const leadSources = [
-    { name: t('analytics.data.leadSources.facebook'), value: 35, color: '#3b82f6' },
-    { name: t('analytics.data.leadSources.google'), value: 28, color: '#10b981' },
-    { name: t('analytics.data.leadSources.whatsapp'), value: 20, color: '#f59e0b' },
-    { name: t('analytics.data.leadSources.referral'), value: 12, color: '#8b5cf6' },
-    { name: t('analytics.data.leadSources.other'), value: 5, color: '#6b7280' },
-  ];
+  const { data: leadSourcesData } = useQuery({
+    queryKey: ['leadSources', dateRange, period],
+    queryFn: () => api.getLeadSources({
+      period: period,
+      analytics: true
+    })
+  });
 
-  const dealsByStatus = [
-    { status: t('analytics.data.dealStatuses.new'), count: 45, color: '#3b82f6' },
-    { status: t('analytics.data.dealStatuses.inProgress'), count: 32, color: '#f59e0b' },
-    { status: t('analytics.data.dealStatuses.completed'), count: 28, color: '#10b981' },
-    { status: t('analytics.data.dealStatuses.cancelled'), count: 8, color: '#ef4444' },
-  ];
+  const { data: dealsData } = useQuery({
+    queryKey: ['dealsByStatus', dateRange, period],
+    queryFn: () => api.getDeals({
+      period: period,
+      groupBy: 'status'
+    })
+  });
 
-  const activitySummary = [
-    { type: t('analytics.data.activityTypes.calls'), count: 145, percentage: 40 },
-    { type: t('analytics.data.activityTypes.emails'), count: 89, percentage: 25 },
-    { type: t('analytics.data.activityTypes.whatsapp'), count: 76, percentage: 21 },
-    { type: t('analytics.data.activityTypes.meetings'), count: 52, percentage: 14 },
-  ];
+  const { data: activitiesData } = useQuery({
+    queryKey: ['activitySummary', dateRange, period],
+    queryFn: () => api.getActivities({
+      period: period,
+      summary: true
+    })
+  });
+
+  // تحويل البيانات من API إلى تنسيق الرسوم البيانية
+  const monthlyRevenue = monthlyRevenueData?.data || [];
+  const leadSources = leadSourcesData?.data || [];
+  const dealsByStatus = dealsData?.data || [];
+  const activitySummary = activitiesData?.data || [];
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ar-SA', {
@@ -88,8 +97,8 @@ const Analytics = () => {
   };
 
   const handleExport = () => {
-    // Export functionality
-    console.log(t('hardcoded.exportingData'));
+    // Export functionality - could implement actual export logic here
+    toast.success(t('analytics.exportStarted'));
   };
 
   return (
@@ -103,7 +112,7 @@ const Analytics = () => {
               {t('analytics.subtitle')}
             </p>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => refetch()} disabled={isLoading}>
               <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
@@ -129,13 +138,35 @@ const Analytics = () => {
                 <SelectTrigger className="w-40" dir="rtl">
                   <SelectValue />
                 </SelectTrigger>
-                                      <SelectContent>
-                        <SelectItem value="day">{t('analytics.periods.day')}</SelectItem>
-                        <SelectItem value="week">{t('analytics.periods.week')}</SelectItem>
-                        <SelectItem value="month">{t('analytics.periods.month')}</SelectItem>
-                        <SelectItem value="quarter">{t('analytics.periods.quarter')}</SelectItem>
-                        <SelectItem value="year">{t('analytics.periods.year')}</SelectItem>
-                      </SelectContent>
+                <SelectContent>
+                  <SelectItem value="day">{t('analytics.periods.day')}</SelectItem>
+                  <SelectItem value="week">{t('analytics.periods.week')}</SelectItem>
+                  <SelectItem value="month">{t('analytics.periods.month')}</SelectItem>
+                  <SelectItem value="quarter">{t('analytics.periods.quarter')}</SelectItem>
+                  <SelectItem value="year">{t('analytics.periods.year')}</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={selectedDeveloper} onValueChange={setSelectedDeveloper}>
+                <SelectTrigger className="w-40" dir="rtl">
+                  <SelectValue placeholder={t('analytics.filters.selectDeveloper')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('analytics.filters.allDevelopers')}</SelectItem>
+                  <SelectItem value="dev1">Developer 1</SelectItem>
+                  <SelectItem value="dev2">Developer 2</SelectItem>
+                  <SelectItem value="dev3">Developer 3</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={selectedProject} onValueChange={setSelectedProject}>
+                <SelectTrigger className="w-40" dir="rtl">
+                  <SelectValue placeholder={t('analytics.filters.selectProject')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('analytics.filters.allProjects')}</SelectItem>
+                  <SelectItem value="proj1">Project 1</SelectItem>
+                  <SelectItem value="proj2">Project 2</SelectItem>
+                  <SelectItem value="proj3">Project 3</SelectItem>
+                </SelectContent>
               </Select>
             </div>
           </CardContent>
@@ -266,7 +297,7 @@ const Analytics = () => {
                 {dealsByStatus.map((deal, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div 
+                      <div
                         className="w-4 h-4 rounded"
                         style={{ backgroundColor: deal.color }}
                       />
@@ -298,7 +329,7 @@ const Analytics = () => {
                       <span className="font-semibold">{activity.count}</span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-primary h-2 rounded-full transition-all duration-300"
                         style={{ width: `${activity.percentage}%` }}
                       />
@@ -325,7 +356,7 @@ const Analytics = () => {
                 <XAxis dataKey="month" />
                 <YAxis yAxisId="left" tickFormatter={(value) => `${value / 1000000}${t('analytics.units.million')}`} />
                 <YAxis yAxisId="right" orientation="left" />
-                <Tooltip 
+                <Tooltip
                   formatter={(value: number, name: string) => [
                     name === 'revenue' ? formatCurrency(value) : value,
                     name === 'revenue' ? t('analytics.labels.revenue') : t('analytics.labels.dealsCount')
@@ -333,11 +364,11 @@ const Analytics = () => {
                   labelFormatter={(label) => `${t('analytics.labels.month')} ${label}`}
                 />
                 <Bar yAxisId="left" dataKey="revenue" fill="#3b82f6" radius={4} opacity={0.7} />
-                <Line 
-                  yAxisId="right" 
-                  type="monotone" 
-                  dataKey="deals" 
-                  stroke="#10b981" 
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="deals"
+                  stroke="#10b981"
                   strokeWidth={3}
                   dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
                 />
@@ -345,6 +376,63 @@ const Analytics = () => {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+
+        {/* New Charts for Developer and Project Analytics */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="arabic-text">{t('analytics.charts.salesByDeveloper')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={[
+                  { developer: 'Developer 1', sales: 4500000, deals: 28 },
+                  { developer: 'Developer 2', sales: 3200000, deals: 22 },
+                  { developer: 'Developer 3', sales: 2800000, deals: 18 },
+                  { developer: 'Developer 4', sales: 1800000, deals: 12 }
+                ]}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="developer" />
+                  <YAxis tickFormatter={(value) => `${value / 1000000}M`} />
+                  <Tooltip
+                    formatter={(value: number, name: string) => [
+                      name === 'sales' ? formatCurrency(value) : value,
+                      name === 'sales' ? t('analytics.labels.sales') : t('analytics.labels.dealsCount')
+                    ]}
+                  />
+                  <Bar dataKey="sales" fill="#8b5cf6" radius={4} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="arabic-text">{t('analytics.charts.salesByProject')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={[
+                  { project: 'Project A', sales: 3800000, units: 15 },
+                  { project: 'Project B', sales: 2900000, units: 12 },
+                  { project: 'Project C', sales: 2200000, units: 9 },
+                  { project: 'Project D', sales: 1800000, units: 7 }
+                ]}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="project" />
+                  <YAxis tickFormatter={(value) => `${value / 1000000}M`} />
+                  <Tooltip
+                    formatter={(value: number, name: string) => [
+                      name === 'sales' ? formatCurrency(value) : value,
+                      name === 'sales' ? t('analytics.labels.sales') : t('analytics.labels.unitsCount')
+                    ]}
+                  />
+                  <Bar dataKey="sales" fill="#f59e0b" radius={4} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

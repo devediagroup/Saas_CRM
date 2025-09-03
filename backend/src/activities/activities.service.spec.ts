@@ -2,7 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ActivitiesService } from './activities.service';
-import { Activity, ActivityType, ActivityStatus, ActivityPriority } from './entities/activity.entity';
+import {
+  Activity,
+  ActivityType,
+  ActivityStatus,
+  ActivityPriority,
+} from './entities/activity.entity';
 
 describe('ActivitiesService', () => {
   let service: ActivitiesService;
@@ -115,7 +120,9 @@ describe('ActivitiesService', () => {
     it('should throw NotFoundException when activity not found', async () => {
       mockRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne('nonexistent-id')).rejects.toThrow('Activity with ID nonexistent-id not found');
+      await expect(service.findOne('nonexistent-id')).rejects.toThrow(
+        'Activity with ID nonexistent-id not found',
+      );
     });
   });
 
@@ -142,7 +149,7 @@ describe('ActivitiesService', () => {
       const completedActivity = {
         ...mockActivity,
         ...updateDto,
-        completed_at: new Date()
+        completed_at: new Date(),
       };
 
       mockRepository.findOne.mockResolvedValue(mockActivity);
@@ -154,7 +161,7 @@ describe('ActivitiesService', () => {
         expect.objectContaining({
           status: ActivityStatus.COMPLETED,
           completed_at: expect.any(Date),
-        })
+        }),
       );
     });
   });
@@ -178,7 +185,10 @@ describe('ActivitiesService', () => {
     it('should return activities by status', async () => {
       mockRepository.find.mockResolvedValue([mockActivity]);
 
-      const result = await service.getActivitiesByStatus('company-id', ActivityStatus.SCHEDULED);
+      const result = await service.getActivitiesByStatus(
+        'company-id',
+        ActivityStatus.SCHEDULED,
+      );
 
       expect(mockRepository.find).toHaveBeenCalledWith({
         where: {
@@ -195,7 +205,10 @@ describe('ActivitiesService', () => {
     it('should return activities by type', async () => {
       mockRepository.find.mockResolvedValue([mockActivity]);
 
-      const result = await service.getActivitiesByType('company-id', ActivityType.MEETING);
+      const result = await service.getActivitiesByType(
+        'company-id',
+        ActivityType.MEETING,
+      );
 
       expect(mockRepository.find).toHaveBeenCalledWith({
         where: {
@@ -238,7 +251,11 @@ describe('ActivitiesService', () => {
       mockRepository.findOne.mockResolvedValue(mockActivity);
       mockRepository.save.mockResolvedValue(completedActivity);
 
-      const result = await service.completeActivity('test-id', 'Successfully completed', 'Good meeting');
+      const result = await service.completeActivity(
+        'test-id',
+        'Successfully completed',
+        'Good meeting',
+      );
 
       expect(mockRepository.findOne).toHaveBeenCalledWith({
         where: { id: 'test-id' },
@@ -250,7 +267,7 @@ describe('ActivitiesService', () => {
           outcome: 'Successfully completed',
           notes: 'Good meeting',
           completed_at: expect.any(Date),
-        })
+        }),
       );
       expect(result).toEqual(completedActivity);
     });
@@ -267,13 +284,16 @@ describe('ActivitiesService', () => {
       mockRepository.findOne.mockResolvedValue(mockActivity);
       mockRepository.save.mockResolvedValue(cancelledActivity);
 
-      const result = await service.cancelActivity('test-id', 'Meeting cancelled due to illness');
+      const result = await service.cancelActivity(
+        'test-id',
+        'Meeting cancelled due to illness',
+      );
 
       expect(mockRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
           status: ActivityStatus.CANCELLED,
           notes: 'Meeting cancelled due to illness',
-        })
+        }),
       );
       expect(result).toEqual(cancelledActivity);
     });
@@ -292,14 +312,18 @@ describe('ActivitiesService', () => {
       mockRepository.findOne.mockResolvedValue(mockActivity);
       mockRepository.save.mockResolvedValue(postponedActivity);
 
-      const result = await service.postponeActivity('test-id', newScheduledAt, 'Postponed due to scheduling conflict');
+      const result = await service.postponeActivity(
+        'test-id',
+        newScheduledAt,
+        'Postponed due to scheduling conflict',
+      );
 
       expect(mockRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
           status: ActivityStatus.POSTPONED,
           scheduled_at: newScheduledAt,
           notes: 'Postponed due to scheduling conflict',
-        })
+        }),
       );
       expect(result).toEqual(postponedActivity);
     });
@@ -307,7 +331,10 @@ describe('ActivitiesService', () => {
 
   describe('getOverdueActivities', () => {
     it('should return overdue activities', async () => {
-      const overdueActivity = { ...mockActivity, scheduled_at: new Date(Date.now() - 86400000) };
+      const overdueActivity = {
+        ...mockActivity,
+        scheduled_at: new Date(Date.now() - 86400000),
+      };
       const mockQueryBuilder = {
         where: jest.fn().mockReturnThis(),
         andWhere: jest.fn().mockReturnThis(),
@@ -320,14 +347,19 @@ describe('ActivitiesService', () => {
 
       const result = await service.getOverdueActivities('company-id');
 
-      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith('activity');
+      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith(
+        'activity',
+      );
       expect(result).toEqual([overdueActivity]);
     });
   });
 
   describe('getUpcomingActivities', () => {
     it('should return upcoming activities', async () => {
-      const upcomingActivity = { ...mockActivity, scheduled_at: new Date(Date.now() + 3600000) };
+      const upcomingActivity = {
+        ...mockActivity,
+        scheduled_at: new Date(Date.now() + 3600000),
+      };
       const mockQueryBuilder = {
         where: jest.fn().mockReturnThis(),
         andWhere: jest.fn().mockReturnThis(),
@@ -340,13 +372,15 @@ describe('ActivitiesService', () => {
 
       const result = await service.getUpcomingActivities('company-id', 24);
 
-      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith('activity');
+      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith(
+        'activity',
+      );
       expect(result).toEqual([upcomingActivity]);
     });
   });
 
   describe('getTodaysActivities', () => {
-    it('should return today\'s activities', async () => {
+    it("should return today's activities", async () => {
       const todaysActivity = { ...mockActivity, scheduled_at: new Date() };
       const mockQueryBuilder = {
         getMany: jest.fn().mockResolvedValue([todaysActivity]),
@@ -371,13 +405,21 @@ describe('ActivitiesService', () => {
 
       mockRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
 
-      const result = await service.searchActivities('company-id', 'test search');
+      const result = await service.searchActivities(
+        'company-id',
+        'test search',
+      );
 
-      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith('activity');
-      expect(mockQueryBuilder.where).toHaveBeenCalledWith('activity.company_id = :companyId', { companyId: 'company-id' });
+      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith(
+        'activity',
+      );
+      expect(mockQueryBuilder.where).toHaveBeenCalledWith(
+        'activity.company_id = :companyId',
+        { companyId: 'company-id' },
+      );
       expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
         '(activity.title LIKE :search OR activity.description LIKE :search OR activity.outcome LIKE :search OR activity.notes LIKE :search)',
-        { search: '%test search%' }
+        { search: '%test search%' },
       );
       expect(result).toEqual([mockActivity]);
     });
@@ -393,7 +435,9 @@ describe('ActivitiesService', () => {
 
       const result = await service.getCalendarView('company-id', 12, 2024);
 
-      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith('activity');
+      expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith(
+        'activity',
+      );
       expect(result).toEqual({
         [mockActivity.scheduled_at.toISOString().split('T')[0]]: [mockActivity],
       });
@@ -403,8 +447,17 @@ describe('ActivitiesService', () => {
   describe('getActivityStats', () => {
     it('should return activity statistics', async () => {
       const activities = [
-        { ...mockActivity, status: ActivityStatus.COMPLETED, type: ActivityType.MEETING, duration_minutes: 60 },
-        { ...mockActivity, status: ActivityStatus.SCHEDULED, type: ActivityType.CALL },
+        {
+          ...mockActivity,
+          status: ActivityStatus.COMPLETED,
+          type: ActivityType.MEETING,
+          duration_minutes: 60,
+        },
+        {
+          ...mockActivity,
+          status: ActivityStatus.SCHEDULED,
+          type: ActivityType.CALL,
+        },
       ];
 
       mockRepository.find.mockResolvedValue(activities);

@@ -33,9 +33,9 @@ const CarouselContext = React.createContext<CarouselContextProps | null>(null)
 
 function useCarousel() {
   const context = React.useContext(CarouselContext)
+  const { t } = useTranslation()
 
   if (!context) {
-    const { t } = useTranslation()
     throw new Error(t('hardcoded.useCarouselError'))
   }
 

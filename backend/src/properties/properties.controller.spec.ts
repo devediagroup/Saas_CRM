@@ -1,7 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PropertiesController } from './properties.controller';
 import { PropertiesService } from './properties.service';
-import { Property, PropertyType, PropertyStatus, ListingType } from './entities/property.entity';
+import {
+  Property,
+  PropertyType,
+  PropertyStatus,
+  ListingType,
+} from './entities/property.entity';
 
 describe('PropertiesController', () => {
   let controller: PropertiesController;
@@ -110,38 +115,79 @@ describe('PropertiesController', () => {
     });
 
     it('should return properties by status', async () => {
-      mockPropertiesService.getPropertiesByStatus.mockResolvedValue([mockProperty]);
+      mockPropertiesService.getPropertiesByStatus.mockResolvedValue([
+        mockProperty,
+      ]);
 
-      const result = await controller.findAll('company-id', PropertyStatus.AVAILABLE);
+      const result = await controller.findAll(
+        'company-id',
+        PropertyStatus.AVAILABLE,
+      );
 
-      expect(mockPropertiesService.getPropertiesByStatus).toHaveBeenCalledWith('company-id', PropertyStatus.AVAILABLE);
+      expect(mockPropertiesService.getPropertiesByStatus).toHaveBeenCalledWith(
+        'company-id',
+        PropertyStatus.AVAILABLE,
+      );
       expect(result).toEqual([mockProperty]);
     });
 
     it('should return properties by type', async () => {
-      mockPropertiesService.getPropertiesByType.mockResolvedValue([mockProperty]);
+      mockPropertiesService.getPropertiesByType.mockResolvedValue([
+        mockProperty,
+      ]);
 
-      const result = await controller.findAll('company-id', undefined, PropertyType.APARTMENT);
+      const result = await controller.findAll(
+        'company-id',
+        undefined,
+        PropertyType.APARTMENT,
+      );
 
-      expect(mockPropertiesService.getPropertiesByType).toHaveBeenCalledWith('company-id', PropertyType.APARTMENT);
+      expect(mockPropertiesService.getPropertiesByType).toHaveBeenCalledWith(
+        'company-id',
+        PropertyType.APARTMENT,
+      );
       expect(result).toEqual([mockProperty]);
     });
 
     it('should return featured properties', async () => {
-      mockPropertiesService.getFeaturedProperties.mockResolvedValue([mockProperty]);
+      mockPropertiesService.getFeaturedProperties.mockResolvedValue([
+        mockProperty,
+      ]);
 
-      const result = await controller.findAll('company-id', undefined, undefined, ListingType.SALE, 'true');
+      const result = await controller.findAll(
+        'company-id',
+        undefined,
+        undefined,
+        ListingType.SALE,
+        'true',
+      );
 
-      expect(mockPropertiesService.getFeaturedProperties).toHaveBeenCalledWith('company-id');
+      expect(mockPropertiesService.getFeaturedProperties).toHaveBeenCalledWith(
+        'company-id',
+      );
       expect(result).toEqual([mockProperty]);
     });
 
     it('should search properties', async () => {
       mockPropertiesService.searchProperties.mockResolvedValue([mockProperty]);
 
-      const result = await controller.findAll('company-id', undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 'test search');
+      const result = await controller.findAll(
+        'company-id',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        'test search',
+      );
 
-      expect(mockPropertiesService.searchProperties).toHaveBeenCalledWith('company-id', 'test search');
+      expect(mockPropertiesService.searchProperties).toHaveBeenCalledWith(
+        'company-id',
+        'test search',
+      );
       expect(result).toEqual([mockProperty]);
     });
   });
@@ -166,7 +212,10 @@ describe('PropertiesController', () => {
 
       const result = await controller.update('test-id', updateDto);
 
-      expect(mockPropertiesService.update).toHaveBeenCalledWith('test-id', updateDto);
+      expect(mockPropertiesService.update).toHaveBeenCalledWith(
+        'test-id',
+        updateDto,
+      );
       expect(result).toEqual(updatedProperty);
     });
   });
@@ -198,7 +247,9 @@ describe('PropertiesController', () => {
 
       const result = await controller.getPropertyStats('company-id');
 
-      expect(mockPropertiesService.getPropertyStats).toHaveBeenCalledWith('company-id');
+      expect(mockPropertiesService.getPropertyStats).toHaveBeenCalledWith(
+        'company-id',
+      );
       expect(result).toEqual(stats);
     });
   });
@@ -207,11 +258,18 @@ describe('PropertiesController', () => {
     it('should update property status', async () => {
       const updatedProperty = { ...mockProperty, status: PropertyStatus.SOLD };
 
-      mockPropertiesService.updatePropertyStatus.mockResolvedValue(updatedProperty);
+      mockPropertiesService.updatePropertyStatus.mockResolvedValue(
+        updatedProperty,
+      );
 
-      const result = await controller.updateStatus('test-id', { status: PropertyStatus.SOLD });
+      const result = await controller.updateStatus('test-id', {
+        status: PropertyStatus.SOLD,
+      });
 
-      expect(mockPropertiesService.updatePropertyStatus).toHaveBeenCalledWith('test-id', PropertyStatus.SOLD);
+      expect(mockPropertiesService.updatePropertyStatus).toHaveBeenCalledWith(
+        'test-id',
+        PropertyStatus.SOLD,
+      );
       expect(result).toEqual(updatedProperty);
     });
   });
@@ -220,11 +278,15 @@ describe('PropertiesController', () => {
     it('should increment property view count', async () => {
       const updatedProperty = { ...mockProperty, view_count: 1 };
 
-      mockPropertiesService.incrementViewCount.mockResolvedValue(updatedProperty);
+      mockPropertiesService.incrementViewCount.mockResolvedValue(
+        updatedProperty,
+      );
 
       const result = await controller.incrementView('test-id');
 
-      expect(mockPropertiesService.incrementViewCount).toHaveBeenCalledWith('test-id');
+      expect(mockPropertiesService.incrementViewCount).toHaveBeenCalledWith(
+        'test-id',
+      );
       expect(result).toEqual(updatedProperty);
     });
   });
@@ -233,11 +295,15 @@ describe('PropertiesController', () => {
     it('should increment property inquiry count', async () => {
       const updatedProperty = { ...mockProperty, inquiry_count: 1 };
 
-      mockPropertiesService.incrementInquiryCount.mockResolvedValue(updatedProperty);
+      mockPropertiesService.incrementInquiryCount.mockResolvedValue(
+        updatedProperty,
+      );
 
       const result = await controller.incrementInquiry('test-id');
 
-      expect(mockPropertiesService.incrementInquiryCount).toHaveBeenCalledWith('test-id');
+      expect(mockPropertiesService.incrementInquiryCount).toHaveBeenCalledWith(
+        'test-id',
+      );
       expect(result).toEqual(updatedProperty);
     });
   });

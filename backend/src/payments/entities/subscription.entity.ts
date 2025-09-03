@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 
 export enum SubscriptionStatus {
@@ -86,7 +94,10 @@ export class Subscription {
 
   // Virtual fields
   get is_active(): boolean {
-    return this.status === SubscriptionStatus.ACTIVE || this.status === SubscriptionStatus.TRIALING;
+    return (
+      this.status === SubscriptionStatus.ACTIVE ||
+      this.status === SubscriptionStatus.TRIALING
+    );
   }
 
   get is_trial(): boolean {

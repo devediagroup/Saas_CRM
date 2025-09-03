@@ -1,22 +1,45 @@
-import { Controller, Post, Get, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { PaymentsService } from './payments.service';
-import type { CreatePaymentIntentDto, CreateSubscriptionDto } from './payments.service';
+import type {
+  CreatePaymentIntentDto,
+  CreateSubscriptionDto,
+} from './payments.service';
 import { Payment } from './entities/payment.entity';
 import { Subscription } from './entities/subscription.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { Permissions } from '../auth/decorators/permissions.decorator';
 import { User } from '../auth/decorators/user.decorator';
 
 @ApiTags('Payments & Subscriptions')
 @Controller('payments')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Post('create-payment-intent')
+  @Permissions('payments.create')
   @ApiOperation({ summary: 'Create payment intent' })
-  @ApiResponse({ status: 200, description: 'Payment intent created successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Payment intent created successfully',
+  })
   async createPaymentIntent(
     @Body() paymentData: CreatePaymentIntentDto,
     @User('companyId') companyId: string,
@@ -28,6 +51,7 @@ export class PaymentsController {
   }
 
   @Post('confirm-payment/:paymentIntentId')
+  @Permissions('payments.update')
   @ApiOperation({ summary: 'Confirm payment' })
   @ApiResponse({ status: 200, description: 'Payment confirmed successfully' })
   async confirmPayment(
@@ -37,8 +61,12 @@ export class PaymentsController {
   }
 
   @Post('create-subscription')
+  @Permissions('payments.create')
   @ApiOperation({ summary: 'Create subscription' })
-  @ApiResponse({ status: 200, description: 'Subscription created successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Subscription created successfully',
+  })
   async createSubscription(
     @Body() subscriptionData: CreateSubscriptionDto,
   ): Promise<any> {
@@ -46,8 +74,12 @@ export class PaymentsController {
   }
 
   @Post('cancel-subscription/:subscriptionId')
+  @Permissions('payments.update')
   @ApiOperation({ summary: 'Cancel subscription' })
-  @ApiResponse({ status: 200, description: 'Subscription cancelled successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Subscription cancelled successfully',
+  })
   async cancelSubscription(
     @Param('subscriptionId') subscriptionId: string,
   ): Promise<any> {
@@ -55,8 +87,12 @@ export class PaymentsController {
   }
 
   @Post('reactivate-subscription/:subscriptionId')
+  @Permissions('payments.update')
   @ApiOperation({ summary: 'Reactivate subscription' })
-  @ApiResponse({ status: 200, description: 'Subscription reactivated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Subscription reactivated successfully',
+  })
   async reactivateSubscription(
     @Param('subscriptionId') subscriptionId: string,
   ): Promise<any> {
@@ -64,8 +100,12 @@ export class PaymentsController {
   }
 
   @Get('subscription/:subscriptionId')
+  @Permissions('payments.read')
   @ApiOperation({ summary: 'Get subscription details' })
-  @ApiResponse({ status: 200, description: 'Subscription details retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Subscription details retrieved successfully',
+  })
   async getSubscriptionDetails(
     @Param('subscriptionId') subscriptionId: string,
   ): Promise<any> {
@@ -73,6 +113,7 @@ export class PaymentsController {
   }
 
   @Get('plans')
+  @Permissions('payments.read')
   @ApiOperation({ summary: 'Get available subscription plans' })
   @ApiResponse({ status: 200, description: 'Plans retrieved successfully' })
   async getAvailablePlans(): Promise<any> {
@@ -80,16 +121,30 @@ export class PaymentsController {
   }
 
   @Get('history/payments')
+  @Permissions('payments.read')
   @ApiOperation({ summary: 'Get payment history' })
-  @ApiResponse({ status: 200, description: 'Payment history retrieved successfully', type: [Payment] })
-  async getPaymentHistory(@User('companyId') companyId: string): Promise<Payment[]> {
+  @ApiResponse({
+    status: 200,
+    description: 'Payment history retrieved successfully',
+    type: [Payment],
+  })
+  async getPaymentHistory(
+    @User('companyId') companyId: string,
+  ): Promise<Payment[]> {
     return this.paymentsService.getPaymentHistory(companyId);
   }
 
   @Get('history/subscriptions')
+  @Permissions('payments.read')
   @ApiOperation({ summary: 'Get subscription history' })
-  @ApiResponse({ status: 200, description: 'Subscription history retrieved successfully', type: [Subscription] })
-  async getSubscriptionHistory(@User('companyId') companyId: string): Promise<Subscription[]> {
+  @ApiResponse({
+    status: 200,
+    description: 'Subscription history retrieved successfully',
+    type: [Subscription],
+  })
+  async getSubscriptionHistory(
+    @User('companyId') companyId: string,
+  ): Promise<Subscription[]> {
     return this.paymentsService.getSubscriptionHistory(companyId);
   }
 
@@ -112,18 +167,29 @@ export class PaymentsController {
 
   @Get('analytics')
   @ApiOperation({ summary: 'Get payment analytics' })
-  @ApiResponse({ status: 200, description: 'Payment analytics retrieved successfully' })
-  async getPaymentAnalytics(@User('companyId') companyId: string): Promise<any> {
+  @ApiResponse({
+    status: 200,
+    description: 'Payment analytics retrieved successfully',
+  })
+  async getPaymentAnalytics(
+    @User('companyId') companyId: string,
+  ): Promise<any> {
     return this.paymentsService.getPaymentAnalytics(companyId);
   }
 
   // Subscription management endpoints
   @Get('current-subscription')
   @ApiOperation({ summary: 'Get current company subscription' })
-  @ApiResponse({ status: 200, description: 'Current subscription retrieved successfully' })
-  async getCurrentSubscription(@User('companyId') companyId: string): Promise<any> {
-    const subscriptions = await this.paymentsService.getSubscriptionHistory(companyId);
-    const current = subscriptions.find(sub => sub.is_active);
+  @ApiResponse({
+    status: 200,
+    description: 'Current subscription retrieved successfully',
+  })
+  async getCurrentSubscription(
+    @User('companyId') companyId: string,
+  ): Promise<any> {
+    const subscriptions =
+      await this.paymentsService.getSubscriptionHistory(companyId);
+    const current = subscriptions.find((sub) => sub.is_active);
 
     if (!current) {
       return {
@@ -146,7 +212,10 @@ export class PaymentsController {
 
   @Post('upgrade-subscription')
   @ApiOperation({ summary: 'Upgrade subscription plan' })
-  @ApiResponse({ status: 200, description: 'Subscription upgraded successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Subscription upgraded successfully',
+  })
   async upgradeSubscription(
     @Body() body: { newPlanId: string; paymentMethodId?: string },
     @User('companyId') companyId: string,
@@ -163,7 +232,10 @@ export class PaymentsController {
 
   @Post('downgrade-subscription')
   @ApiOperation({ summary: 'Downgrade subscription plan' })
-  @ApiResponse({ status: 200, description: 'Subscription downgraded successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Subscription downgraded successfully',
+  })
   async downgradeSubscription(
     @Body() body: { newPlanId: string },
     @User('companyId') companyId: string,
@@ -180,7 +252,10 @@ export class PaymentsController {
   // Usage tracking endpoints
   @Get('usage/current')
   @ApiOperation({ summary: 'Get current usage statistics' })
-  @ApiResponse({ status: 200, description: 'Current usage retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current usage retrieved successfully',
+  })
   async getCurrentUsage(@User('companyId') companyId: string): Promise<any> {
     // In a real implementation, you would calculate actual usage
     // For now, we'll return mock data
@@ -200,7 +275,10 @@ export class PaymentsController {
 
   @Get('usage/history')
   @ApiOperation({ summary: 'Get usage history' })
-  @ApiResponse({ status: 200, description: 'Usage history retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Usage history retrieved successfully',
+  })
   @ApiQuery({ name: 'months', required: false, type: Number })
   async getUsageHistory(
     @User('companyId') companyId: string,
@@ -235,8 +313,12 @@ export class PaymentsController {
 
   // Billing and invoice endpoints
   @Get('invoices')
+  @Permissions('payments.read')
   @ApiOperation({ summary: 'Get invoice history' })
-  @ApiResponse({ status: 200, description: 'Invoice history retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Invoice history retrieved successfully',
+  })
   async getInvoiceHistory(@User('companyId') companyId: string): Promise<any> {
     // Generate mock invoice history
     const invoices: any[] = [];
@@ -253,7 +335,11 @@ export class PaymentsController {
         downloadUrl: `https://api.echoops.com/invoices/inv_${Date.now()}_${i}.pdf`,
         period: {
           start: new Date(date.getFullYear(), date.getMonth(), 1).toISOString(),
-          end: new Date(date.getFullYear(), date.getMonth() + 1, 0).toISOString(),
+          end: new Date(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            0,
+          ).toISOString(),
         },
       };
       invoices.push(invoice);
@@ -267,8 +353,12 @@ export class PaymentsController {
   }
 
   @Get('billing-info')
+  @Permissions('payments.read')
   @ApiOperation({ summary: 'Get billing information' })
-  @ApiResponse({ status: 200, description: 'Billing information retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Billing information retrieved successfully',
+  })
   async getBillingInfo(@User('companyId') companyId: string): Promise<any> {
     return {
       success: true,
@@ -290,8 +380,12 @@ export class PaymentsController {
   }
 
   @Post('update-billing-info')
+  @Permissions('payments.update')
   @ApiOperation({ summary: 'Update billing information' })
-  @ApiResponse({ status: 200, description: 'Billing information updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Billing information updated successfully',
+  })
   async updateBillingInfo(
     @Body() billingInfo: any,
     @User('companyId') companyId: string,
@@ -305,8 +399,12 @@ export class PaymentsController {
   }
 
   @Post('update-payment-method')
+  @Permissions('payments.update')
   @ApiOperation({ summary: 'Update payment method' })
-  @ApiResponse({ status: 200, description: 'Payment method updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Payment method updated successfully',
+  })
   async updatePaymentMethod(
     @Body() paymentMethodData: any,
     @User('companyId') companyId: string,

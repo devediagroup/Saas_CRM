@@ -1,5 +1,18 @@
-import { Controller, Post, Body, UseGuards, Get, Patch, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  Patch,
+  Param,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { IsEmail, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { AuthService, AuthResponse } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -81,7 +94,10 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Login successful', type: Object })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   async login(@Body() loginDto: LoginDto): Promise<AuthResponse> {
-    const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+    const user = await this.authService.validateUser(
+      loginDto.email,
+      loginDto.password,
+    );
     if (!user) {
       throw new Error('Invalid credentials');
     }
@@ -91,7 +107,11 @@ export class AuthController {
   @Post('register')
   @Public()
   @ApiOperation({ summary: 'Register new user and company' })
-  @ApiResponse({ status: 201, description: 'Registration successful', type: Object })
+  @ApiResponse({
+    status: 201,
+    description: 'Registration successful',
+    type: Object,
+  })
   @ApiResponse({ status: 409, description: 'User or company already exists' })
   async register(@Body() registerDto: RegisterDto): Promise<AuthResponse> {
     return this.authService.register(registerDto);
@@ -104,7 +124,12 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Token refreshed', type: Object })
   async refresh(@User() user): Promise<{ access_token: string }> {
     // In a real implementation, you'd validate the refresh token
-    const userEntity = { id: user.id, email: user.email, company_id: user.companyId, role: user.role };
+    const userEntity = {
+      id: user.id,
+      email: user.email,
+      company_id: user.companyId,
+      role: user.role,
+    };
     return this.authService.refreshToken(userEntity as any);
   }
 
@@ -130,7 +155,9 @@ export class AuthController {
   @Public()
   @ApiOperation({ summary: 'Request password reset' })
   @ApiResponse({ status: 200, description: 'Reset email sent' })
-  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<{ message: string }> {
+  async forgotPassword(
+    @Body() forgotPasswordDto: ForgotPasswordDto,
+  ): Promise<{ message: string }> {
     return this.authService.forgotPassword(forgotPasswordDto.email);
   }
 
@@ -139,8 +166,13 @@ export class AuthController {
   @ApiOperation({ summary: 'Reset password with token' })
   @ApiResponse({ status: 200, description: 'Password reset successfully' })
   @ApiResponse({ status: 401, description: 'Invalid or expired token' })
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<{ message: string }> {
-    await this.authService.resetPassword(resetPasswordDto.token, resetPasswordDto.newPassword);
+  async resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<{ message: string }> {
+    await this.authService.resetPassword(
+      resetPasswordDto.token,
+      resetPasswordDto.newPassword,
+    );
     return { message: 'Password reset successfully' };
   }
 
@@ -168,7 +200,8 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'Profile updated successfully' })
   async updateProfile(
     @User('id') userId: string,
-    @Body() updateProfileDto: { firstName?: string; lastName?: string; phone?: string },
+    @Body()
+    updateProfileDto: { firstName?: string; lastName?: string; phone?: string },
   ): Promise<{ message: string }> {
     // Implementation would go here
     return { message: 'Profile updated successfully' };

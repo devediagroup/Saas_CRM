@@ -63,9 +63,9 @@ const Login = () => {
         {/* Header with Logo */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <img 
-              src={echoopsLogo} 
-              alt="EchoOps Logo" 
+            <img
+              src={echoopsLogo}
+              alt="EchoOps Logo"
               className="h-16 w-auto"
             />
           </div>
@@ -84,13 +84,13 @@ const Login = () => {
               {t('auth.login.title')}
             </CardTitle>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Field */}
               <div className="space-y-2">
-                <Label 
-                  htmlFor="email" 
+                <Label
+                  htmlFor="email"
                   className="text-sm font-medium arabic-text flex items-center gap-2"
                 >
                   <Mail className="h-4 w-4" />
@@ -103,15 +103,15 @@ const Login = () => {
                   className="arabic-text text-right"
                   dir="rtl"
                   value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
                 />
               </div>
 
               {/* Password Field */}
               <div className="space-y-2">
-                <Label 
-                  htmlFor="password" 
+                <Label
+                  htmlFor="password"
                   className="text-sm font-medium arabic-text flex items-center gap-2"
                 >
                   <Lock className="h-4 w-4" />
@@ -125,7 +125,7 @@ const Login = () => {
                     className="arabic-text text-right pl-10"
                     dir="rtl"
                     value={formData.password}
-                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
                   />
                   <button

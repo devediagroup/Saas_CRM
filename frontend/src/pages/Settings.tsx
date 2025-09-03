@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { 
-  User, 
-  Building2, 
-  Bell, 
-  Shield, 
-  Palette, 
+import {
+  User,
+  Building2,
+  Bell,
+  Shield,
+  Palette,
   Plug,
   Save,
   Eye,
@@ -77,15 +77,35 @@ const Settings = () => {
     avatar: ""
   });
 
-  // Company form state
-  const [companyData, setCompanyData] = useState({
-    name: "Echoops CRM",
-    email: "info@echoops.com",
-    phone: "+966112345678",
-            address: "Riyadh, Saudi Arabia",
-    website: "https://echoops.com",
-            description: "Advanced Customer Relationship Management System"
+  // جلب بيانات الشركة من API
+  const { data: companyInfo, isLoading: companyLoading } = useQuery({
+    queryKey: ['companyInfo'],
+    queryFn: () => api.getCompany('current')
   });
+
+  // Company form state - استخدام بيانات حقيقية
+  const [companyData, setCompanyData] = useState({
+    name: companyInfo?.data?.name || "",
+    email: companyInfo?.data?.email || "",
+    phone: companyInfo?.data?.phone || "",
+    address: companyInfo?.data?.address || "",
+    website: companyInfo?.data?.website || "",
+    description: companyInfo?.data?.description || ""
+  });
+
+  // تحديث بيانات الشركة عند تحميلها من API
+  useEffect(() => {
+    if (companyInfo?.data) {
+      setCompanyData({
+        name: companyInfo.data.name || "",
+        email: companyInfo.data.email || "",
+        phone: companyInfo.data.phone || "",
+        address: companyInfo.data.address || "",
+        website: companyInfo.data.website || "",
+        description: companyInfo.data.description || ""
+      });
+    }
+  }, [companyInfo]);
 
   // Notification settings state
   const [notificationSettings, setNotificationSettings] = useState({
@@ -287,7 +307,7 @@ const Settings = () => {
                       <Input
                         id="firstName"
                         value={profileData.firstName}
-                        onChange={(e) => setProfileData({...profileData, firstName: e.target.value})}
+                        onChange={(e) => setProfileData({ ...profileData, firstName: e.target.value })}
                         className="arabic-text"
                         required
                       />
@@ -297,7 +317,7 @@ const Settings = () => {
                       <Input
                         id="lastName"
                         value={profileData.lastName}
-                        onChange={(e) => setProfileData({...profileData, lastName: e.target.value})}
+                        onChange={(e) => setProfileData({ ...profileData, lastName: e.target.value })}
                         className="arabic-text"
                         required
                       />
@@ -310,7 +330,7 @@ const Settings = () => {
                       <Input
                         id="username"
                         value={profileData.username}
-                        onChange={(e) => setProfileData({...profileData, username: e.target.value})}
+                        onChange={(e) => setProfileData({ ...profileData, username: e.target.value })}
                         className="arabic-text"
                         required
                       />
@@ -323,7 +343,7 @@ const Settings = () => {
                           id="email"
                           type="email"
                           value={profileData.email}
-                          onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                          onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
                           className="pr-10"
                           required
                         />
@@ -338,7 +358,7 @@ const Settings = () => {
                       <Input
                         id="phone"
                         value={profileData.phone}
-                        onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                        onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
                         className="pr-10 arabic-text"
                         placeholder="+966501234567"
                       />
@@ -375,7 +395,7 @@ const Settings = () => {
                       <Input
                         id="companyName"
                         value={companyData.name}
-                        onChange={(e) => setCompanyData({...companyData, name: e.target.value})}
+                        onChange={(e) => setCompanyData({ ...companyData, name: e.target.value })}
                         className="arabic-text"
                         required
                       />
@@ -388,7 +408,7 @@ const Settings = () => {
                           id="companyEmail"
                           type="email"
                           value={companyData.email}
-                          onChange={(e) => setCompanyData({...companyData, email: e.target.value})}
+                          onChange={(e) => setCompanyData({ ...companyData, email: e.target.value })}
                           className="pr-10"
                           required
                         />
@@ -404,7 +424,7 @@ const Settings = () => {
                         <Input
                           id="companyPhone"
                           value={companyData.phone}
-                          onChange={(e) => setCompanyData({...companyData, phone: e.target.value})}
+                          onChange={(e) => setCompanyData({ ...companyData, phone: e.target.value })}
                           className="pr-10 arabic-text"
                           required
                         />
@@ -415,7 +435,7 @@ const Settings = () => {
                       <Input
                         id="website"
                         value={companyData.website}
-                        onChange={(e) => setCompanyData({...companyData, website: e.target.value})}
+                        onChange={(e) => setCompanyData({ ...companyData, website: e.target.value })}
                         placeholder="https://example.com"
                       />
                     </div>
@@ -428,7 +448,7 @@ const Settings = () => {
                       <Input
                         id="address"
                         value={companyData.address}
-                        onChange={(e) => setCompanyData({...companyData, address: e.target.value})}
+                        onChange={(e) => setCompanyData({ ...companyData, address: e.target.value })}
                         className="pr-10 arabic-text"
                         required
                       />
@@ -440,7 +460,7 @@ const Settings = () => {
                     <Textarea
                       id="description"
                       value={companyData.description}
-                      onChange={(e) => setCompanyData({...companyData, description: e.target.value})}
+                      onChange={(e) => setCompanyData({ ...companyData, description: e.target.value })}
                       className="arabic-text"
                       rows={4}
                     />
@@ -481,8 +501,8 @@ const Settings = () => {
                     </div>
                     <Switch
                       checked={notificationSettings.emailNotifications}
-                      onCheckedChange={(checked) => 
-                        setNotificationSettings({...notificationSettings, emailNotifications: checked})
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, emailNotifications: checked })
                       }
                     />
                   </div>
@@ -496,8 +516,8 @@ const Settings = () => {
                     </div>
                     <Switch
                       checked={notificationSettings.smsNotifications}
-                      onCheckedChange={(checked) => 
-                        setNotificationSettings({...notificationSettings, smsNotifications: checked})
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, smsNotifications: checked })
                       }
                     />
                   </div>
@@ -511,8 +531,8 @@ const Settings = () => {
                     </div>
                     <Switch
                       checked={notificationSettings.pushNotifications}
-                      onCheckedChange={(checked) => 
-                        setNotificationSettings({...notificationSettings, pushNotifications: checked})
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, pushNotifications: checked })
                       }
                     />
                   </div>
@@ -527,8 +547,8 @@ const Settings = () => {
                     <Label className="arabic-text">{t('settings.notifications.newLeads')}</Label>
                     <Switch
                       checked={notificationSettings.newLeads}
-                      onCheckedChange={(checked) => 
-                        setNotificationSettings({...notificationSettings, newLeads: checked})
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, newLeads: checked })
                       }
                     />
                   </div>
@@ -538,7 +558,7 @@ const Settings = () => {
                     <Switch
                       checked={notificationSettings.dealUpdates}
                       onCheckedChange={(checked) =>
-                        setNotificationSettings({...notificationSettings, dealUpdates: checked})
+                        setNotificationSettings({ ...notificationSettings, dealUpdates: checked })
                       }
                     />
                   </div>
@@ -548,7 +568,7 @@ const Settings = () => {
                     <Switch
                       checked={notificationSettings.systemAlerts}
                       onCheckedChange={(checked) =>
-                        setNotificationSettings({...notificationSettings, systemAlerts: checked})
+                        setNotificationSettings({ ...notificationSettings, systemAlerts: checked })
                       }
                     />
                   </div>
@@ -557,8 +577,8 @@ const Settings = () => {
                     <Label className="arabic-text">{t('settings.notifications.activityReminders')}</Label>
                     <Switch
                       checked={notificationSettings.activityReminders}
-                      onCheckedChange={(checked) => 
-                        setNotificationSettings({...notificationSettings, activityReminders: checked})
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, activityReminders: checked })
                       }
                     />
                   </div>
@@ -567,8 +587,8 @@ const Settings = () => {
                     <Label className="arabic-text">{t('settings.notifications.whatsappMessages')}</Label>
                     <Switch
                       checked={notificationSettings.whatsappMessages}
-                      onCheckedChange={(checked) => 
-                        setNotificationSettings({...notificationSettings, whatsappMessages: checked})
+                      onCheckedChange={(checked) =>
+                        setNotificationSettings({ ...notificationSettings, whatsappMessages: checked })
                       }
                     />
                   </div>
@@ -583,8 +603,8 @@ const Settings = () => {
                     <Label className="arabic-text">{t('settings.notifications.reportSchedule')}</Label>
                     <Select
                       value={notificationSettings.reportSchedule}
-                      onValueChange={(value) => 
-                        setNotificationSettings({...notificationSettings, reportSchedule: value})
+                      onValueChange={(value) =>
+                        setNotificationSettings({ ...notificationSettings, reportSchedule: value })
                       }
                     >
                       <SelectTrigger dir="rtl">
@@ -634,7 +654,7 @@ const Settings = () => {
                           id="currentPassword"
                           type={showCurrentPassword ? "text" : "password"}
                           value={securityData.currentPassword}
-                          onChange={(e) => setSecurityData({...securityData, currentPassword: e.target.value})}
+                          onChange={(e) => setSecurityData({ ...securityData, currentPassword: e.target.value })}
                           className="pr-10 pl-10"
                           required
                         />
@@ -658,7 +678,7 @@ const Settings = () => {
                           id="newPassword"
                           type={showNewPassword ? "text" : "password"}
                           value={securityData.newPassword}
-                          onChange={(e) => setSecurityData({...securityData, newPassword: e.target.value})}
+                          onChange={(e) => setSecurityData({ ...securityData, newPassword: e.target.value })}
                           className="pr-10 pl-10"
                           required
                         />
@@ -672,7 +692,7 @@ const Settings = () => {
                           {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
-                      
+
                       {securityData.newPassword && (
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
@@ -694,7 +714,7 @@ const Settings = () => {
                           id="confirmPassword"
                           type={showConfirmPassword ? "text" : "password"}
                           value={securityData.confirmPassword}
-                          onChange={(e) => setSecurityData({...securityData, confirmPassword: e.target.value})}
+                          onChange={(e) => setSecurityData({ ...securityData, confirmPassword: e.target.value })}
                           className="pr-10 pl-10"
                           required
                         />
@@ -708,7 +728,7 @@ const Settings = () => {
                           {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
-                      
+
                       {securityData.confirmPassword && (
                         <div className="flex items-center gap-2 text-sm">
                           {securityData.newPassword === securityData.confirmPassword ? (
@@ -746,8 +766,8 @@ const Settings = () => {
                     </div>
                     <Switch
                       checked={securityData.twoFactorEnabled}
-                      onCheckedChange={(checked) => 
-                        setSecurityData({...securityData, twoFactorEnabled: checked})
+                      onCheckedChange={(checked) =>
+                        setSecurityData({ ...securityData, twoFactorEnabled: checked })
                       }
                     />
                   </div>
@@ -761,8 +781,8 @@ const Settings = () => {
                     </div>
                     <Switch
                       checked={securityData.loginNotifications}
-                      onCheckedChange={(checked) => 
-                        setSecurityData({...securityData, loginNotifications: checked})
+                      onCheckedChange={(checked) =>
+                        setSecurityData({ ...securityData, loginNotifications: checked })
                       }
                     />
                   </div>
@@ -779,8 +799,8 @@ const Settings = () => {
                       <Label className="arabic-text">{t('settings.security.sessionTimeoutLabel')}</Label>
                       <Select
                         value={securityData.sessionTimeout}
-                        onValueChange={(value) => 
-                          setSecurityData({...securityData, sessionTimeout: value})
+                        onValueChange={(value) =>
+                          setSecurityData({ ...securityData, sessionTimeout: value })
                         }
                       >
                         <SelectTrigger dir="rtl">
@@ -800,8 +820,8 @@ const Settings = () => {
                       <Label className="arabic-text">{t('settings.security.passwordExpiryLabel')}</Label>
                       <Select
                         value={securityData.passwordExpiry}
-                        onValueChange={(value) => 
-                          setSecurityData({...securityData, passwordExpiry: value})
+                        onValueChange={(value) =>
+                          setSecurityData({ ...securityData, passwordExpiry: value })
                         }
                       >
                         <SelectTrigger dir="rtl">
@@ -845,18 +865,18 @@ const Settings = () => {
                     <Label className="arabic-text">{t('settings.appearance.theme')}</Label>
                     <Select
                       value={appearanceSettings.theme}
-                      onValueChange={(value) => 
-                        setAppearanceSettings({...appearanceSettings, theme: value})
+                      onValueChange={(value) =>
+                        setAppearanceSettings({ ...appearanceSettings, theme: value })
                       }
                     >
                       <SelectTrigger dir="rtl">
                         <SelectValue />
                       </SelectTrigger>
-                                              <SelectContent>
-                          <SelectItem value="light">{t('settings.appearance.light')}</SelectItem>
-                          <SelectItem value="dark">{t('settings.appearance.dark')}</SelectItem>
-                          <SelectItem value="system">{t('settings.appearance.system')}</SelectItem>
-                        </SelectContent>
+                      <SelectContent>
+                        <SelectItem value="light">{t('settings.appearance.light')}</SelectItem>
+                        <SelectItem value="dark">{t('settings.appearance.dark')}</SelectItem>
+                        <SelectItem value="system">{t('settings.appearance.system')}</SelectItem>
+                      </SelectContent>
                     </Select>
                   </div>
 
@@ -864,17 +884,17 @@ const Settings = () => {
                     <Label className="arabic-text">{t('settings.appearance.language')}</Label>
                     <Select
                       value={appearanceSettings.language}
-                      onValueChange={(value) => 
-                        setAppearanceSettings({...appearanceSettings, language: value})
+                      onValueChange={(value) =>
+                        setAppearanceSettings({ ...appearanceSettings, language: value })
                       }
                     >
                       <SelectTrigger dir="rtl">
                         <SelectValue />
                       </SelectTrigger>
-                                              <SelectContent>
-                          <SelectItem value="ar">{t('settings.appearance.arabic')}</SelectItem>
-                          <SelectItem value="en">{t('settings.appearance.english')}</SelectItem>
-                        </SelectContent>
+                      <SelectContent>
+                        <SelectItem value="ar">{t('settings.appearance.arabic')}</SelectItem>
+                        <SelectItem value="en">{t('settings.appearance.english')}</SelectItem>
+                      </SelectContent>
                     </Select>
                   </div>
 
@@ -882,8 +902,8 @@ const Settings = () => {
                     <Label className="arabic-text">{t('settings.appearance.dateFormat')}</Label>
                     <Select
                       value={appearanceSettings.dateFormat}
-                      onValueChange={(value) => 
-                        setAppearanceSettings({...appearanceSettings, dateFormat: value})
+                      onValueChange={(value) =>
+                        setAppearanceSettings({ ...appearanceSettings, dateFormat: value })
                       }
                     >
                       <SelectTrigger dir="rtl">
@@ -901,18 +921,18 @@ const Settings = () => {
                     <Label className="arabic-text">{t('settings.appearance.currency')}</Label>
                     <Select
                       value={appearanceSettings.currency}
-                      onValueChange={(value) => 
-                        setAppearanceSettings({...appearanceSettings, currency: value})
+                      onValueChange={(value) =>
+                        setAppearanceSettings({ ...appearanceSettings, currency: value })
                       }
                     >
                       <SelectTrigger dir="rtl">
                         <SelectValue />
                       </SelectTrigger>
-                                              <SelectContent>
-                          <SelectItem value="SAR">{t('settings.appearance.sar')}</SelectItem>
-                          <SelectItem value="USD">{t('settings.appearance.usd')}</SelectItem>
-                          <SelectItem value="EUR">{t('settings.appearance.eur')}</SelectItem>
-                        </SelectContent>
+                      <SelectContent>
+                        <SelectItem value="SAR">{t('settings.appearance.sar')}</SelectItem>
+                        <SelectItem value="USD">{t('settings.appearance.usd')}</SelectItem>
+                        <SelectItem value="EUR">{t('settings.appearance.eur')}</SelectItem>
+                      </SelectContent>
                     </Select>
                   </div>
 
@@ -920,19 +940,19 @@ const Settings = () => {
                     <Label className="arabic-text">{t('settings.appearance.timezone')}</Label>
                     <Select
                       value={appearanceSettings.timezone}
-                      onValueChange={(value) => 
-                        setAppearanceSettings({...appearanceSettings, timezone: value})
+                      onValueChange={(value) =>
+                        setAppearanceSettings({ ...appearanceSettings, timezone: value })
                       }
                     >
                       <SelectTrigger dir="rtl">
                         <SelectValue />
                       </SelectTrigger>
-                                              <SelectContent>
-                          <SelectItem value="Asia/Riyadh">{t('settings.appearance.riyadh')}</SelectItem>
-                          <SelectItem value="Asia/Dubai">{t('settings.appearance.dubai')}</SelectItem>
-                          <SelectItem value="Europe/London">{t('settings.appearance.london')}</SelectItem>
-                          <SelectItem value="America/New_York">{t('settings.appearance.newyork')}</SelectItem>
-                        </SelectContent>
+                      <SelectContent>
+                        <SelectItem value="Asia/Riyadh">{t('settings.appearance.riyadh')}</SelectItem>
+                        <SelectItem value="Asia/Dubai">{t('settings.appearance.dubai')}</SelectItem>
+                        <SelectItem value="Europe/London">{t('settings.appearance.london')}</SelectItem>
+                        <SelectItem value="America/New_York">{t('settings.appearance.newyork')}</SelectItem>
+                      </SelectContent>
                     </Select>
                   </div>
                 </div>
@@ -948,13 +968,13 @@ const Settings = () => {
                   </div>
                   <Switch
                     checked={appearanceSettings.compactMode}
-                    onCheckedChange={(checked) => 
-                      setAppearanceSettings({...appearanceSettings, compactMode: checked})
+                    onCheckedChange={(checked) =>
+                      setAppearanceSettings({ ...appearanceSettings, compactMode: checked })
                     }
                   />
                 </div>
 
-                <Button 
+                <Button
                   onClick={() => handleSaveSettings(t('settings.appearance.title'), appearanceSettings)}
                   className="gap-2 arabic-text"
                 >
@@ -995,8 +1015,8 @@ const Settings = () => {
                       </Badge>
                       <Switch
                         checked={integrationSettings.whatsappConnected}
-                        onCheckedChange={(checked) => 
-                          setIntegrationSettings({...integrationSettings, whatsappConnected: checked})
+                        onCheckedChange={(checked) =>
+                          setIntegrationSettings({ ...integrationSettings, whatsappConnected: checked })
                         }
                       />
                     </div>
@@ -1021,8 +1041,8 @@ const Settings = () => {
                       </Badge>
                       <Switch
                         checked={integrationSettings.emailConnected}
-                        onCheckedChange={(checked) => 
-                          setIntegrationSettings({...integrationSettings, emailConnected: checked})
+                        onCheckedChange={(checked) =>
+                          setIntegrationSettings({ ...integrationSettings, emailConnected: checked })
                         }
                       />
                     </div>
@@ -1047,8 +1067,8 @@ const Settings = () => {
                       </Badge>
                       <Switch
                         checked={integrationSettings.smsConnected}
-                        onCheckedChange={(checked) => 
-                          setIntegrationSettings({...integrationSettings, smsConnected: checked})
+                        onCheckedChange={(checked) =>
+                          setIntegrationSettings({ ...integrationSettings, smsConnected: checked })
                         }
                       />
                     </div>
@@ -1073,8 +1093,8 @@ const Settings = () => {
                       </Badge>
                       <Switch
                         checked={integrationSettings.calendarConnected}
-                        onCheckedChange={(checked) => 
-                          setIntegrationSettings({...integrationSettings, calendarConnected: checked})
+                        onCheckedChange={(checked) =>
+                          setIntegrationSettings({ ...integrationSettings, calendarConnected: checked })
                         }
                       />
                     </div>
@@ -1085,7 +1105,7 @@ const Settings = () => {
 
                 <div className="space-y-4">
                   <h3 className="font-medium arabic-text">{t('settings.integrations.webhooks')}</h3>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="space-y-1">
                       <Label className="arabic-text">{t('settings.integrations.enableWebhooks')}</Label>
@@ -1095,8 +1115,8 @@ const Settings = () => {
                     </div>
                     <Switch
                       checked={integrationSettings.webhooksEnabled}
-                      onCheckedChange={(checked) => 
-                        setIntegrationSettings({...integrationSettings, webhooksEnabled: checked})
+                      onCheckedChange={(checked) =>
+                        setIntegrationSettings({ ...integrationSettings, webhooksEnabled: checked })
                       }
                     />
                   </div>
@@ -1112,7 +1132,7 @@ const Settings = () => {
                   )}
                 </div>
 
-                <Button 
+                <Button
                   onClick={() => handleSaveSettings(t('settings.integrations.title'), integrationSettings)}
                   className="gap-2 arabic-text"
                 >

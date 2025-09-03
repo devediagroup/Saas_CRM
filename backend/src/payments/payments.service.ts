@@ -4,7 +4,10 @@ import Stripe from 'stripe';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment, PaymentStatus } from './entities/payment.entity';
-import { Subscription, SubscriptionStatus } from './entities/subscription.entity';
+import {
+  Subscription,
+  SubscriptionStatus,
+} from './entities/subscription.entity';
 import { Company } from '../companies/entities/company.entity';
 
 export interface CreatePaymentIntentDto {
@@ -103,7 +106,6 @@ export class PaymentsService {
         clientSecret: paymentIntent.client_secret,
         paymentIntentId: paymentIntent.id,
       };
-
     } catch (error) {
       this.logger.error(`Failed to create payment intent: ${error.message}`);
       return { success: false, error: error.message };
@@ -116,7 +118,8 @@ export class PaymentsService {
     }
 
     try {
-      const paymentIntent = await this.stripe.paymentIntents.retrieve(paymentIntentId);
+      const paymentIntent =
+        await this.stripe.paymentIntents.retrieve(paymentIntentId);
 
       // Update payment status
       await this.paymentsRepository.update(
@@ -132,14 +135,15 @@ export class PaymentsService {
         status: paymentIntent.status,
         amount: paymentIntent.amount / 100,
       };
-
     } catch (error) {
       this.logger.error(`Failed to confirm payment: ${error.message}`);
       return { success: false, error: error.message };
     }
   }
 
-  async createSubscription(subscriptionData: CreateSubscriptionDto): Promise<any> {
+  async createSubscription(
+    subscriptionData: CreateSubscriptionDto,
+  ): Promise<any> {
     if (!this.isEnabled) {
       return {
         success: true,
@@ -179,9 +183,11 @@ export class PaymentsService {
       // Create subscription
       const subscription = await this.stripe.subscriptions.create({
         customer: customerId,
-        items: [{
-          price: subscriptionData.planId,
-        }],
+        items: [
+          {
+            price: subscriptionData.planId,
+          },
+        ],
         payment_behavior: 'default_incomplete',
         payment_settings: {
           save_default_payment_method: 'on_subscription',
@@ -198,10 +204,18 @@ export class PaymentsService {
         stripe_subscription_id: subscription.id,
         company_id: subscriptionData.companyId,
         status: subscription.status as any,
-        current_period_start: (subscription as any).current_period_start ? new Date((subscription as any).current_period_start * 1000) : new Date(),
-        current_period_end: (subscription as any).current_period_end ? new Date((subscription as any).current_period_end * 1000) : new Date(),
-        trial_start: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
-        trial_end: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+        current_period_start: (subscription as any).current_period_start
+          ? new Date((subscription as any).current_period_start * 1000)
+          : new Date(),
+        current_period_end: (subscription as any).current_period_end
+          ? new Date((subscription as any).current_period_end * 1000)
+          : new Date(),
+        trial_start: subscription.trial_start
+          ? new Date(subscription.trial_start * 1000)
+          : null,
+        trial_end: subscription.trial_end
+          ? new Date(subscription.trial_end * 1000)
+          : null,
         cancel_at_period_end: subscription.cancel_at_period_end,
         metadata: subscription.metadata as any,
         created_at: new Date(),
@@ -211,9 +225,9 @@ export class PaymentsService {
         success: true,
         subscriptionId: subscription.id,
         status: subscription.status,
-        clientSecret: (subscription.latest_invoice as any)?.payment_intent?.client_secret,
+        clientSecret: (subscription.latest_invoice as any)?.payment_intent
+          ?.client_secret,
       };
-
     } catch (error) {
       this.logger.error(`Failed to create subscription: ${error.message}`);
       return { success: false, error: error.message };
@@ -226,9 +240,12 @@ export class PaymentsService {
     }
 
     try {
-      const subscription = await this.stripe.subscriptions.update(subscriptionId, {
-        cancel_at_period_end: true,
-      });
+      const subscription = await this.stripe.subscriptions.update(
+        subscriptionId,
+        {
+          cancel_at_period_end: true,
+        },
+      );
 
       // Update local record
       await this.subscriptionsRepository.update(
@@ -242,9 +259,10 @@ export class PaymentsService {
       return {
         success: true,
         cancelAtPeriodEnd: subscription.cancel_at_period_end,
-        currentPeriodEnd: (subscription as any).current_period_end ? new Date((subscription as any).current_period_end * 1000) : new Date(),
+        currentPeriodEnd: (subscription as any).current_period_end
+          ? new Date((subscription as any).current_period_end * 1000)
+          : new Date(),
       };
-
     } catch (error) {
       this.logger.error(`Failed to cancel subscription: ${error.message}`);
       return { success: false, error: error.message };
@@ -257,9 +275,12 @@ export class PaymentsService {
     }
 
     try {
-      const subscription = await this.stripe.subscriptions.update(subscriptionId, {
-        cancel_at_period_end: false,
-      });
+      const subscription = await this.stripe.subscriptions.update(
+        subscriptionId,
+        {
+          cancel_at_period_end: false,
+        },
+      );
 
       // Update local record
       await this.subscriptionsRepository.update(
@@ -274,7 +295,6 @@ export class PaymentsService {
         success: true,
         status: subscription.status,
       };
-
     } catch (error) {
       this.logger.error(`Failed to reactivate subscription: ${error.message}`);
       return { success: false, error: error.message };
@@ -292,18 +312,24 @@ export class PaymentsService {
     }
 
     try {
-      const subscription = await this.stripe.subscriptions.retrieve(subscriptionId);
+      const subscription =
+        await this.stripe.subscriptions.retrieve(subscriptionId);
 
       return {
         success: true,
         subscriptionId: subscription.id,
         status: subscription.status,
-        currentPeriodStart: (subscription as any).current_period_start ? new Date((subscription as any).current_period_start * 1000) : new Date(),
-        currentPeriodEnd: (subscription as any).current_period_end ? new Date((subscription as any).current_period_end * 1000) : new Date(),
+        currentPeriodStart: (subscription as any).current_period_start
+          ? new Date((subscription as any).current_period_start * 1000)
+          : new Date(),
+        currentPeriodEnd: (subscription as any).current_period_end
+          ? new Date((subscription as any).current_period_end * 1000)
+          : new Date(),
         cancelAtPeriodEnd: subscription.cancel_at_period_end,
-        trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+        trialEnd: subscription.trial_end
+          ? new Date(subscription.trial_end * 1000)
+          : null,
       };
-
     } catch (error) {
       this.logger.error(`Failed to get subscription details: ${error.message}`);
       return { success: false, error: error.message };
@@ -417,7 +443,10 @@ export class PaymentsService {
     });
   }
 
-  async generateInvoice(companyId: string, subscriptionId: string): Promise<any> {
+  async generateInvoice(
+    companyId: string,
+    subscriptionId: string,
+  ): Promise<any> {
     if (!this.isEnabled) {
       return {
         success: true,
@@ -453,7 +482,6 @@ export class PaymentsService {
         status: 'generated',
         downloadUrl: `https://api.echoops.com/invoices/inv_${Date.now()}.pdf`,
       };
-
     } catch (error) {
       this.logger.error(`Failed to generate invoice: ${error.message}`);
       return { success: false, error: error.message };
@@ -485,7 +513,6 @@ export class PaymentsService {
       }
 
       return { success: true, received: true };
-
     } catch (error) {
       this.logger.error(`Failed to handle webhook: ${error.message}`);
       return { success: false, error: error.message };
@@ -518,7 +545,9 @@ export class PaymentsService {
       { stripe_subscription_id: subscription.id },
       {
         status: subscription.status,
-        current_period_start: new Date(subscription.current_period_start * 1000),
+        current_period_start: new Date(
+          subscription.current_period_start * 1000,
+        ),
         current_period_end: new Date(subscription.current_period_end * 1000),
         cancel_at_period_end: subscription.cancel_at_period_end,
         updated_at: new Date(),
@@ -547,14 +576,20 @@ export class PaymentsService {
     const subscriptions = await this.getSubscriptionHistory(companyId);
 
     const totalRevenue = payments
-      .filter(p => p.status === PaymentStatus.SUCCEEDED)
+      .filter((p) => p.status === PaymentStatus.SUCCEEDED)
       .reduce((sum, p) => sum + p.amount, 0);
 
     const monthlyRevenue = payments
-      .filter(p => p.status === 'succeeded' && p.created_at.getMonth() === new Date().getMonth())
+      .filter(
+        (p) =>
+          p.status === 'succeeded' &&
+          p.created_at.getMonth() === new Date().getMonth(),
+      )
       .reduce((sum, p) => sum + p.amount, 0);
 
-    const activeSubscriptions = subscriptions.filter(s => s.status === 'active').length;
+    const activeSubscriptions = subscriptions.filter(
+      (s) => s.status === 'active',
+    ).length;
 
     return {
       totalRevenue,
@@ -587,7 +622,9 @@ export class PaymentsService {
 
   private calculateChurnRate(subscriptions: Subscription[]): number {
     const total = subscriptions.length;
-    const canceled = subscriptions.filter(s => s.status === 'canceled').length;
+    const canceled = subscriptions.filter(
+      (s) => s.status === 'canceled',
+    ).length;
 
     return total > 0 ? (canceled / total) * 100 : 0;
   }

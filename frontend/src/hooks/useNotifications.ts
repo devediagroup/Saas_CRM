@@ -2,9 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export const useNotifications = () => {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   // Fetch notifications
   const notificationsQuery = useQuery({
@@ -24,13 +26,13 @@ export const useNotifications = () => {
 
   // Mark as read mutation
   const markAsReadMutation = useMutation({
-    mutationFn: (id: number) => api.markNotificationAsRead(id),
+    mutationFn: (id: number) => api.markNotificationAsRead(id.toString()),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       queryClient.invalidateQueries({ queryKey: ['unreadCount'] });
     },
     onError: () => {
-      toast.error('حدث خطأ في تحديث الإشعار');
+      toast.error(t('notifications.actions.error'));
     }
   });
 
@@ -40,23 +42,23 @@ export const useNotifications = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       queryClient.invalidateQueries({ queryKey: ['unreadCount'] });
-      toast.success('تم تحديد جميع الإشعارات كمقروءة');
+      toast.success(t('notifications.actions.markAllReadSuccess'));
     },
     onError: () => {
-      toast.error('حدث خطأ في تحديث الإشعارات');
+      toast.error(t('notifications.actions.error'));
     }
   });
 
   // Delete notification mutation
   const deleteNotificationMutation = useMutation({
-    mutationFn: (id: number) => api.deleteNotification(id),
+    mutationFn: (id: number) => api.deleteNotification(id.toString()),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       queryClient.invalidateQueries({ queryKey: ['unreadCount'] });
-      toast.success('تم حذف الإشعار');
+      toast.success(t('notifications.actions.deleteSuccess'));
     },
     onError: () => {
-      toast.error('حدث خطأ في حذف الإشعار');
+      toast.error(t('notifications.actions.error'));
     }
   });
 
@@ -66,10 +68,10 @@ export const useNotifications = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
       queryClient.invalidateQueries({ queryKey: ['unreadCount'] });
-      toast.success('تم حذف جميع الإشعارات');
+      toast.success(t('notifications.actions.deleteAllSuccess'));
     },
     onError: () => {
-      toast.error('حدث خطأ في حذف الإشعارات');
+      toast.error(t('notifications.actions.error'));
     }
   });
 

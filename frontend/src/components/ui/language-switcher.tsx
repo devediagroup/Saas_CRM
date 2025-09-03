@@ -29,28 +29,21 @@ export const LanguageSwitcher: React.FC = () => {
 
   const handleLanguageChange = async (languageCode: string) => {
     try {
-      console.log(`LanguageSwitcher: Changing language to ${languageCode}`);
-      
       await i18n.changeLanguage(languageCode);
 
       // Update document direction
       const lang = languages.find(l => l.code === languageCode);
       if (lang) {
-        console.log(`LanguageSwitcher: Setting direction to ${lang.direction}`);
-        
         document.documentElement.dir = lang.direction;
         document.documentElement.lang = languageCode;
 
         // Store language preference
         localStorage.setItem('language', languageCode);
         localStorage.setItem('direction', lang.direction);
-        
-        console.log(`LanguageSwitcher: document.documentElement.dir = ${document.documentElement.dir}`);
-        console.log(`LanguageSwitcher: document.documentElement.lang = ${document.documentElement.lang}`);
-        
+
         // Force re-render by dispatching custom event
-        window.dispatchEvent(new CustomEvent('languageChanged', { 
-          detail: { language: languageCode, direction: lang.direction } 
+        window.dispatchEvent(new CustomEvent('languageChanged', {
+          detail: { language: languageCode, direction: lang.direction }
         }));
       }
     } catch (error) {
@@ -59,8 +52,6 @@ export const LanguageSwitcher: React.FC = () => {
   };
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language);
-  
-  console.log(`LanguageSwitcher - Current language: ${i18n.language}, Current direction: ${document.documentElement.dir}`);
 
   return (
     <DropdownMenu>

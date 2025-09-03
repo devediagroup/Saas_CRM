@@ -377,7 +377,7 @@ const TasksAppointments = () => {
                 <SelectValue placeholder={t('tasksAppointments.status')} />
               </SelectTrigger>
               <SelectContent>
-                                  <SelectItem value="all">{t('tasksAppointments.allStatuses')}</SelectItem>
+                <SelectItem value="all">{t('tasksAppointments.allStatuses')}</SelectItem>
                 <SelectItem value="pending">{t('tasks.status.pending')}</SelectItem>
                 <SelectItem value="in_progress">{t('tasks.status.in_progress')}</SelectItem>
                 <SelectItem value="completed">{t('tasks.status.completed')}</SelectItem>
@@ -389,7 +389,7 @@ const TasksAppointments = () => {
                 <SelectValue placeholder={t('tasksAppointments.type')} />
               </SelectTrigger>
               <SelectContent>
-                                  <SelectItem value="all">{t('tasksAppointments.allTypes')}</SelectItem>
+                <SelectItem value="all">{t('tasksAppointments.allTypes')}</SelectItem>
                 <SelectItem value="call">{t('tasks.types.call')}</SelectItem>
                 <SelectItem value="meeting">{t('tasks.types.meeting')}</SelectItem>
                 <SelectItem value="visit">{t('tasks.types.visit')}</SelectItem>
@@ -403,7 +403,7 @@ const TasksAppointments = () => {
                 <SelectValue placeholder={t('tasksAppointments.priority')} />
               </SelectTrigger>
               <SelectContent>
-                                  <SelectItem value="all">{t('tasksAppointments.allPriorities')}</SelectItem>
+                <SelectItem value="all">{t('tasksAppointments.allPriorities')}</SelectItem>
                 <SelectItem value="low">{t('tasks.priority.low')}</SelectItem>
                 <SelectItem value="normal">{t('tasks.priority.normal')}</SelectItem>
                 <SelectItem value="high">{t('tasks.priority.high')}</SelectItem>
@@ -468,7 +468,7 @@ const TasksAppointments = () => {
                     id="task-description"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                          placeholder={t('tasksAppointments.taskDescription')}
+                    placeholder={t('tasksAppointments.taskDescription')}
                     className="arabic-text"
                     rows={3}
                   />
@@ -549,7 +549,7 @@ const TasksAppointments = () => {
                         <SelectValue placeholder={t('tasksAppointments.selectAssigned')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">{t('common.notSpecified')}</SelectItem>
+                        <SelectItem value="none">{t('common.notSpecified')}</SelectItem>
                         {users.map((user: any) => (
                           <SelectItem key={user.id} value={user.id.toString()}>
                             {user.firstName && user.lastName
@@ -570,7 +570,7 @@ const TasksAppointments = () => {
                         <SelectValue placeholder={t('tasksAppointments.selectTeam')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">{t('common.notSpecified')}</SelectItem>
+                        <SelectItem value="none">{t('common.notSpecified')}</SelectItem>
                         {teams.map((team: any) => (
                           <SelectItem key={team.id} value={team.id.toString()}>
                             {team.name}
@@ -592,7 +592,7 @@ const TasksAppointments = () => {
                         <SelectValue placeholder={t('tasksAppointments.selectLead')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">{t('common.notSpecified')}</SelectItem>
+                        <SelectItem value="none">{t('common.notSpecified')}</SelectItem>
                         {leads.map((lead: any) => (
                           <SelectItem key={lead.id} value={lead.id.toString()}>
                             {lead.first_name} {lead.last_name}
@@ -611,7 +611,7 @@ const TasksAppointments = () => {
                         <SelectValue placeholder={t('tasksAppointments.selectDeal')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">{t('common.notSpecified')}</SelectItem>
+                        <SelectItem value="none">{t('common.notSpecified')}</SelectItem>
                         {deals.map((deal: any) => (
                           <SelectItem key={deal.id} value={deal.id.toString()}>
                             {deal.title}
@@ -630,7 +630,7 @@ const TasksAppointments = () => {
                         <SelectValue placeholder={t('tasksAppointments.selectProperty')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">{t('common.notSpecified')}</SelectItem>
+                        <SelectItem value="none">{t('common.notSpecified')}</SelectItem>
                         {properties.map((property: any) => (
                           <SelectItem key={property.id} value={property.id.toString()}>
                             {property.title}
@@ -649,7 +649,7 @@ const TasksAppointments = () => {
                         id="task-location"
                         value={formData.location}
                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                                                  placeholder={t('tasksAppointments.locationPlaceholder')}
+                        placeholder={t('tasksAppointments.locationPlaceholder')}
                         className="arabic-text"
                       />
                     </div>
@@ -669,12 +669,12 @@ const TasksAppointments = () => {
                 )}
 
                 <div>
-                                        <Label htmlFor="task-notes" className="arabic-text">{t('tasksAppointments.notes')}</Label>
+                  <Label htmlFor="task-notes" className="arabic-text">{t('tasksAppointments.notes')}</Label>
                   <Textarea
                     id="task-notes"
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                            placeholder={t('tasksAppointments.additionalNotes')}
+                    placeholder={t('tasksAppointments.additionalNotes')}
                     className="arabic-text"
                     rows={2}
                   />

@@ -26,6 +26,8 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { SecurityModule } from './security/security.module';
 import { AiModule } from './ai/ai.module';
+import { DevelopersModule } from './developers/developers.module';
+import { ProjectsModule } from './projects/projects.module';
 
 // Configurations
 import { databaseConfig } from './config/database.config';
@@ -64,10 +66,12 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     PassportModule.register({ defaultStrategy: 'jwt' }),
 
     // Rate Limiting
-    ThrottlerModule.forRoot([{
-      ttl: 60000, // 1 minute
-      limit: 100,
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 1 minute
+        limit: 100,
+      },
+    ]),
 
     // Feature Modules
     AuthModule,
@@ -83,6 +87,8 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     SubscriptionsModule,
     SecurityModule,
     AiModule,
+    DevelopersModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [

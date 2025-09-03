@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 import { Lead } from '../../leads/entities/lead.entity';
 import { Activity } from '../../activities/entities/activity.entity';
@@ -9,14 +18,14 @@ export enum UserRole {
   SALES_MANAGER = 'sales_manager',
   SALES_AGENT = 'sales_agent',
   MARKETING = 'marketing',
-  SUPPORT = 'support'
+  SUPPORT = 'support',
 }
 
 export enum UserStatus {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
   SUSPENDED = 'suspended',
-  PENDING = 'pending'
+  PENDING = 'pending',
 }
 
 @Entity('users')
@@ -45,14 +54,14 @@ export class User {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.SALES_AGENT
+    default: UserRole.SALES_AGENT,
   })
   role: UserRole;
 
   @Column({
     type: 'enum',
     enum: UserStatus,
-    default: UserStatus.ACTIVE
+    default: UserStatus.ACTIVE,
   })
   status: UserStatus;
 
@@ -96,14 +105,14 @@ export class User {
   @Column('uuid')
   company_id: string;
 
-  @ManyToOne(() => Company, company => company.users, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Company, (company) => company.users, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
-  @OneToMany(() => Lead, lead => lead.assigned_to)
+  @OneToMany(() => Lead, (lead) => lead.assigned_to)
   assigned_leads: Lead[];
 
-  @OneToMany(() => Activity, activity => activity.user)
+  @OneToMany(() => Activity, (activity) => activity.user)
   activities: Activity[];
 
   // Virtual fields

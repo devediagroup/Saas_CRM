@@ -6,10 +6,7 @@ import { WhatsAppController } from './whatsapp.controller';
 import { WhatsAppChat } from './entities/whatsapp-chat.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([WhatsAppChat]),
-    ConfigModule,
-  ],
+  imports: [TypeOrmModule.forFeature([WhatsAppChat]), ConfigModule],
   controllers: [WhatsAppController],
   providers: [WhatsAppService],
   exports: [WhatsAppService],

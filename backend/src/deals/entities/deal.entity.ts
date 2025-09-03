@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 import { Lead } from '../../leads/entities/lead.entity';
 import { Property } from '../../properties/entities/property.entity';
@@ -12,21 +21,21 @@ export enum DealStage {
   NEGOTIATION = 'negotiation',
   CONTRACT = 'contract',
   CLOSED_WON = 'closed_won',
-  CLOSED_LOST = 'closed_lost'
+  CLOSED_LOST = 'closed_lost',
 }
 
 export enum DealPriority {
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high',
-  URGENT = 'urgent'
+  URGENT = 'urgent',
 }
 
 export enum DealType {
   SALE = 'sale',
   RENT = 'rent',
   MANAGEMENT = 'management',
-  CONSULTATION = 'consultation'
+  CONSULTATION = 'consultation',
 }
 
 @Entity('deals')
@@ -49,21 +58,21 @@ export class Deal {
   @Column({
     type: 'enum',
     enum: DealStage,
-    default: DealStage.PROSPECT
+    default: DealStage.PROSPECT,
   })
   stage: DealStage;
 
   @Column({
     type: 'enum',
     enum: DealPriority,
-    default: DealPriority.MEDIUM
+    default: DealPriority.MEDIUM,
   })
   priority: DealPriority;
 
   @Column({
     type: 'enum',
     enum: DealType,
-    default: DealType.SALE
+    default: DealType.SALE,
   })
   deal_type: DealType;
 
@@ -138,13 +147,20 @@ export class Deal {
   property: Property;
 
   @Column('uuid', { nullable: true })
+  unit_id: string;
+
+  @ManyToOne(() => Property, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'unit_id' })
+  unit: Property;
+
+  @Column('uuid', { nullable: true })
   assigned_to_id: string;
 
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'assigned_to_id' })
   assigned_to: User;
 
-  @OneToMany(() => Activity, activity => activity.deal)
+  @OneToMany(() => Activity, (activity) => activity.deal)
   activities: Activity[];
 
   // Virtual fields
@@ -159,6 +175,10 @@ export class Deal {
   }
 
   get is_overdue(): boolean {
-    return this.expected_close_date && this.expected_close_date < new Date() && !this.actual_close_date;
+    return (
+      this.expected_close_date &&
+      this.expected_close_date < new Date() &&
+      !this.actual_close_date
+    );
   }
 }

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  MoreHorizontal, 
-  Eye, 
-  Edit, 
+import {
+  Plus,
+  Search,
+  Filter,
+  MoreHorizontal,
+  Eye,
+  Edit,
   Trash2,
   MapPin,
   Bed,
@@ -46,6 +46,8 @@ import { Textarea } from "@/components/ui/textarea";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { usePermissions } from "@/hooks/usePermissions";
+import { Can, CanAny } from "@/components/PermissionGuard";
 
 interface Property {
   id: number;
@@ -65,14 +67,20 @@ interface Property {
   agent: string;
   views: number;
   favorites: number;
+  // Optional relations (when included by API)
+  project?: { id: string; name: string };
+  developer?: { id: string; name: string };
 }
 
 const Properties = () => {
   const { t } = useTranslation();
+  const { can, canCRUD } = usePermissions();
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [priceFilter, setPriceFilter] = useState("all");
+  const [projectFilter, setProjectFilter] = useState<string>("all");
+  const [developerFilter, setDeveloperFilter] = useState<string>("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingProperty, setEditingProperty] = useState<any>(null);
@@ -87,20 +95,47 @@ const Properties = () => {
     bathrooms: 0,
     location: "",
     address: "",
-    status: "Available"
+    status: "Available",
+    project_id: "",
+    developer_id: ""
   });
 
   const queryClient = useQueryClient();
 
-  // Fetch properties from API
+  // Fetch projects & developers for filters and form dropdowns
+  const { data: projectsList } = useQuery({
+    queryKey: ['projects:list'],
+    queryFn: () => api.getProjects({ limit: 500 }),
+    staleTime: 10 * 60 * 1000,
+  });
+  const { data: developersList } = useQuery({
+    queryKey: ['developers:list'],
+    queryFn: () => api.getDevelopers({ limit: 500 }),
+    staleTime: 10 * 60 * 1000,
+  });
+
+  // Fetch properties from API (with conditional endpoints for filters)
   const { data: propertiesData, isLoading } = useQuery({
-    queryKey: ['properties', searchTerm, typeFilter, statusFilter, priceFilter],
-    queryFn: () => api.getProperties({
-      ...(searchTerm && { title_contains: searchTerm }),
-      ...(typeFilter !== 'all' && { property_type: typeFilter }),
-      ...(statusFilter !== 'all' && { status: statusFilter }),
-      sort: 'created_at:desc'
-    })
+    queryKey: ['properties', searchTerm, typeFilter, statusFilter, priceFilter, projectFilter, developerFilter],
+    queryFn: () => {
+      const common = {
+        ...(searchTerm && { title_contains: searchTerm }),
+        ...(typeFilter !== 'all' && { property_type: typeFilter }),
+        ...(statusFilter !== 'all' && { status: statusFilter }),
+        sort: 'created_at:desc'
+      } as Record<string, unknown>;
+
+      if (projectFilter !== 'all' && developerFilter !== 'all') {
+        return api.getPropertiesByProjectAndDeveloper(projectFilter, developerFilter, common);
+      }
+      if (projectFilter !== 'all') {
+        return api.getPropertiesByProject(projectFilter, common);
+      }
+      if (developerFilter !== 'all') {
+        return api.getPropertiesByDeveloper(developerFilter, common);
+      }
+      return api.getProperties(common);
+    }
   });
 
   const properties = Array.isArray(propertiesData?.data) ? propertiesData.data : [];
@@ -155,7 +190,9 @@ const Properties = () => {
       bathrooms: 0,
       location: "",
       address: "",
-      status: "Available"
+      status: "Available",
+      project_id: "",
+      developer_id: ""
     });
   };
 
@@ -181,7 +218,9 @@ const Properties = () => {
       bathrooms: property.bathrooms || 0,
       location: property.location || '',
       address: property.address || '',
-      status: property.status || 'Available'
+      status: property.status || 'Available',
+      project_id: property.project_id || property.project?.id || '',
+      developer_id: property.developer_id || property.developer?.id || ''
     });
   };
 
@@ -193,15 +232,15 @@ const Properties = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'available': 
+      case 'available':
         return 'bg-green-100 text-green-800 border-green-200';
-      case 'booked': 
+      case 'booked':
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'sold': 
+      case 'sold':
         return 'bg-red-100 text-red-800 border-red-200';
-      case 'rented': 
+      case 'rented':
         return 'bg-blue-100 text-blue-800 border-blue-200';
-      default: 
+      default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
@@ -215,13 +254,13 @@ const Properties = () => {
   };
 
   const filteredProperties = properties.filter(property => {
-    const matchesSearch = !searchTerm || 
-                         (property.title && property.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                         (property.location && property.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                         (property.description && property.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = !searchTerm ||
+      (property.title && property.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (property.location && property.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (property.description && property.description.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesType = typeFilter === 'all' || property.type === typeFilter;
     const matchesStatus = statusFilter === 'all' || property.status === statusFilter;
-    
+
     let matchesPrice = true;
     if (priceFilter !== 'all') {
       const price = property.price;
@@ -232,7 +271,7 @@ const Properties = () => {
         case 'over-1m': matchesPrice = price > 1000000; break;
       }
     }
-    
+
     return matchesSearch && matchesType && matchesStatus && matchesPrice;
   });
 
@@ -247,10 +286,12 @@ const Properties = () => {
               {t('properties.search')}
             </p>
           </div>
-          <Button className="gradient-primary" onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
-            {t('properties.add')}
-          </Button>
+          <Can permission="properties.create">
+            <Button className="gradient-primary" onClick={() => setIsCreateDialogOpen(true)}>
+              <Plus className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
+              {t('properties.add')}
+            </Button>
+          </Can>
         </div>
 
         {/* Stats Cards */}
@@ -268,7 +309,7 @@ const Properties = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="crm-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -284,7 +325,7 @@ const Properties = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="crm-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -300,7 +341,7 @@ const Properties = () => {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="crm-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -337,7 +378,7 @@ const Properties = () => {
                   />
                 </div>
               </div>
-              
+
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger className="w-full sm:w-[150px]">
                   <SelectValue placeholder={t('properties.filters.typePlaceholder')} />
@@ -350,7 +391,7 @@ const Properties = () => {
                   <SelectItem value="office">{t('properties.types.office')}</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-full sm:w-[150px]">
                   <SelectValue placeholder={t('properties.filters.statusPlaceholder')} />
@@ -363,7 +404,7 @@ const Properties = () => {
                   <SelectItem value="rented">{t('properties.statuses.rented')}</SelectItem>
                 </SelectContent>
               </Select>
-              
+
               <Select value={priceFilter} onValueChange={setPriceFilter}>
                 <SelectTrigger className="w-full sm:w-[200px]">
                   <SelectValue placeholder={t('properties.filters.pricePlaceholder')} />
@@ -374,6 +415,32 @@ const Properties = () => {
                   <SelectItem value="300k-600k">{t('properties.priceRanges.300k-600k')}</SelectItem>
                   <SelectItem value="600k-1m">{t('properties.priceRanges.600k-1m')}</SelectItem>
                   <SelectItem value="over-1m">{t('properties.priceRanges.over-1m')}</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Project Filter */}
+              <Select value={projectFilter} onValueChange={setProjectFilter}>
+                <SelectTrigger className="w-full sm:w-[220px]">
+                  <SelectValue placeholder={t('properties.filters.projectPlaceholder') || 'Project'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('common.all') || 'All'}</SelectItem>
+                  {(projectsList?.data || []).map((p: any) => (
+                    <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Developer Filter */}
+              <Select value={developerFilter} onValueChange={setDeveloperFilter}>
+                <SelectTrigger className="w-full sm:w-[220px]">
+                  <SelectValue placeholder={t('properties.filters.developerPlaceholder') || 'Developer'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('common.all') || 'All'}</SelectItem>
+                  {(developersList?.data || []).map((d: any) => (
+                    <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -389,14 +456,14 @@ const Properties = () => {
                 <div className="h-48 bg-gradient-to-r from-muted to-muted/50 rounded-t-lg flex items-center justify-center">
                   <Square className="h-12 w-12 text-muted-foreground" />
                 </div>
-                
+
                 {/* Status Badge */}
                 <div className="absolute top-3 right-3">
                   <Badge className={getStatusColor(property.status)}>
                     {property.status}
                   </Badge>
                 </div>
-                
+
                 {/* Favorites */}
                 <div className="absolute top-3 left-3 flex items-center gap-2">
                   <div className="bg-white/90 rounded-full p-1.5">
@@ -407,7 +474,7 @@ const Properties = () => {
                   </span>
                 </div>
               </div>
-              
+
               <CardContent className="p-4">
                 <div className="space-y-3">
                   {/* Title and Price */}
@@ -417,13 +484,13 @@ const Properties = () => {
                       {formatPrice(property.price)}
                     </p>
                   </div>
-                  
+
                   {/* Location */}
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <MapPin className="h-4 w-4" />
                     <span className="text-sm">{property.district}, {property.location}</span>
                   </div>
-                  
+
                   {/* Property Details */}
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
@@ -443,7 +510,19 @@ const Properties = () => {
                       </div>
                     )}
                   </div>
-                  
+
+                  {/* Project / Developer Info */}
+                  {(property.project || property.developer) && (
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      {property.project && (
+                        <Badge variant="secondary">{property.project.name}</Badge>
+                      )}
+                      {property.developer && (
+                        <Badge variant="secondary">{property.developer.name}</Badge>
+                      )}
+                    </div>
+                  )}
+
                   {/* Features */}
                   <div className="flex flex-wrap gap-1">
                     {property.features.slice(0, 2).map((feature, index) => (
@@ -457,9 +536,9 @@ const Properties = () => {
                       </Badge>
                     )}
                   </div>
-                  
+
                   {/* Agent and Views */}
-                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                  <div className="flex items-center justify-between pt-2 border-t border-gray-200">
                     <span className="text-sm text-muted-foreground">{property.agent}</span>
                     <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <Eye className="h-3 w-3" />
@@ -468,7 +547,7 @@ const Properties = () => {
                   </div>
                 </div>
               </CardContent>
-              
+
               <div className="p-4 pt-0">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -482,25 +561,29 @@ const Properties = () => {
                       <Eye className="ml-2 h-4 w-4" />
                       {t('properties.dropdown.viewDetails')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleEdit(property)}>
-                      <Edit className="ml-2 h-4 w-4" />
-                      {t('properties.dropdown.editProperty')}
-                    </DropdownMenuItem>
+                    <Can permission="properties.update">
+                      <DropdownMenuItem onClick={() => handleEdit(property)}>
+                        <Edit className="ml-2 h-4 w-4" />
+                        {t('properties.dropdown.editProperty')}
+                      </DropdownMenuItem>
+                    </Can>
                     <DropdownMenuItem>
                       <Heart className="ml-2 h-4 w-4" />
                       {t('properties.dropdown.addToFavorites')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(property.id)}>
-                      <Trash2 className="ml-2 h-4 w-4" />
-                      {t('properties.dropdown.deleteProperty')}
-                    </DropdownMenuItem>
+                    <Can permission="properties.delete">
+                      <DropdownMenuItem className="text-destructive" onClick={() => handleDelete(property.id)}>
+                        <Trash2 className="ml-2 h-4 w-4" />
+                        {t('properties.dropdown.deleteProperty')}
+                      </DropdownMenuItem>
+                    </Can>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             </Card>
           ))}
         </div>
-        
+
         {filteredProperties.length === 0 && (
           <Card className="crm-card">
             <CardContent className="text-center py-12">
@@ -543,16 +626,16 @@ const Properties = () => {
                   <Input
                     id="title"
                     value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     className="arabic-text"
                     required
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="property_type" className="arabic-text">{t('properties.form.propertyType')}</Label>
-                  <Select value={formData.property_type} onValueChange={(value) => setFormData({...formData, property_type: value})}>
+                  <Select value={formData.property_type} onValueChange={(value) => setFormData({ ...formData, property_type: value })}>
                     <SelectTrigger className="arabic-text">
-                                              <SelectValue placeholder={t('properties.form.choosePropertyType')} />
+                      <SelectValue placeholder={t('properties.form.choosePropertyType')} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Apartment">{t('properties.propertyTypes.apartment')}</SelectItem>
@@ -571,7 +654,7 @@ const Properties = () => {
                     id="price"
                     type="number"
                     value={formData.price}
-                    onChange={(e) => setFormData({...formData, price: parseInt(e.target.value)})}
+                    onChange={(e) => setFormData({ ...formData, price: parseInt(e.target.value) })}
                     className="arabic-text"
                     required
                   />
@@ -582,7 +665,7 @@ const Properties = () => {
                     id="area"
                     type="number"
                     value={formData.area}
-                    onChange={(e) => setFormData({...formData, area: parseInt(e.target.value)})}
+                    onChange={(e) => setFormData({ ...formData, area: parseInt(e.target.value) })}
                     className="arabic-text"
                     required
                   />
@@ -593,7 +676,7 @@ const Properties = () => {
                     id="bedrooms"
                     type="number"
                     value={formData.bedrooms}
-                    onChange={(e) => setFormData({...formData, bedrooms: parseInt(e.target.value)})}
+                    onChange={(e) => setFormData({ ...formData, bedrooms: parseInt(e.target.value) })}
                     className="arabic-text"
                   />
                 </div>
@@ -605,16 +688,16 @@ const Properties = () => {
                   <Input
                     id="location"
                     value={formData.location}
-                    onChange={(e) => setFormData({...formData, location: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     className="arabic-text"
                     required
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="status" className="arabic-text">{t('properties.form.status')}</Label>
-                  <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value})}>
+                  <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
                     <SelectTrigger className="arabic-text">
-                                              <SelectValue placeholder={t('properties.form.chooseStatus')} />
+                      <SelectValue placeholder={t('properties.form.chooseStatus')} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Available">{t('properties.propertyStatuses.available')}</SelectItem>
@@ -627,14 +710,47 @@ const Properties = () => {
               </div>
 
               <div className="space-y-2">
-                                  <Label htmlFor="description" className="arabic-text">{t('properties.form.description')}</Label>
+                <Label htmlFor="description" className="arabic-text">{t('properties.form.description')}</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="arabic-text"
                   rows={3}
                 />
+              </div>
+
+              {/* Project and Developer Selection */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="project_id" className="arabic-text">{t('properties.form.project') || 'Project'}</Label>
+                  <Select value={formData.project_id || 'none'} onValueChange={(value) => setFormData({ ...formData, project_id: value === 'none' ? '' : value })}>
+                    <SelectTrigger className="arabic-text">
+                      <SelectValue placeholder={t('properties.form.selectProject') || 'Select Project'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">{t('properties.form.noProject') || 'No Project'}</SelectItem>
+                      {(projectsList?.data || []).map((p: any) => (
+                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="developer_id" className="arabic-text">{t('properties.form.developer') || 'Developer'}</Label>
+                  <Select value={formData.developer_id || 'none'} onValueChange={(value) => setFormData({ ...formData, developer_id: value === 'none' ? '' : value })}>
+                    <SelectTrigger className="arabic-text">
+                      <SelectValue placeholder={t('properties.form.selectDeveloper') || 'Select Developer'} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">{t('properties.form.noDeveloper') || 'No Developer'}</SelectItem>
+                      {(developersList?.data || []).map((d: any) => (
+                        <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-4">

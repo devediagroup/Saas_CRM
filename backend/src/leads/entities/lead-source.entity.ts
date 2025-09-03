@@ -1,4 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 import { Lead } from './lead.entity';
 
@@ -10,12 +19,12 @@ export enum LeadSourceType {
   PHONE = 'phone',
   WALK_IN = 'walk_in',
   ADVERTISING = 'advertising',
-  OTHER = 'other'
+  OTHER = 'other',
 }
 
 export enum LeadSourceStatus {
   ACTIVE = 'active',
-  INACTIVE = 'inactive'
+  INACTIVE = 'inactive',
 }
 
 @Entity('lead_sources')
@@ -32,14 +41,14 @@ export class LeadSource {
   @Column({
     type: 'enum',
     enum: LeadSourceType,
-    default: LeadSourceType.WEBSITE
+    default: LeadSourceType.WEBSITE,
   })
   type: LeadSourceType;
 
   @Column({
     type: 'enum',
     enum: LeadSourceStatus,
-    default: LeadSourceStatus.ACTIVE
+    default: LeadSourceStatus.ACTIVE,
   })
   status: LeadSourceStatus;
 
@@ -81,6 +90,6 @@ export class LeadSource {
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
-  @OneToMany(() => Lead, lead => lead.lead_source)
+  @OneToMany(() => Lead, (lead) => lead.lead_source)
   leads: Lead[];
 }
