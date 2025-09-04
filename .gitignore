@@ -10,9 +10,14 @@ pids/
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbul
+# Testing and E2E
 coverage/
 *.lcov
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+test-results/
+.nyc_output
 
 # Environment variables
 .env
