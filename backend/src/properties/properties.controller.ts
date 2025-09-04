@@ -25,8 +25,8 @@ import {
   ListingType,
 } from './entities/property.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { PermissionsGuard } from '../auth/guards/permissions.guard';
-import { Permissions } from '../auth/decorators/permissions.decorator';
+import { PermissionGuard } from '../auth/guards/permission.guard';
+import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import { User } from '../auth/decorators/user.decorator';
 
 class CreatePropertyDto {
@@ -103,13 +103,13 @@ class UpdatePropertyDto {
 
 @ApiTags('Properties')
 @Controller('properties')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, PermissionGuard)
 @ApiBearerAuth()
 export class PropertiesController {
-  constructor(private readonly propertiesService: PropertiesService) {}
+  constructor(private readonly propertiesService: PropertiesService) { }
 
   @Post()
-  @Permissions('properties.create')
+  @RequirePermission('properties.create')
   @ApiOperation({ summary: 'Create a new property' })
   @ApiResponse({
     status: 201,
@@ -128,7 +128,7 @@ export class PropertiesController {
   }
 
   @Get()
-  @Permissions('properties.read')
+  @RequirePermission('properties.read')
   @ApiOperation({ summary: 'Get all properties for company' })
   @ApiResponse({
     status: 200,
@@ -214,7 +214,7 @@ export class PropertiesController {
   }
 
   @Get('stats')
-  @Permissions('properties.read')
+  @RequirePermission('properties.read')
   @ApiOperation({ summary: 'Get property statistics' })
   @ApiResponse({
     status: 200,
@@ -228,7 +228,7 @@ export class PropertiesController {
   }
 
   @Get('by-project/:projectId')
-  @Permissions('properties.read')
+  @RequirePermission('properties.read')
   @ApiOperation({ summary: 'Get properties by project' })
   @ApiResponse({
     status: 200,
@@ -248,7 +248,7 @@ export class PropertiesController {
   }
 
   @Get('by-developer/:developerId')
-  @Permissions('properties.read')
+  @RequirePermission('properties.read')
   @ApiOperation({ summary: 'Get properties by developer' })
   @ApiResponse({
     status: 200,
@@ -268,7 +268,7 @@ export class PropertiesController {
   }
 
   @Get('by-project-and-developer/:projectId/:developerId')
-  @Permissions('properties.read')
+  @RequirePermission('properties.read')
   @ApiOperation({ summary: 'Get properties by project and developer' })
   @ApiResponse({
     status: 200,
@@ -288,7 +288,7 @@ export class PropertiesController {
   }
 
   @Get(':id')
-  @Permissions('properties.read')
+  @RequirePermission('properties.read')
   @ApiOperation({ summary: 'Get property by ID' })
   @ApiResponse({
     status: 200,
@@ -304,7 +304,7 @@ export class PropertiesController {
   }
 
   @Patch(':id')
-  @Permissions('properties.update')
+  @RequirePermission('properties.update')
   @ApiOperation({ summary: 'Update property' })
   @ApiResponse({
     status: 200,
@@ -320,7 +320,7 @@ export class PropertiesController {
   }
 
   @Patch(':id/status')
-  @Permissions('properties.update')
+  @RequirePermission('properties.update')
   @ApiOperation({ summary: 'Update property status' })
   @ApiResponse({
     status: 200,
@@ -336,7 +336,7 @@ export class PropertiesController {
   }
 
   @Patch(':id/view')
-  @Permissions('properties.update')
+  @RequirePermission('properties.update')
   @ApiOperation({ summary: 'Increment property view count' })
   @ApiResponse({
     status: 200,
@@ -351,7 +351,7 @@ export class PropertiesController {
   }
 
   @Patch(':id/inquiry')
-  @Permissions('properties.update')
+  @RequirePermission('properties.update')
   @ApiOperation({ summary: 'Increment property inquiry count' })
   @ApiResponse({
     status: 200,
@@ -366,7 +366,7 @@ export class PropertiesController {
   }
 
   @Delete(':id')
-  @Permissions('properties.delete')
+  @RequirePermission('properties.delete')
   @ApiOperation({ summary: 'Delete property' })
   @ApiResponse({ status: 200, description: 'Property deleted successfully' })
   async remove(

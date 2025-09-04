@@ -4,7 +4,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import {
   Deal,
   DealStage,
@@ -19,22 +19,53 @@ export class DealsService {
     @InjectRepository(Deal)
     private dealsRepository: Repository<Deal>,
     private permissionsService: PermissionsService,
-  ) {}
+    private dataSource: DataSource,
+  ) { }
 
   async create(createDealDto: Partial<Deal>, userId: string): Promise<Deal> {
-    // Check if user has permission to create deals
-    const hasPermission = await this.permissionsService.hasPermission(
-      userId,
-      'deals.create',
-    );
-    if (!hasPermission) {
-      throw new ForbiddenException(
-        'You do not have permission to create deals',
-      );
-    }
+    return this.createWithTransaction(createDealDto, userId);
+  }
 
-    const deal = this.dealsRepository.create(createDealDto);
-    return this.dealsRepository.save(deal);
+  async createWithTransaction(createDealDto: Partial<Deal>, userId: string): Promise<Deal> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Check if user has permission to create deals
+      const hasPermission = await this.permissionsService.hasPermission(
+        userId,
+        'deals.create',
+      );
+      if (!hasPermission) {
+        throw new ForbiddenException(
+          'You do not have permission to create deals',
+        );
+      }
+
+      // Create deal within transaction
+      const deal = queryRunner.manager.create(Deal, createDealDto);
+      const savedDeal = await queryRunner.manager.save(deal);
+
+      // Add activity log for deal creation
+      // Note: You would need to import Activity entity and add it here
+      // await queryRunner.manager.save(Activity, {
+      //   user_id: userId,
+      //   action: 'create_deal',
+      //   entity_id: savedDeal.id,
+      //   entity_type: 'deal',
+      //   description: `Created deal: ${savedDeal.title}`,
+      //   company_id: savedDeal.company_id
+      // });
+
+      await queryRunner.commitTransaction();
+      return savedDeal;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async findAll(companyId: string, userId: string): Promise<Deal[]> {
@@ -81,21 +112,68 @@ export class DealsService {
     updateDealDto: Partial<Deal>,
     userId: string,
   ): Promise<Deal> {
-    // Check if user has permission to update deals
-    const hasPermission = await this.permissionsService.hasPermission(
-      userId,
-      'deals.update',
-    );
-    if (!hasPermission) {
-      throw new ForbiddenException(
-        'You do not have permission to update deals',
+    return this.updateWithTransaction(id, updateDealDto, userId);
+  }
+
+  async updateWithTransaction(
+    id: string,
+    updateDealDto: Partial<Deal>,
+    userId: string,
+  ): Promise<Deal> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Check if user has permission to update deals
+      const hasPermission = await this.permissionsService.hasPermission(
+        userId,
+        'deals.update',
       );
+      if (!hasPermission) {
+        throw new ForbiddenException(
+          'You do not have permission to update deals',
+        );
+      }
+
+      // Find the deal first
+      const deal = await queryRunner.manager.findOne(Deal, {
+        where: { id },
+        relations: ['company', 'lead', 'property', 'assigned_to', 'activities'],
+      });
+
+      if (!deal) {
+        throw new NotFoundException(`Deal with ID ${id} not found`);
+      }
+
+      // Store old values for audit log
+      const oldValues = { ...deal };
+
+      // Update deal within transaction
+      Object.assign(deal, updateDealDto);
+      const updatedDeal = await queryRunner.manager.save(deal);
+
+      // Add activity log for deal update
+      // Note: You would need to import Activity entity and add it here
+      // await queryRunner.manager.save(Activity, {
+      //   user_id: userId,
+      //   action: 'update_deal',
+      //   entity_id: updatedDeal.id,
+      //   entity_type: 'deal',
+      //   description: `Updated deal: ${updatedDeal.title}`,
+      //   old_values: oldValues,
+      //   new_values: updateDealDto,
+      //   company_id: updatedDeal.company_id
+      // });
+
+      await queryRunner.commitTransaction();
+      return updatedDeal;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-
-    const deal = await this.findOne(id, userId);
-
-    Object.assign(deal, updateDealDto);
-    return this.dealsRepository.save(deal);
   }
 
   async remove(id: string, userId: string): Promise<void> {
@@ -162,18 +240,75 @@ export class DealsService {
     userId: string,
     stage: DealStage,
   ): Promise<Deal> {
-    const deal = await this.findOne(id, userId);
+    return this.updateDealStageWithTransaction(id, userId, stage);
+  }
 
-    // If closing the deal, set the actual close date
-    if (
-      (stage === DealStage.CLOSED_WON || stage === DealStage.CLOSED_LOST) &&
-      !deal.actual_close_date
-    ) {
-      deal.actual_close_date = new Date();
+  async updateDealStageWithTransaction(
+    id: string,
+    userId: string,
+    stage: DealStage,
+  ): Promise<Deal> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Check if user has permission to update deals
+      const hasPermission = await this.permissionsService.hasPermission(
+        userId,
+        'deals.update',
+      );
+      if (!hasPermission) {
+        throw new ForbiddenException(
+          'You do not have permission to update deals',
+        );
+      }
+
+      // Find the deal first
+      const deal = await queryRunner.manager.findOne(Deal, {
+        where: { id },
+        relations: ['company', 'lead', 'property', 'assigned_to', 'activities'],
+      });
+
+      if (!deal) {
+        throw new NotFoundException(`Deal with ID ${id} not found`);
+      }
+
+      // Store old values for audit log
+      const oldStage = deal.stage;
+
+      // If closing the deal, set the actual close date
+      if (
+        (stage === DealStage.CLOSED_WON || stage === DealStage.CLOSED_LOST) &&
+        !deal.actual_close_date
+      ) {
+        deal.actual_close_date = new Date();
+      }
+
+      deal.stage = stage;
+      const updatedDeal = await queryRunner.manager.save(deal);
+
+      // Add activity log for stage change
+      // Note: You would need to import Activity entity and add it here
+      // await queryRunner.manager.save(Activity, {
+      //   user_id: userId,
+      //   action: 'update_deal_stage',
+      //   entity_id: updatedDeal.id,
+      //   entity_type: 'deal',
+      //   description: `Changed deal stage from ${oldStage} to ${stage}`,
+      //   old_values: { stage: oldStage },
+      //   new_values: { stage: stage },
+      //   company_id: updatedDeal.company_id
+      // });
+
+      await queryRunner.commitTransaction();
+      return updatedDeal;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-
-    deal.stage = stage;
-    return this.dealsRepository.save(deal);
   }
 
   async assignDeal(id: string, userId: string): Promise<Deal> {
@@ -327,10 +462,10 @@ export class DealsService {
       conversionRate:
         deals.length > 0
           ? (
-              (deals.filter((d) => d.stage === DealStage.CLOSED_WON).length /
-                deals.length) *
-              100
-            ).toFixed(1)
+            (deals.filter((d) => d.stage === DealStage.CLOSED_WON).length /
+              deals.length) *
+            100
+          ).toFixed(1)
           : 0,
       totalValue: deals.reduce((sum, d) => sum + d.amount, 0),
       weightedValue: deals.reduce((sum, d) => sum + d.weighted_amount, 0),

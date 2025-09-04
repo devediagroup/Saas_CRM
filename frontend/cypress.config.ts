@@ -2,8 +2,7 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   e2e: {
-    // baseUrl will be set dynamically in tests
-    // baseUrl: 'http://localhost:3000',
+    baseUrl: 'http://localhost:8080',
     specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'cypress/support/e2e.ts',
     fixturesFolder: 'cypress/fixtures',
@@ -35,15 +34,15 @@ export default defineConfig({
   },
   component: {
     devServer: {
-      framework: 'create-react-app',
-      bundler: 'webpack',
+      framework: 'react',
+      bundler: 'vite',
     },
     specPattern: 'src/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'cypress/support/component.ts',
   },
   env: {
-    API_URL: 'http://localhost:1337',
-    BACKEND_URL: 'http://localhost:1337',
-    FRONTEND_URL: 'http://localhost:3000',
+    API_URL: 'http://localhost:3001',
+    BACKEND_URL: 'http://localhost:3001',
+    FRONTEND_URL: 'http://localhost:5173',
   },
 });

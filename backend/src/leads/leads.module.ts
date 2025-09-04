@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CacheModule } from '@nestjs/cache-manager';
 
 // Controllers
 import { LeadsController } from './leads.controller';
@@ -15,9 +16,13 @@ import { LeadSource } from './entities/lead-source.entity';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Lead, LeadSource]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([Lead, LeadSource]),
+    AuthModule,
+    CacheModule.register(),
+  ],
   controllers: [LeadsController],
   providers: [LeadsService],
   exports: [LeadsService],
 })
-export class LeadsModule {}
+export class LeadsModule { }

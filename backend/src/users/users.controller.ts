@@ -19,8 +19,8 @@ import {
 import { UsersService } from './users.service';
 import { User, UserRole, UserStatus } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { PermissionsGuard } from '../auth/guards/permissions.guard';
-import { Permissions } from '../auth/decorators/permissions.decorator';
+import { PermissionGuard } from '../auth/guards/permission.guard';
+import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import { User as UserDecorator } from '../auth/decorators/user.decorator';
 
 class CreateUserDto {
@@ -44,13 +44,13 @@ class UpdateUserDto {
 
 @ApiTags('Users')
 @Controller('users')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, PermissionGuard)
 @ApiBearerAuth()
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
-  @Permissions('users.create')
+  @RequirePermission('users.create')
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({
     status: 201,
@@ -69,7 +69,7 @@ export class UsersController {
   }
 
   @Get()
-  @Permissions('users.read')
+  @RequirePermission('users.read')
   @ApiOperation({ summary: 'Get all users for company' })
   @ApiResponse({
     status: 200,
@@ -84,7 +84,7 @@ export class UsersController {
   }
 
   @Get('stats')
-  @Permissions('users.read')
+  @RequirePermission('users.read')
   @ApiOperation({ summary: 'Get user statistics for company' })
   @ApiResponse({
     status: 200,
@@ -98,7 +98,7 @@ export class UsersController {
   }
 
   @Get('by-role/:role')
-  @Permissions('users.read')
+  @RequirePermission('users.read')
   @ApiOperation({ summary: 'Get users by role' })
   @ApiResponse({
     status: 200,
@@ -113,7 +113,7 @@ export class UsersController {
   }
 
   @Get('by-status/:status')
-  @Permissions('users.read')
+  @RequirePermission('users.read')
   @ApiOperation({ summary: 'Get users by status' })
   @ApiResponse({
     status: 200,
@@ -128,7 +128,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @Permissions('users.read')
+  @RequirePermission('users.read')
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({
     status: 200,
@@ -144,7 +144,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @Permissions('users.update')
+  @RequirePermission('users.update')
   @ApiOperation({ summary: 'Update user' })
   @ApiResponse({
     status: 200,
@@ -161,7 +161,7 @@ export class UsersController {
   }
 
   @Patch(':id/role')
-  @Permissions('users.update')
+  @RequirePermission('users.update')
   @ApiOperation({ summary: 'Change user role' })
   @ApiResponse({
     status: 200,
@@ -177,7 +177,7 @@ export class UsersController {
   }
 
   @Patch(':id/activate')
-  @Permissions('users.update')
+  @RequirePermission('users.update')
   @ApiOperation({ summary: 'Activate user' })
   @ApiResponse({
     status: 200,
@@ -192,7 +192,7 @@ export class UsersController {
   }
 
   @Patch(':id/deactivate')
-  @Permissions('users.update')
+  @RequirePermission('users.update')
   @ApiOperation({ summary: 'Deactivate user' })
   @ApiResponse({
     status: 200,
@@ -207,7 +207,7 @@ export class UsersController {
   }
 
   @Patch(':id/suspend')
-  @Permissions('users.update')
+  @RequirePermission('users.update')
   @ApiOperation({ summary: 'Suspend user' })
   @ApiResponse({
     status: 200,
@@ -222,7 +222,7 @@ export class UsersController {
   }
 
   @Patch(':id/verify-email')
-  @Permissions('users.update')
+  @RequirePermission('users.update')
   @ApiOperation({ summary: 'Verify user email' })
   @ApiResponse({
     status: 200,
@@ -237,7 +237,7 @@ export class UsersController {
   }
 
   @Patch(':id/verify-phone')
-  @Permissions('users.update')
+  @RequirePermission('users.update')
   @ApiOperation({ summary: 'Verify user phone' })
   @ApiResponse({
     status: 200,
@@ -252,7 +252,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @Permissions('users.delete')
+  @RequirePermission('users.delete')
   @ApiOperation({ summary: 'Delete user' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
   @ApiResponse({ status: 404, description: 'User not found' })

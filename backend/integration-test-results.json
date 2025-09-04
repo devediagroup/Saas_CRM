@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-09-03T15:09:03.376Z",
+  "summary": {
+    "total_suites": 4,
+    "passed_suites": 0,
+    "failed_suites": 4,
+    "skipped_suites": 0,
+    "total_tests": 4,
+    "total_passed": 0,
+    "total_failed": 4,
+    "total_duration_ms": 3059
+  },
+  "results": [
+    {
+      "suite": "auth.integration.spec.ts",
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "duration": 678,
+      "status": "failed"
+    },
+    {
+      "suite": "leads.integration.spec.ts",
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "duration": 766,
+      "status": "failed"
+    },
+    {
+      "suite": "properties.integration.spec.ts",
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "duration": 850,
+      "status": "failed"
+    },
+    {
+      "suite": "users.integration.spec.ts",
+      "tests": 1,
+      "passed": 0,
+      "failed": 1,
+      "duration": 761,
+      "status": "failed"
+    }
+  ]
+}

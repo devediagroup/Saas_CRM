@@ -1,0 +1,33 @@
+{
+    "displayName": "Integration Tests",
+    "rootDir": ".",
+    "testMatch": [
+        "<rootDir>/test/integration/**/*.spec.ts"
+    ],
+    "moduleFileExtensions": [
+        "js",
+        "json",
+        "ts"
+    ],
+    "transform": {
+        "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+        "src/**/*.(t|j)s",
+        "!src/**/*.spec.ts",
+        "!src/**/*.interface.ts",
+        "!src/main.ts"
+    ],
+    "coverageDirectory": "coverage-integration",
+    "testEnvironment": "node",
+    "moduleNameMapping": {
+        "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "setupFilesAfterEnv": [
+        "<rootDir>/test/integration/setup.ts"
+    ],
+    "testTimeout": 30000,
+    "verbose": true,
+    "detectOpenHandles": true,
+    "forceExit": true
+}

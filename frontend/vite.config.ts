@@ -128,52 +128,115 @@ export default defineConfig(({ mode }) => ({
   },
 
   build: {
-    // Code Splitting
+    // Code Splitting with optimized chunks
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Vendor chunks
-          'react-vendor': ['react', 'react-dom'],
-          'router-vendor': ['react-router-dom'],
-          'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
-          'query-vendor': ['@tanstack/react-query'],
-          'form-vendor': ['react-hook-form', '@hookform/resolvers'],
-          'utils-vendor': ['clsx', 'tailwind-merge', 'date-fns'],
-          'chart-vendor': ['recharts'],
+        manualChunks: (id) => {
+          // React core libs
+          if (id.includes('react') || id.includes('react-dom')) {
+            return 'react-vendor';
+          }
+          // Router
+          if (id.includes('react-router')) {
+            return 'router-vendor';
+          }
+          // UI libraries (Radix)
+          if (id.includes('@radix-ui')) {
+            return 'ui-vendor';
+          }
+          // Query library
+          if (id.includes('@tanstack/react-query')) {
+            return 'query-vendor';
+          }
+          // Form libraries
+          if (id.includes('react-hook-form') || id.includes('@hookform')) {
+            return 'form-vendor';
+          }
+          // Chart libraries
+          if (id.includes('recharts') || id.includes('d3')) {
+            return 'chart-vendor';
+          }
+          // Icon libraries
+          if (id.includes('lucide-react') || id.includes('@heroicons')) {
+            return 'icon-vendor';
+          }
+          // Utility libraries
+          if (id.includes('clsx') || id.includes('tailwind-merge') ||
+            id.includes('date-fns') || id.includes('class-variance-authority')) {
+            return 'utils-vendor';
+          }
+          // Other vendor libraries
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
         },
-        // Naming pattern for chunks
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]',
+        // Optimized naming pattern for chunks
+        chunkFileNames: (chunkInfo) => {
+          if (chunkInfo.name.includes('vendor')) {
+            return 'assets/vendor/[name].[hash].js';
+          }
+          return 'assets/chunks/[name].[hash].js';
+        },
+        entryFileNames: 'assets/[name].[hash].js',
+        assetFileNames: (assetInfo) => {
+          const extType = assetInfo.name?.split('.').pop();
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType || '')) {
+            return 'assets/images/[name].[hash].[ext]';
+          }
+          if (/woff2?|eot|ttf|otf/i.test(extType || '')) {
+            return 'assets/fonts/[name].[hash].[ext]';
+          }
+          return 'assets/[name].[hash].[ext]';
+        },
+      },
+      // External dependencies (don't bundle these)
+      external: (id) => {
+        // Only externalize in production
+        if (mode === 'production') {
+          return false; // Bundle everything for now
+        }
+        return false;
       },
     },
 
-    // Chunk size warnings
-    chunkSizeWarningLimit: 1000,
+    // Performance optimization
+    chunkSizeWarningLimit: 500, // Stricter limit
 
-    // Source maps for production debugging
-    sourcemap: mode === 'production' ? 'hidden' : true,
+    // Source maps only in development
+    sourcemap: mode === 'production' ? false : true,
 
-    // Minification
+    // Advanced minification
     minify: 'terser',
     terserOptions: {
       compress: {
         drop_console: mode === 'production',
         drop_debugger: mode === 'production',
+        pure_funcs: mode === 'production' ? ['console.log', 'console.info'] : [],
+        passes: 2, // Multiple passes for better compression
+      },
+      mangle: {
+        safari10: true, // Safari 10 compatibility
+      },
+      format: {
+        comments: false, // Remove comments
       },
     },
 
     // CSS optimization
     cssCodeSplit: true,
+    cssMinify: 'lightningcss',
 
-    // Target modern browsers
-    target: 'esnext',
+    // Target modern browsers for smaller bundle
+    target: ['es2020', 'chrome80', 'firefox78', 'safari14'],
 
-    // Enable gzip compression
+    // Disable compressed size reporting for faster builds
     reportCompressedSize: false,
+
+    // Disable polyfills for smaller bundle
+    polyfillModulePreload: false,
   },
 
-  // Dependency optimization
+  // Dependency optimization for faster dev builds
   optimizeDeps: {
     include: [
       'react',
@@ -183,7 +246,27 @@ export default defineConfig(({ mode }) => ({
       'react-hook-form',
       'clsx',
       'tailwind-merge',
+      'lucide-react',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      'recharts',
     ],
+    exclude: [
+      // Exclude large libraries that don't need pre-bundling
+      '@rollup/rollup-linux-x64-gnu',
+      '@rollup/rollup-darwin-x64',
+    ],
+  },
+
+  // Experimental features for better performance
+  experimental: {
+    renderBuiltUrl(filename) {
+      // Use CDN for assets in production
+      if (mode === 'production' && process.env.CDN_URL) {
+        return `${process.env.CDN_URL}/${filename}`;
+      }
+      return filename;
+    },
   },
 
   // Preview server for production testing

@@ -1,0 +1,215 @@
+{
+    "testUser": {
+        "email": "admin@echoops.com",
+        "password": "Admin123!",
+        "name": "مدير النظام"
+    },
+    "testLead": {
+        "first_name": "أحمد",
+        "last_name": "محمد",
+        "email": "ahmed.mohammed@example.com",
+        "phone": "+966501234567",
+        "company": "شركة الاختبار",
+        "notes": "عميل محتمل مهتم بشراء فيلا"
+    },
+    "testProperty": {
+        "title": "فيلا فاخرة في الرياض",
+        "description": "فيلا حديثة بمواصفات عالية ومساحات واسعة",
+        "price": "2500000",
+        "area": "400",
+        "type": "Villa",
+        "city": "الرياض",
+        "address": "حي الملقا",
+        "bedrooms": "4",
+        "bathrooms": "3",
+        "features": [
+            "مسبح",
+            "حديقة",
+            "جراج",
+            "مكيف"
+        ]
+    },
+    "testDeal": {
+        "title": "صفقة شراء فيلا - أحمد محمد",
+        "value": "2500000",
+        "stage": "مفاوضات",
+        "probability": "75",
+        "notes": "العميل مهتم جداً والمفاوضات في مراحل متقدمة"
+    },
+    "users": [
+        {
+            "email": "admin@echoops.com",
+            "password": "Admin123!",
+            "role": "admin",
+            "name": "مدير النظام"
+        },
+        {
+            "email": "sales@echoops.com",
+            "password": "Sales123!",
+            "role": "sales",
+            "name": "مندوب مبيعات"
+        },
+        {
+            "email": "agent@echoops.com",
+            "password": "Agent123!",
+            "role": "agent",
+            "name": "وكيل عقاري"
+        }
+    ],
+    "companies": [
+        {
+            "name": "شركة العقارات الذهبية",
+            "email": "info@goldrealestate.com",
+            "phone": "+966112345678",
+            "address": "الرياض، المملكة العربية السعودية"
+        },
+        {
+            "name": "مؤسسة الأملاك المتميزة",
+            "email": "contact@premiumproperties.com",
+            "phone": "+966112345679",
+            "address": "جدة، المملكة العربية السعودية"
+        }
+    ],
+    "searchTerms": [
+        "أحمد",
+        "فيلا",
+        "الرياض",
+        "2500000",
+        "شقة",
+        "جدة",
+        "مكتب",
+        "أرض"
+    ],
+    "filters": {
+        "propertyTypes": [
+            "Villa",
+            "Apartment",
+            "Office",
+            "Land"
+        ],
+        "cities": [
+            "الرياض",
+            "جدة",
+            "الدمام",
+            "مكة المكرمة"
+        ],
+        "priceRanges": [
+            {
+                "min": 0,
+                "max": 500000
+            },
+            {
+                "min": 500000,
+                "max": 1000000
+            },
+            {
+                "min": 1000000,
+                "max": 2000000
+            },
+            {
+                "min": 2000000,
+                "max": 5000000
+            }
+        ],
+        "leadStatuses": [
+            "جديد",
+            "تم التواصل",
+            "مؤهل",
+            "محول"
+        ],
+        "dealStages": [
+            "مفاوضات",
+            "عرض",
+            "مراجعة",
+            "موقع",
+            "مغلق"
+        ]
+    },
+    "sampleData": {
+        "leads": [
+            {
+                "first_name": "سارة",
+                "last_name": "أحمد",
+                "email": "sara.ahmed@example.com",
+                "phone": "+966501234568",
+                "status": "جديد"
+            },
+            {
+                "first_name": "محمد",
+                "last_name": "علي",
+                "email": "mohammed.ali@example.com",
+                "phone": "+966501234569",
+                "status": "تم التواصل"
+            },
+            {
+                "first_name": "فاطمة",
+                "last_name": "حسن",
+                "email": "fatima.hassan@example.com",
+                "phone": "+966501234570",
+                "status": "مؤهل"
+            }
+        ],
+        "properties": [
+            {
+                "title": "شقة حديثة في الرياض",
+                "price": "800000",
+                "area": "150",
+                "type": "Apartment",
+                "city": "الرياض"
+            },
+            {
+                "title": "فيلا فاخرة في جدة",
+                "price": "3500000",
+                "area": "500",
+                "type": "Villa",
+                "city": "جدة"
+            },
+            {
+                "title": "مكتب تجاري في الدمام",
+                "price": "1200000",
+                "area": "200",
+                "type": "Office",
+                "city": "الدمام"
+            }
+        ]
+    },
+    "api": {
+        "baseUrl": "http://localhost:3001",
+        "endpoints": {
+            "auth": "/api/auth",
+            "leads": "/api/leads",
+            "properties": "/api/properties",
+            "deals": "/api/deals",
+            "users": "/api/users",
+            "companies": "/api/companies"
+        }
+    },
+    "selectors": {
+        "navigation": {
+            "sidebar": "[data-testid='sidebar']",
+            "dashboard": "[data-testid='nav-dashboard']",
+            "leads": "[data-testid='nav-leads']",
+            "properties": "[data-testid='nav-properties']",
+            "deals": "[data-testid='nav-deals']",
+            "users": "[data-testid='nav-users']"
+        },
+        "forms": {
+            "loginForm": "[data-testid='login-form']",
+            "leadForm": "[data-testid='lead-form']",
+            "propertyForm": "[data-testid='property-form']",
+            "submitButton": "[data-testid='submit-button']",
+            "cancelButton": "[data-testid='cancel-button']"
+        },
+        "tables": {
+            "leadsTable": "[data-testid='leads-table']",
+            "propertiesTable": "[data-testid='properties-table']",
+            "dealsTable": "[data-testid='deals-table']"
+        },
+        "modals": {
+            "addLead": "[data-testid='add-lead-modal']",
+            "editLead": "[data-testid='edit-lead-modal']",
+            "deleteLead": "[data-testid='delete-lead-modal']",
+            "addProperty": "[data-testid='add-property-modal']"
+        }
+    }
+}

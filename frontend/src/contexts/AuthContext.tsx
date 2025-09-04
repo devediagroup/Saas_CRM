@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from 'react';
 
 // أنواع البيانات
 interface User {
@@ -23,6 +23,34 @@ interface AuthContextType {
   refreshUserPermissions: () => Promise<void>;
 }
 
+// Helper functions for SUPER_ADMIN permissions
+const getSuperAdminPermissions = (): string[] => [
+  'leads.create', 'leads.read', 'leads.update', 'leads.delete',
+  'properties.create', 'properties.read', 'properties.update', 'properties.delete',
+  'companies.create', 'companies.read', 'companies.update', 'companies.delete',
+  'developers.create', 'developers.read', 'developers.update', 'developers.delete',
+  'projects.create', 'projects.read', 'projects.update', 'projects.delete',
+  'activities.create', 'activities.read', 'activities.update', 'activities.delete',
+  'deals.create', 'deals.read', 'deals.update', 'deals.delete',
+  'users.create', 'users.read', 'users.update', 'users.delete',
+  'settings.read', 'settings.update',
+  'analytics.read', 'reports.read'
+];
+
+const isSuperAdmin = (role: string): boolean =>
+  role === 'SUPER_ADMIN' || role === 'super_admin';
+
+const enhanceUserWithPermissions = (userData: any): User => {
+  if (isSuperAdmin(userData.role)) {
+    console.log('🔧 SUPER_ADMIN detected, adding all permissions');
+    return {
+      ...userData,
+      permissions: getSuperAdminPermissions()
+    };
+  }
+  return userData;
+};
+
 // إنشاء Context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -45,84 +73,113 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Refs to track component state and prevent memory leaks
+  const mountedRef = useRef(true);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Cleanup function
+  const cleanup = useCallback(() => {
+    mountedRef.current = false;
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+  }, []);
+
+  // Enhanced fetch with abort controller
+  const fetchWithAbort = useCallback(async (url: string, options: RequestInit = {}) => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    abortControllerRef.current = new AbortController();
+
+    return fetch(url, {
+      ...options,
+      signal: abortControllerRef.current.signal,
+    });
+  }, []);
+
   // التحقق من وجود مستخدم مسجل
   useEffect(() => {
+    let debounceTimeout: NodeJS.Timeout;
+
     const checkAuthStatus = async () => {
+      if (!mountedRef.current) return;
+
       console.log('🔄 Starting auth status check...');
       try {
         const token = localStorage.getItem('token');
         console.log('🔑 Token check:', token ? 'TOKEN_EXISTS' : 'NO_TOKEN');
 
-        if (token) {
+        if (token && mountedRef.current) {
           console.log('🚀 Making API call to /api/auth/me');
-          console.log('🔑 Using token:', token.substring(0, 20) + '...');
-          // التحقق من صحة التوكن
-          const response = await fetch('/api/auth/me', {
+
+          const response = await fetchWithAbort('/api/auth/me', {
             headers: {
               'Authorization': `Bearer ${token}`,
             },
           });
 
           console.log('📶 API Response status:', response.status);
-          console.log('📶 API Response headers:', Object.fromEntries(response.headers.entries()));
 
-          if (response.ok) {
+          if (response.ok && mountedRef.current) {
             const userData = await response.json();
             console.log('👤 User data loaded:', userData);
 
-            // إذا كان المستخدم SUPER_ADMIN، أضف جميع الصلاحيات مؤقتاً
-            if (userData.role === 'SUPER_ADMIN' || userData.role === 'super_admin') {
-              console.log('🔧 SUPER_ADMIN detected on auth check, adding all permissions');
-              const allPermissions = [
-                'leads.create', 'leads.read', 'leads.update', 'leads.delete',
-                'properties.create', 'properties.read', 'properties.update', 'properties.delete',
-                'companies.create', 'companies.read', 'companies.update', 'companies.delete',
-                'developers.create', 'developers.read', 'developers.update', 'developers.delete',
-                'projects.create', 'projects.read', 'projects.update', 'projects.delete',
-                'activities.create', 'activities.read', 'activities.update', 'activities.delete',
-                'deals.create', 'deals.read', 'deals.update', 'deals.delete',
-                'users.create', 'users.read', 'users.update', 'users.delete',
-                'settings.read', 'settings.update',
-                'analytics.read', 'reports.read'
-              ];
-              userData.permissions = allPermissions;
-              console.log('✅ Permissions added to user data:', allPermissions.length, 'permissions');
-            }
-
-            setUser(userData);
+            // تحسين الكود باستخدام دالة مساعدة
+            const enhancedUser = enhanceUserWithPermissions(userData);
+            setUser(enhancedUser);
             console.log('✅ User state updated successfully');
-          } else {
-            // التوكن غير صالح
+          } else if (mountedRef.current) {
             console.log('❌ Token invalid, status:', response.status);
-            const errorText = await response.text();
-            console.log('❌ Error response:', errorText);
             localStorage.removeItem('token');
+            setUser(null);
           }
-        } else {
-          console.log('ℹ️ No token found in localStorage');
         }
-      } catch (error) {
+      } catch (error: any) {
+        if (error.name === 'AbortError') {
+          console.log('🔄 Auth check aborted');
+          return;
+        }
         console.error('❌ Error in auth check:', error);
-        console.error('❌ Error details:', {
-          name: error.name,
-          message: error.message,
-          stack: error.stack
-        });
-        localStorage.removeItem('token');
+        if (mountedRef.current) {
+          localStorage.removeItem('token');
+          setUser(null);
+        }
       } finally {
-        console.log('✅ Auth check completed, setting isLoading to false');
-        setIsLoading(false);
+        if (mountedRef.current) {
+          console.log('✅ Auth check completed, setting isLoading to false');
+          setIsLoading(false);
+        }
       }
     };
 
-    checkAuthStatus();
-  }, []);
+    // Add debounce to prevent multiple calls
+    debounceTimeout = setTimeout(checkAuthStatus, 100);
+
+    // Cleanup function to prevent memory leaks
+    return () => {
+      clearTimeout(debounceTimeout);
+      cleanup();
+      console.log('🧹 Auth cleanup completed');
+    };
+  }, [fetchWithAbort, cleanup]);
 
   // تسجيل الدخول
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
+    if (!mountedRef.current) return;
+
     try {
       setIsLoading(true);
-      const response = await fetch('/api/auth/login', {
+      const response = await fetchWithAbort('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,69 +193,59 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const { token, user: userData } = await response.json();
 
+      if (!mountedRef.current) return;
+
       // حفظ التوكن
       localStorage.setItem('token', token);
 
-      // تحديث حالة المستخدم
-      setUser(userData);
-
-      // إذا كان المستخدم SUPER_ADMIN، أضف جميع الصلاحيات مؤقتاً
-      if (userData.role === 'SUPER_ADMIN' || userData.role === 'super_admin') {
-        console.log('🔧 SUPER_ADMIN detected, adding all permissions');
-        const allPermissions = [
-          'leads.create', 'leads.read', 'leads.update', 'leads.delete',
-          'properties.create', 'properties.read', 'properties.update', 'properties.delete',
-          'companies.create', 'companies.read', 'companies.update', 'companies.delete',
-          'developers.create', 'developers.read', 'developers.update', 'developers.delete',
-          'projects.create', 'projects.read', 'projects.update', 'projects.delete',
-          'activities.create', 'activities.read', 'activities.update', 'activities.delete',
-          'deals.create', 'deals.read', 'deals.update', 'deals.delete',
-          'users.create', 'users.read', 'users.update', 'users.delete',
-          'settings.read', 'settings.update',
-          'analytics.read', 'reports.read'
-        ];
-        setUser(prev => prev ? { ...prev, permissions: allPermissions } : null);
-      }
+      // تحديث حالة المستخدم مع تعزيز الصلاحيات
+      const enhancedUser = enhanceUserWithPermissions(userData);
+      setUser(enhancedUser);
 
       // جلب الصلاحيات
       await refreshUserPermissions();
-    } catch (error) {
+    } catch (error: any) {
+      if (error.name === 'AbortError') return;
       console.error('خطأ في تسجيل الدخول:', error);
       throw error;
     } finally {
-      setIsLoading(false);
+      if (mountedRef.current) {
+        setIsLoading(false);
+      }
     }
-  };
+  }, [fetchWithAbort]);
 
   // تسجيل الخروج
-  const logout = () => {
+  const logout = useCallback(() => {
+    cleanup();
     localStorage.removeItem('token');
     setUser(null);
-  };
+  }, [cleanup]);
 
   // جلب صلاحيات المستخدم
-  const refreshUserPermissions = async () => {
-    if (!user) return;
+  const refreshUserPermissions = useCallback(async () => {
+    if (!user || !mountedRef.current) return;
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('/api/auth/permissions', {
+      const response = await fetchWithAbort('/api/auth/permissions', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
-      if (response.ok) {
+      if (response.ok && mountedRef.current) {
         const { permissions } = await response.json();
         setUser(prev => prev ? { ...prev, permissions } : null);
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.name === 'AbortError') return;
       console.error('خطأ في جلب الصلاحيات:', error);
     }
-  };
+  }, [user, fetchWithAbort]);
 
   // التحقق من وجود صلاحية واحدة
-  const hasPermission = (permission: string): boolean => {
+  const hasPermission = useCallback((permission: string): boolean => {
     // إضافة logging للتشخيص
     console.log('🔍 hasPermission check:', {
       permission,
@@ -233,17 +280,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const hasIt = user.permissions.includes(permission);
     console.log(`${hasIt ? '✅' : '❌'} Permission ${permission}: ${hasIt}`);
     return hasIt;
-  };
+  }, [user]);
 
   // التحقق من وجود أي صلاحية من مجموعة
-  const hasAnyPermission = (permissions: string[]): boolean => {
+  const hasAnyPermission = useCallback((permissions: string[]): boolean => {
     return permissions.some(permission => hasPermission(permission));
-  };
+  }, [hasPermission]);
 
   // التحقق من وجود جميع الصلاحيات
-  const hasAllPermissions = (permissions: string[]): boolean => {
+  const hasAllPermissions = useCallback((permissions: string[]): boolean => {
     return permissions.every(permission => hasPermission(permission));
-  };
+  }, [hasPermission]);
+
+  // Component unmount cleanup
+  useEffect(() => {
+    return () => {
+      cleanup();
+    };
+  }, [cleanup]);
 
   // قيمة Context
   const value: AuthContextType = {

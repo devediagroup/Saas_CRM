@@ -2,6 +2,7 @@ import {
   Injectable,
   UnauthorizedException,
   ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -12,6 +13,7 @@ import {
   Company,
   SubscriptionPlan,
 } from '../companies/entities/company.entity';
+import { validatePasswordStrength } from '../validators/password.validator';
 
 export interface AuthResponse {
   access_token: string;
@@ -38,7 +40,7 @@ export class AuthService {
     private usersService: UsersService,
     private companiesService: CompaniesService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
@@ -91,6 +93,16 @@ export class AuthService {
     companyName: string;
     phone?: string;
   }): Promise<AuthResponse> {
+    // Validate password strength
+    const passwordValidation = validatePasswordStrength(registerData.password);
+    if (!passwordValidation.isValid) {
+      throw new BadRequestException({
+        message: 'Password does not meet security requirements',
+        errors: passwordValidation.errors,
+        strength: passwordValidation.strength,
+      });
+    }
+
     // Check if user already exists
     const existingUser = await this.usersService.findByEmail(
       registerData.email,
@@ -158,6 +170,16 @@ export class AuthService {
     oldPassword: string,
     newPassword: string,
   ): Promise<void> {
+    // Validate new password strength
+    const passwordValidation = validatePasswordStrength(newPassword);
+    if (!passwordValidation.isValid) {
+      throw new BadRequestException({
+        message: 'New password does not meet security requirements',
+        errors: passwordValidation.errors,
+        strength: passwordValidation.strength,
+      });
+    }
+
     const user = await this.usersService.findOne(userId, userId);
 
     // Verify old password
@@ -167,6 +189,12 @@ export class AuthService {
     );
     if (!isValidPassword) {
       throw new UnauthorizedException('Invalid current password');
+    }
+
+    // Check if new password is different from old password
+    const isSamePassword = await bcrypt.compare(newPassword, user.password_hash);
+    if (isSamePassword) {
+      throw new BadRequestException('New password must be different from current password');
     }
 
     // Hash new password
@@ -216,6 +244,16 @@ export class AuthService {
   }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
+    // Validate new password strength
+    const passwordValidation = validatePasswordStrength(newPassword);
+    if (!passwordValidation.isValid) {
+      throw new BadRequestException({
+        message: 'New password does not meet security requirements',
+        errors: passwordValidation.errors,
+        strength: passwordValidation.strength,
+      });
+    }
+
     try {
       const payload = this.jwtService.verify(token);
 
@@ -236,6 +274,12 @@ export class AuthService {
         throw new UnauthorizedException('Token has expired');
       }
 
+      // Check if new password is different from current password
+      const isSamePassword = await bcrypt.compare(newPassword, user.password_hash);
+      if (isSamePassword) {
+        throw new BadRequestException('New password must be different from current password');
+      }
+
       // Hash new password
       const hashedPassword = await bcrypt.hash(newPassword, 12);
 
@@ -250,6 +294,9 @@ export class AuthService {
         user.id,
       );
     } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
       throw new UnauthorizedException('Invalid or expired token');
     }
   }

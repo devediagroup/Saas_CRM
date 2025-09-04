@@ -111,6 +111,7 @@ export const Sidebar: React.FC = () => {
                 href={item.href}
                 className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors ${isRTL ? 'flex-row-reverse' : ''}`}
                 style={isRTL ? { justifyContent: 'flex-start' } : {}}
+                data-testid={`nav-${item.key}`}
               >
                 <span className="inline-flex w-6 justify-center items-center">
                   <item.icon className="h-5 w-5" />

@@ -263,13 +263,17 @@ const Leads = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-primary">{t('leads.title')}</h1>
+            <h1 className="text-3xl font-bold text-primary" data-testid="leads-header">{t('leads.title')}</h1>
             <p className="text-muted-foreground mt-1">
               {t('leads.search')}
             </p>
           </div>
           <Can permission="leads.create">
-            <Button className="gradient-primary" onClick={() => setIsCreateDialogOpen(true)}>
+            <Button
+              className="gradient-primary"
+              onClick={() => setIsCreateDialogOpen(true)}
+              data-testid="add-lead-button"
+            >
               <Plus className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
               {t('leads.add')}
             </Button>
@@ -354,11 +358,12 @@ const Leads = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="arabic-text"
+                  data-testid="leads-search"
                 />
               </div>
 
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full sm:w-[150px]">
+                <SelectTrigger className="w-full sm:w-[150px]" data-testid="status-filter">
                   <SelectValue placeholder={t('leads.filters.status')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -437,7 +442,7 @@ const Leads = () => {
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <Table>
+              <Table data-testid="leads-table">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-right">{t('leads.table.lead')}</TableHead>
@@ -455,7 +460,7 @@ const Leads = () => {
                   {filteredLeads.map((lead) => {
                     const unitInfo = getUnitInfo(lead);
                     return (
-                      <TableRow key={lead.id}>
+                      <TableRow key={lead.id} data-testid="lead-row">
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <div>
@@ -531,7 +536,7 @@ const Leads = () => {
                                 {t('leads.actions.view')}
                               </DropdownMenuItem>
                               <Can permission="leads.update">
-                                <DropdownMenuItem onClick={() => handleEdit(lead)}>
+                                <DropdownMenuItem onClick={() => handleEdit(lead)} data-testid="edit-lead">
                                   <Edit className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
                                   {t('leads.actions.edit')}
                                 </DropdownMenuItem>
@@ -540,6 +545,7 @@ const Leads = () => {
                                 <DropdownMenuItem
                                   onClick={() => handleDelete(lead.id)}
                                   className="text-red-600 focus:text-red-600"
+                                  data-testid="delete-lead"
                                 >
                                   <Trash2 className="ml-2 h-4 w-4 rtl:ml-0 rtl:mr-2" />
                                   {t('leads.actions.delete')}

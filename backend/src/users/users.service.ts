@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { User, UserRole, UserStatus } from './entities/user.entity';
 import { PermissionsService } from '../auth/services/permissions.service';
 
@@ -15,22 +15,61 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private permissionsService: PermissionsService,
-  ) {}
+    private dataSource: DataSource,
+  ) { }
 
   async create(createUserDto: Partial<User>, userId: string): Promise<User> {
-    // Check if user has permission to create users
-    const hasPermission = await this.permissionsService.hasPermission(
-      userId,
-      'users.create',
-    );
-    if (!hasPermission) {
-      throw new ForbiddenException(
-        'You do not have permission to create users',
-      );
-    }
+    return this.createWithTransaction(createUserDto, userId);
+  }
 
-    const user = this.usersRepository.create(createUserDto);
-    return this.usersRepository.save(user);
+  async createWithTransaction(createUserDto: Partial<User>, userId: string): Promise<User> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Check if user has permission to create users
+      const hasPermission = await this.permissionsService.hasPermission(
+        userId,
+        'users.create',
+      );
+      if (!hasPermission) {
+        throw new ForbiddenException(
+          'You do not have permission to create users',
+        );
+      }
+
+      // Check if email already exists
+      const existingUser = await queryRunner.manager.findOne(User, {
+        where: { email: createUserDto.email },
+      });
+      if (existingUser) {
+        throw new ConflictException('Email already exists');
+      }
+
+      // Create user within transaction
+      const user = queryRunner.manager.create(User, createUserDto);
+      const savedUser = await queryRunner.manager.save(user);
+
+      // Add activity log for user creation
+      // Note: You would need to import Activity entity and add it here
+      // await queryRunner.manager.save(Activity, {
+      //   user_id: userId,
+      //   action: 'create_user',
+      //   entity_id: savedUser.id,
+      //   entity_type: 'user',
+      //   description: `Created user: ${savedUser.first_name} ${savedUser.last_name}`,
+      //   company_id: savedUser.company_id
+      // });
+
+      await queryRunner.commitTransaction();
+      return savedUser;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async findAll(companyId?: string, userId?: string): Promise<User[]> {
@@ -168,18 +207,75 @@ export class UsersService {
     newRole: UserRole,
     userId: string,
   ): Promise<User> {
-    const user = await this.findOne(id, userId);
+    return this.changeUserRoleWithTransaction(id, newRole, userId);
+  }
 
-    // Prevent changing super admin role
-    if (
-      user.role === UserRole.SUPER_ADMIN &&
-      newRole !== UserRole.SUPER_ADMIN
-    ) {
-      throw new ConflictException('Cannot change super admin role');
+  async changeUserRoleWithTransaction(
+    id: string,
+    newRole: UserRole,
+    userId: string,
+  ): Promise<User> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Check if user has permission to update users
+      const hasPermission = await this.permissionsService.hasPermission(
+        userId,
+        'users.update',
+      );
+      if (!hasPermission) {
+        throw new ForbiddenException(
+          'You do not have permission to update users',
+        );
+      }
+
+      // Find the user first
+      const user = await queryRunner.manager.findOne(User, {
+        where: { id },
+        relations: ['company'],
+      });
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+
+      // Store old role for audit log
+      const oldRole = user.role;
+
+      // Prevent changing super admin role
+      if (
+        user.role === UserRole.SUPER_ADMIN &&
+        newRole !== UserRole.SUPER_ADMIN
+      ) {
+        throw new ConflictException('Cannot change super admin role');
+      }
+
+      user.role = newRole;
+      const updatedUser = await queryRunner.manager.save(user);
+
+      // Add activity log for role change
+      // Note: You would need to import Activity entity and add it here
+      // await queryRunner.manager.save(Activity, {
+      //   user_id: userId,
+      //   action: 'change_user_role',
+      //   entity_id: updatedUser.id,
+      //   entity_type: 'user',
+      //   description: `Changed user role from ${oldRole} to ${newRole}`,
+      //   old_values: { role: oldRole },
+      //   new_values: { role: newRole },
+      //   company_id: updatedUser.company_id
+      // });
+
+      await queryRunner.commitTransaction();
+      return updatedUser;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-
-    user.role = newRole;
-    return this.usersRepository.save(user);
   }
 
   async activateUser(id: string, userId: string): Promise<User> {

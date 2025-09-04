@@ -13,6 +13,9 @@ import { PermissionsService } from './services/permissions.service';
 // Strategies
 import { JwtStrategy } from './strategies/jwt.strategy';
 
+// Guards
+import { PermissionGuard } from './guards/permission.guard';
+
 // Entities
 import { User } from '../users/entities/user.entity';
 import { Company } from '../companies/entities/company.entity';
@@ -27,14 +30,14 @@ import { CompaniesModule } from '../companies/companies.module';
     PassportModule,
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET || 'your-super-secret-jwt-key-here',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '24h' },
     }),
     forwardRef(() => UsersModule),
     CompaniesModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, PermissionsService, JwtStrategy],
-  exports: [AuthService, PermissionsService],
+  providers: [AuthService, PermissionsService, JwtStrategy, PermissionGuard],
+  exports: [AuthService, PermissionsService, PermissionGuard],
 })
-export class AuthModule {}
+export class AuthModule { }

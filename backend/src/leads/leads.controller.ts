@@ -19,8 +19,8 @@ import {
 import { LeadsService } from './leads.service';
 import { Lead, LeadStatus, LeadPriority } from './entities/lead.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { PermissionsGuard } from '../auth/guards/permissions.guard';
-import { Permissions } from '../auth/decorators/permissions.decorator';
+import { PermissionGuard } from '../auth/guards/permission.guard';
+import { RequirePermission } from '../auth/decorators/require-permission.decorator';
 import { User } from '../auth/decorators/user.decorator';
 
 class CreateLeadDto {
@@ -75,13 +75,13 @@ class UpdateLeadDto {
 
 @ApiTags('Leads')
 @Controller('leads')
-@UseGuards(JwtAuthGuard, PermissionsGuard)
+@UseGuards(JwtAuthGuard, PermissionGuard)
 @ApiBearerAuth()
 export class LeadsController {
-  constructor(private readonly leadsService: LeadsService) {}
+  constructor(private readonly leadsService: LeadsService) { }
 
   @Post()
-  @Permissions('leads.create')
+  @RequirePermission('leads.create')
   @ApiOperation({ summary: 'Create a new lead' })
   @ApiResponse({
     status: 201,
@@ -100,7 +100,7 @@ export class LeadsController {
   }
 
   @Get()
-  @Permissions('leads.read')
+  @RequirePermission('leads.read')
   @ApiOperation({ summary: 'Get all leads for company' })
   @ApiResponse({
     status: 200,
@@ -138,7 +138,7 @@ export class LeadsController {
   }
 
   @Get('stats')
-  @Permissions('leads.read')
+  @RequirePermission('leads.read')
   @ApiOperation({ summary: 'Get lead statistics' })
   @ApiResponse({
     status: 200,
@@ -152,7 +152,7 @@ export class LeadsController {
   }
 
   @Get(':id')
-  @Permissions('leads.read')
+  @RequirePermission('leads.read')
   @ApiOperation({ summary: 'Get lead by ID' })
   @ApiResponse({
     status: 200,
@@ -168,7 +168,7 @@ export class LeadsController {
   }
 
   @Patch(':id')
-  @Permissions('leads.update')
+  @RequirePermission('leads.update')
   @ApiOperation({ summary: 'Update lead' })
   @ApiResponse({
     status: 200,
@@ -184,7 +184,7 @@ export class LeadsController {
   }
 
   @Patch(':id/assign')
-  @Permissions('leads.update')
+  @RequirePermission('leads.update')
   @ApiOperation({ summary: 'Assign lead to user' })
   @ApiResponse({
     status: 200,
@@ -200,7 +200,7 @@ export class LeadsController {
   }
 
   @Patch(':id/status')
-  @Permissions('leads.update')
+  @RequirePermission('leads.update')
   @ApiOperation({ summary: 'Update lead status' })
   @ApiResponse({
     status: 200,
@@ -216,7 +216,7 @@ export class LeadsController {
   }
 
   @Patch(':id/priority')
-  @Permissions('leads.update')
+  @RequirePermission('leads.update')
   @ApiOperation({ summary: 'Update lead priority' })
   @ApiResponse({
     status: 200,
@@ -232,7 +232,7 @@ export class LeadsController {
   }
 
   @Delete(':id')
-  @Permissions('leads.delete')
+  @RequirePermission('leads.delete')
   @ApiOperation({ summary: 'Delete lead' })
   @ApiResponse({ status: 200, description: 'Lead deleted successfully' })
   async remove(
@@ -244,7 +244,7 @@ export class LeadsController {
   }
 
   @Get('by-unit/:unitId')
-  @Permissions('leads.read')
+  @RequirePermission('leads.read')
   @ApiOperation({ summary: 'Get leads by unit' })
   @ApiResponse({
     status: 200,
@@ -260,7 +260,7 @@ export class LeadsController {
   }
 
   @Get('by-project/:projectId')
-  @Permissions('leads.read')
+  @RequirePermission('leads.read')
   @ApiOperation({ summary: 'Get leads by project' })
   @ApiResponse({
     status: 200,
@@ -276,7 +276,7 @@ export class LeadsController {
   }
 
   @Get('by-developer/:developerId')
-  @Permissions('leads.read')
+  @RequirePermission('leads.read')
   @ApiOperation({ summary: 'Get leads by developer' })
   @ApiResponse({
     status: 200,

@@ -13,13 +13,14 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { IsEmail, IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsEmail, IsString, IsNotEmpty, IsOptional, Validate } from 'class-validator';
 import { AuthService, AuthResponse } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from './decorators/public.decorator';
 import { User } from './decorators/user.decorator';
 import { Roles } from './decorators/roles.decorator';
 import { UserRole } from '../users/entities/user.entity';
+import { StrongPasswordValidator } from '../validators/password.validator';
 
 class LoginDto {
   @IsEmail()
@@ -46,6 +47,7 @@ class RegisterDto {
 
   @IsString()
   @IsNotEmpty()
+  @Validate(StrongPasswordValidator)
   password: string;
 
   @IsString()
@@ -64,6 +66,7 @@ class ChangePasswordDto {
 
   @IsString()
   @IsNotEmpty()
+  @Validate(StrongPasswordValidator)
   newPassword: string;
 }
 
@@ -80,13 +83,14 @@ class ResetPasswordDto {
 
   @IsString()
   @IsNotEmpty()
+  @Validate(StrongPasswordValidator)
   newPassword: string;
 }
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('login')
   @Public()

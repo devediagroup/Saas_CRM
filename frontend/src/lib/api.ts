@@ -1,11 +1,25 @@
 import axios from 'axios';
 
+// Enhanced error class for better error handling
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status?: number,
+    public code?: string,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
 // Create axios instance
 const apiClient = axios.create({
   baseURL: 'http://localhost:3000/api',
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30 seconds timeout
 });
 
 // Request interceptor to add auth token
@@ -18,19 +32,134 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    return Promise.reject(new ApiError('فشل في إرسال الطلب', 0, 'REQUEST_ERROR', error));
   }
 );
 
-// Response interceptor to handle auth errors
+// Enhanced response interceptor with better error handling
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+    const { response, request, message } = error;
+
+    // Network error
+    if (!response && request) {
+      throw new ApiError(
+        'فشل في الاتصال بالخادم. تحقق من اتصالك بالإنترنت.',
+        0,
+        'NETWORK_ERROR',
+        error
+      );
     }
-    return Promise.reject(error);
+
+    // Timeout error
+    if (message.includes('timeout')) {
+      throw new ApiError(
+        'انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.',
+        0,
+        'TIMEOUT_ERROR',
+        error
+      );
+    }
+
+    // HTTP errors
+    if (response) {
+      const { status, data } = response;
+
+      switch (status) {
+        case 400:
+          throw new ApiError(
+            data?.message || 'بيانات غير صحيحة. يرجى التحقق من المدخلات.',
+            400,
+            'BAD_REQUEST',
+            data
+          );
+
+        case 401:
+          localStorage.removeItem('token');
+          window.location.href = '/login';
+          throw new ApiError(
+            'انتهت صلاحية جلسة العمل. يرجى تسجيل الدخول مرة أخرى.',
+            401,
+            'UNAUTHORIZED',
+            data
+          );
+
+        case 403:
+          throw new ApiError(
+            'ليس لديك صلاحية للوصول إلى هذا المورد.',
+            403,
+            'FORBIDDEN',
+            data
+          );
+
+        case 404:
+          throw new ApiError(
+            'المورد المطلوب غير موجود.',
+            404,
+            'NOT_FOUND',
+            data
+          );
+
+        case 409:
+          throw new ApiError(
+            data?.message || 'تعارض في البيانات. قد يكون المورد موجود مسبقاً.',
+            409,
+            'CONFLICT',
+            data
+          );
+
+        case 422:
+          throw new ApiError(
+            data?.message || 'فشل في التحقق من صحة البيانات.',
+            422,
+            'VALIDATION_ERROR',
+            data
+          );
+
+        case 429:
+          throw new ApiError(
+            'تم تجاوز حد الطلبات المسموح. يرجى المحاولة لاحقاً.',
+            429,
+            'RATE_LIMIT',
+            data
+          );
+
+        case 500:
+          throw new ApiError(
+            'خطأ داخلي في الخادم. يرجى المحاولة لاحقاً.',
+            500,
+            'INTERNAL_ERROR',
+            data
+          );
+
+        case 502:
+        case 503:
+        case 504:
+          throw new ApiError(
+            'الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.',
+            status,
+            'SERVICE_UNAVAILABLE',
+            data
+          );
+
+        default:
+          throw new ApiError(
+            data?.message || `حدث خطأ غير متوقع (${status}).`,
+            status,
+            'UNKNOWN_ERROR',
+            data
+          );
+      }
+    }
+
+    // Generic error fallback
+    throw new ApiError(
+      'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.',
+      0,
+      'GENERIC_ERROR',
+      error
+    );
   }
 );
 

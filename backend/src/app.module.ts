@@ -4,7 +4,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { CacheModule } from '@nestjs/cache-manager';
 import { APP_GUARD } from '@nestjs/core';
+
+// Configuration
+import { validateEnvironment } from './config/validation';
+import { databaseConfig } from './config/database.config';
+import { jwtConfig } from './config/jwt.config';
+import { appConfig } from './config/app.config';
+import { cacheConfig } from './config/cache.config';
 
 // Controllers
 import { AppController } from './app.controller';
@@ -28,23 +36,23 @@ import { SecurityModule } from './security/security.module';
 import { AiModule } from './ai/ai.module';
 import { DevelopersModule } from './developers/developers.module';
 import { ProjectsModule } from './projects/projects.module';
-
-// Configurations
-import { databaseConfig } from './config/database.config';
-import { jwtConfig } from './config/jwt.config';
-import { appConfig } from './config/app.config';
+import { HealthCheckModule } from './health-check/health-check.module';
 
 // Guards
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
+// Middleware
+import { PermissionMiddleware } from './auth/middleware/permission.middleware';
+
 @Module({
   imports: [
-    // Global Configuration
+    // Global Configuration with validation
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.local', '.env'],
+      validate: validateEnvironment,
     }),
 
     // Database Configuration
@@ -73,6 +81,9 @@ import { ThrottlerGuard } from '@nestjs/throttler';
       },
     ]),
 
+    // Redis Cache Configuration
+    CacheModule.registerAsync(cacheConfig),
+
     // Feature Modules
     AuthModule,
     CompaniesModule,
@@ -89,6 +100,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     AiModule,
     DevelopersModule,
     ProjectsModule,
+    HealthCheckModule,
   ],
   controllers: [AppController],
   providers: [
@@ -109,6 +121,8 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    // Global middleware can be configured here
+    consumer
+      .apply(PermissionMiddleware)
+      .forRoutes('api/*'); // Apply to all API routes
   }
 }

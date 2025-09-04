@@ -2,74 +2,74 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  Inject,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 import {
   Property,
   PropertyType,
   PropertyStatus,
   ListingType,
 } from './entities/property.entity';
-import { PermissionsService } from '../auth/services/permissions.service';
+import { CacheKeys, CacheTTL } from '../config/cache.config';
 
 @Injectable()
 export class PropertiesService {
   constructor(
     @InjectRepository(Property)
     private propertiesRepository: Repository<Property>,
-    private permissionsService: PermissionsService,
-  ) {}
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) { }
 
   async create(
     createPropertyDto: Partial<Property>,
     userId: string,
   ): Promise<Property> {
-    // Check if user has permission to create properties
-    const hasPermission = await this.permissionsService.hasPermission(
-      userId,
-      'properties.create',
-    );
-    if (!hasPermission) {
-      throw new ForbiddenException(
-        'You do not have permission to create properties',
-      );
-    }
+    // Permission check handled by PermissionGuard
 
     const property = this.propertiesRepository.create(createPropertyDto);
-    return this.propertiesRepository.save(property);
+    const savedProperty = await this.propertiesRepository.save(property);
+
+    // Invalidate cache after successful creation
+    await this.invalidatePropertiesCache(savedProperty.company_id);
+
+    return savedProperty;
   }
 
   async findAll(companyId: string, userId: string): Promise<Property[]> {
-    // Check if user has permission to read properties
-    const hasPermission = await this.permissionsService.hasPermission(
-      userId,
-      'properties.read',
-    );
-    if (!hasPermission) {
-      throw new ForbiddenException(
-        'You do not have permission to read properties',
-      );
+    // Permission check handled by PermissionGuard
+
+    // Try to get from cache first
+    const cacheKey = CacheKeys.PROPERTIES_ALL(companyId);
+    const cachedProperties = await this.cacheManager.get<Property[]>(cacheKey);
+    if (cachedProperties) {
+      console.log(`🎯 Cache HIT for ${cacheKey}`);
+      return cachedProperties;
     }
 
-    return this.propertiesRepository.find({
-      where: { company_id: companyId },
-      relations: ['company', 'project', 'developer'],
-      order: { created_at: 'DESC' },
-    });
+    console.log(`💾 Cache MISS for ${cacheKey}, fetching from database`);
+
+    const properties = await this.propertiesRepository
+      .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
+      .where('property.company_id = :companyId', { companyId })
+      .orderBy('property.created_at', 'DESC')
+      .getMany();
+
+    // Cache the result for 30 minutes
+    await this.cacheManager.set(cacheKey, properties, CacheTTL.MEDIUM);
+    console.log(`💰 Cached ${properties.length} properties with key ${cacheKey}`);
+
+    return properties;
   }
 
   async findOne(id: string, userId: string): Promise<Property> {
-    // Check if user has permission to read properties
-    const hasPermission = await this.permissionsService.hasPermission(
-      userId,
-      'properties.read',
-    );
-    if (!hasPermission) {
-      throw new ForbiddenException(
-        'You do not have permission to read properties',
-      );
-    }
+    // Permission check handled by PermissionGuard
 
     const property = await this.propertiesRepository.findOne({
       where: { id },
@@ -88,86 +88,86 @@ export class PropertiesService {
     updatePropertyDto: Partial<Property>,
     userId: string,
   ): Promise<Property> {
-    // Check if user has permission to update properties
-    const hasPermission = await this.permissionsService.hasPermission(
-      userId,
-      'properties.update',
-    );
-    if (!hasPermission) {
-      throw new ForbiddenException(
-        'You do not have permission to update properties',
-      );
-    }
+    // Permission check handled by PermissionGuard
 
     const property = await this.findOne(id, userId);
 
     Object.assign(property, updatePropertyDto);
-    return this.propertiesRepository.save(property);
+    const updatedProperty = await this.propertiesRepository.save(property);
+
+    // Invalidate cache after successful update
+    await this.invalidatePropertiesCache(updatedProperty.company_id);
+
+    return updatedProperty;
   }
 
   async remove(id: string, userId: string): Promise<void> {
-    // Check if user has permission to delete properties
-    const hasPermission = await this.permissionsService.hasPermission(
-      userId,
-      'properties.delete',
-    );
-    if (!hasPermission) {
-      throw new ForbiddenException(
-        'You do not have permission to delete properties',
-      );
-    }
+    // Permission check handled by PermissionGuard
 
     const property = await this.findOne(id, userId);
+    const companyId = property.company_id;
+
     await this.propertiesRepository.remove(property);
+
+    // Invalidate cache after successful deletion
+    await this.invalidatePropertiesCache(companyId);
   }
 
   async getPropertiesByStatus(
     companyId: string,
     status: PropertyStatus,
   ): Promise<Property[]> {
-    return this.propertiesRepository.find({
-      where: {
-        company_id: companyId,
-        status,
-      },
-      relations: ['company'],
-    });
+    return this.propertiesRepository
+      .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
+      .where('property.company_id = :companyId', { companyId })
+      .andWhere('property.status = :status', { status })
+      .orderBy('property.created_at', 'DESC')
+      .getMany();
   }
 
   async getPropertiesByType(
     companyId: string,
     propertyType: PropertyType,
   ): Promise<Property[]> {
-    return this.propertiesRepository.find({
-      where: {
-        company_id: companyId,
-        property_type: propertyType,
-      },
-      relations: ['company'],
-    });
+    return this.propertiesRepository
+      .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
+      .where('property.company_id = :companyId', { companyId })
+      .andWhere('property.property_type = :propertyType', { propertyType })
+      .orderBy('property.created_at', 'DESC')
+      .getMany();
   }
 
   async getPropertiesByListingType(
     companyId: string,
     listingType: ListingType,
   ): Promise<Property[]> {
-    return this.propertiesRepository.find({
-      where: {
-        company_id: companyId,
-        listing_type: listingType,
-      },
-      relations: ['company'],
-    });
+    return this.propertiesRepository
+      .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
+      .where('property.company_id = :companyId', { companyId })
+      .andWhere('property.listing_type = :listingType', { listingType })
+      .orderBy('property.created_at', 'DESC')
+      .getMany();
   }
 
   async getFeaturedProperties(companyId: string): Promise<Property[]> {
-    return this.propertiesRepository.find({
-      where: {
-        company_id: companyId,
-        is_featured: true,
-      },
-      relations: ['company'],
-    });
+    return this.propertiesRepository
+      .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
+      .where('property.company_id = :companyId', { companyId })
+      .andWhere('property.is_featured = :featured', { featured: true })
+      .orderBy('property.created_at', 'DESC')
+      .getMany();
   }
 
   async updatePropertyStatus(
@@ -195,14 +195,27 @@ export class PropertiesService {
     userId: string,
     searchTerm: string,
   ): Promise<Property[]> {
+    // Sanitize search term to prevent SQL injection
+    const sanitizedSearchTerm = searchTerm
+      .trim()
+      .replace(/[^\w\s\-\.\@\+\(\)\[\]]/g, '')
+      .substring(0, 100); // Limit length to prevent abuse
+
+    if (!sanitizedSearchTerm) {
+      return [];
+    }
+
     return this.propertiesRepository
       .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
       .where('property.company_id = :companyId', { companyId })
       .andWhere(
         '(property.title LIKE :search OR property.description LIKE :search OR property.address LIKE :search OR property.city LIKE :search)',
-        { search: `%${searchTerm}%` },
+        { search: `%${sanitizedSearchTerm}%` },
       )
-      .leftJoinAndSelect('property.company', 'company')
+      .orderBy('property.created_at', 'DESC')
       .getMany();
   }
 
@@ -215,13 +228,16 @@ export class PropertiesService {
   ): Promise<Property[]> {
     return this.propertiesRepository
       .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
       .where('property.company_id = :companyId', { companyId })
       .andWhere('property.listing_type = :listingType', { listingType })
       .andWhere('property.price BETWEEN :minPrice AND :maxPrice', {
         minPrice,
         maxPrice,
       })
-      .leftJoinAndSelect('property.company', 'company')
+      .orderBy('property.price', 'ASC')
       .getMany();
   }
 
@@ -271,13 +287,15 @@ export class PropertiesService {
     userId: string,
     projectId: string,
   ): Promise<Property[]> {
-    return this.propertiesRepository.find({
-      where: {
-        company_id: companyId,
-        project_id: projectId,
-      },
-      relations: ['company', 'project', 'developer'],
-    });
+    return this.propertiesRepository
+      .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
+      .where('property.company_id = :companyId', { companyId })
+      .andWhere('property.project_id = :projectId', { projectId })
+      .orderBy('property.created_at', 'DESC')
+      .getMany();
   }
 
   async getPropertiesByDeveloper(
@@ -285,13 +303,15 @@ export class PropertiesService {
     userId: string,
     developerId: string,
   ): Promise<Property[]> {
-    return this.propertiesRepository.find({
-      where: {
-        company_id: companyId,
-        developer_id: developerId,
-      },
-      relations: ['company', 'project', 'developer'],
-    });
+    return this.propertiesRepository
+      .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
+      .where('property.company_id = :companyId', { companyId })
+      .andWhere('property.developer_id = :developerId', { developerId })
+      .orderBy('property.created_at', 'DESC')
+      .getMany();
   }
 
   async getPropertiesByProjectAndDeveloper(
@@ -299,14 +319,16 @@ export class PropertiesService {
     projectId: string,
     developerId: string,
   ): Promise<Property[]> {
-    return this.propertiesRepository.find({
-      where: {
-        company_id: companyId,
-        project_id: projectId,
-        developer_id: developerId,
-      },
-      relations: ['company', 'project', 'developer'],
-    });
+    return this.propertiesRepository
+      .createQueryBuilder('property')
+      .leftJoinAndSelect('property.company', 'company')
+      .leftJoinAndSelect('property.project', 'project')
+      .leftJoinAndSelect('property.developer', 'developer')
+      .where('property.company_id = :companyId', { companyId })
+      .andWhere('property.project_id = :projectId', { projectId })
+      .andWhere('property.developer_id = :developerId', { developerId })
+      .orderBy('property.created_at', 'DESC')
+      .getMany();
   }
 
   async getPropertyStats(companyId: string, userId: string) {
@@ -372,5 +394,28 @@ export class PropertiesService {
     };
 
     return stats;
+  }
+
+  /**
+   * Helper method to invalidate related cache entries
+   * @param companyId Company ID
+   */
+  private async invalidatePropertiesCache(companyId: string): Promise<void> {
+    const cacheKeysToDelete = [
+      CacheKeys.PROPERTIES_ALL(companyId),
+      CacheKeys.PROPERTIES_STATS(companyId),
+      CacheKeys.PROPERTIES_FEATURED(companyId),
+      // Invalidate all status-based caches
+      ...Object.values(PropertyStatus).map(status => CacheKeys.PROPERTIES_BY_STATUS(companyId, status)),
+      // Invalidate all type-based caches  
+      ...Object.values(PropertyType).map(type => CacheKeys.PROPERTIES_BY_TYPE(companyId, type)),
+    ];
+
+    // Delete all cache entries
+    await Promise.all(cacheKeysToDelete.map(key =>
+      this.cacheManager.del(key)
+        .then(() => console.log(`🗑️ Invalidated cache: ${key}`))
+        .catch(err => console.warn(`⚠️ Failed to invalidate cache ${key}:`, err))
+    ));
   }
 }

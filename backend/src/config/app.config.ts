@@ -11,7 +11,7 @@ export const appConfig = {
     dest: process.env.UPLOAD_DEST || './uploads',
   },
   encryption: {
-    key: process.env.ENCRYPTION_KEY || 'your-encryption-key-here',
+    key: process.env.ENCRYPTION_KEY,
   },
   logging: {
     level: process.env.LOG_LEVEL || 'info',
