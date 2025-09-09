@@ -181,20 +181,20 @@ export class AuthController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user profile' })
-  @ApiResponse({ status: 200, description: 'User profile retrieved' })
-  async getProfile(@User() user) {
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      companyId: user.companyId,
-      status: user.status,
-    };
+  @ApiResponse({ status: 200, description: 'User profile retrieved successfully.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  getProfile(@User() user) {
+    return this.authService.getProfile(user.id);
+  }
+
+  @Get('permissions')
+  @ApiOperation({ summary: 'Get current user permissions' })
+  @ApiResponse({ status: 200, description: 'Permissions retrieved successfully.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  async getPermissions(@User() user) {
+    const permissions = await this.authService.getUserPermissions(user.id);
+    return { permissions };
   }
 
   @Patch('profile')

@@ -2,6 +2,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 // Controllers
 import { AuthController } from './auth.controller';
@@ -28,10 +29,22 @@ import { CompaniesModule } from '../companies/companies.module';
   imports: [
     TypeOrmModule.forFeature([User, Company]),
     PassportModule,
-    JwtModule.register({
-      global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '24h' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => {
+        const secret = configService.get<string>('JWT_SECRET');
+        console.log('🔐 JWT_SECRET loaded:', secret ? 'YES' : 'NO');
+        if (!secret) {
+          throw new Error('JWT_SECRET is not defined in environment variables');
+        }
+        return {
+          secret,
+          signOptions: {
+            expiresIn: configService.get<string>('JWT_EXPIRES_IN', '24h'),
+          },
+        };
+      },
+      inject: [ConfigService],
     }),
     forwardRef(() => UsersModule),
     CompaniesModule,

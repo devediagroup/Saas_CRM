@@ -10,6 +10,15 @@ import { appConfig } from './config/app.config';
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
 
+  // Validate critical environment variables
+  if (!process.env.JWT_SECRET) {
+    logger.error('❌ JWT_SECRET is not defined in environment variables');
+    logger.error('Please check your .env file and ensure JWT_SECRET is set');
+    process.exit(1);
+  } else {
+    logger.log(`✅ JWT_SECRET loaded (length: ${process.env.JWT_SECRET.length})`);
+  }
+
   // Create NestJS application
   const app = await NestFactory.create(AppModule, {
     logger:

@@ -48,28 +48,24 @@ export class UsersService {
       }
 
       // Create user within transaction
-      const user = queryRunner.manager.create(User, createUserDto);
-      const savedUser = await queryRunner.manager.save(user);
-
-      // Add activity log for user creation
-      // Note: You would need to import Activity entity and add it here
-      // await queryRunner.manager.save(Activity, {
-      //   user_id: userId,
-      //   action: 'create_user',
-      //   entity_id: savedUser.id,
-      //   entity_type: 'user',
-      //   description: `Created user: ${savedUser.first_name} ${savedUser.last_name}`,
-      //   company_id: savedUser.company_id
-      // });
+      const newUser = queryRunner.manager.create(User, createUserDto);
+      const savedUser = await queryRunner.manager.save(newUser);
 
       await queryRunner.commitTransaction();
       return savedUser;
-    } catch (error) {
+    } catch (err) {
       await queryRunner.rollbackTransaction();
-      throw error;
+      throw err;
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async findOneWithPermissions(id: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: { id },
+      relations: ['permissions'],
+    });
   }
 
   async findAll(companyId?: string, userId?: string): Promise<User[]> {

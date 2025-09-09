@@ -7,10 +7,13 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Company } from '../../companies/entities/company.entity';
 import { Lead } from '../../leads/entities/lead.entity';
 import { Activity } from '../../activities/entities/activity.entity';
+import { Permission } from '../../auth/entities/permission.entity';
 
 export enum UserRole {
   SUPER_ADMIN = 'super_admin',
@@ -68,8 +71,13 @@ export class User {
   @Column({ type: 'json', nullable: true })
   preferences: Record<string, any>;
 
-  @Column({ type: 'json', nullable: true })
-  permissions: Record<string, any>;
+  @ManyToMany(() => Permission, { cascade: true, eager: true })
+  @JoinTable({
+    name: 'user_permissions',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
+  })
+  permissions: Permission[];
 
   @Column({ nullable: true })
   last_login_at: Date;

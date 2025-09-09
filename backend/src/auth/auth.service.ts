@@ -50,6 +50,28 @@ export class AuthService {
     return null;
   }
 
+  async getProfile(userId: string) {
+    const user = await this.usersService.findOne(userId, userId); // Assuming findOne can be used this way
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    // Return a DTO to avoid exposing sensitive fields
+    const { password_hash, ...result } = user;
+    return result;
+  }
+
+  async getUserPermissions(userId: string): Promise<string[]> {
+    const user = await this.usersService.findOneWithPermissions(userId);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    if (user.role === 'super_admin') {
+      // Return all possible permissions for super_admin
+      return ['leads.create', 'leads.read', 'leads.update', 'leads.delete', /* ... all other permissions */];
+    }
+    return user.permissions.map(p => p.name);
+  }
+
   async login(user: User): Promise<AuthResponse> {
     // Get company details
     const company = await this.companiesService.findOne(user.company_id);
@@ -61,28 +83,40 @@ export class AuthService {
       role: user.role,
     };
 
-    const accessToken = this.jwtService.sign(payload);
+    // Debug: Check JWT service configuration
+    console.log('🔐 Attempting to sign JWT token...');
+    try {
+      const accessToken = this.jwtService.sign(payload);
+      console.log('✅ JWT token signed successfully');
 
-    // Update last login
-    await this.usersService.updateLastLogin(user.id);
+      // Update last login
+      await this.usersService.updateLastLogin(user.id);
 
-    return {
-      access_token: accessToken,
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        role: user.role,
-        companyId: user.company_id,
-        companyName: company.name,
-      },
-      company: {
-        id: company.id,
-        name: company.name,
-        subscriptionPlan: company.subscription_plan,
-      },
-    };
+      return {
+        access_token: accessToken,
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.first_name,
+          lastName: user.last_name,
+          role: user.role,
+          companyId: user.company_id,
+          companyName: company.name,
+        },
+        company: {
+          id: company.id,
+          name: company.name,
+          subscriptionPlan: company.subscription_plan,
+        },
+      };
+    } catch (error) {
+      console.error('❌ JWT signing failed:', error.message);
+      console.error('🔍 Debug info:');
+      console.error('  - JWT_SECRET defined:', !!process.env.JWT_SECRET);
+      console.error('  - JWT_SECRET length:', process.env.JWT_SECRET?.length || 0);
+      console.error('  - NODE_ENV:', process.env.NODE_ENV);
+      throw new Error(`JWT signing failed: ${error.message}`);
+    }
   }
 
   async register(registerData: {
